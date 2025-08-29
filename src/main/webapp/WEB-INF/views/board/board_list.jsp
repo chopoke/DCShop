@@ -53,11 +53,29 @@
 		</section>
 
 		<!-- 컨텐츠부분 -->
+		<!-- <div id="container1">
+			<div id="contests">
+				<div class="image-container1">
+					<input type="text" placeholder="Search"
+							class="board_search" />
+				</div>
+			</div>
+		</div> -->
 		<div id="container">
 			<div id="contests">
-				<div class="titleArea">
+				<div class="titleArea mx-auto w-[400px]">
 					<!-- <h1 align="center">게시판</h1> -->
-					<center><img alt="" src="resources/img_main/자유게시판2.png" height="200px"></center>
+					<!-- <center><img alt="" src="resources/img_main/자유게시판3.png" width="350px"></center> -->
+
+					<div class="image-container">
+						<input type="text" placeholder="Search" class="board_search" />
+						<a href="#"><img alt="" src="resources/img_main/icon/돋보기.png"></a>
+				      	<img alt="" src="resources/img_main/고개틀2.png">
+				      	<div class="text-overlay">
+				        	<h4><b>자유게시판</b></h4>
+				      	</div>
+				    </div>
+					
 				</div>
 
 				<div>

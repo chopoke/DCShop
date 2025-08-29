@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Page - 독캣배송</title>
+  <title>Admin - 독캣배송</title>
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
  <style type="text/css">
  .hero-section1 {
@@ -31,7 +31,7 @@
     <div class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
       
       <!-- 사이드바 -->
-      <aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
+      <aside class="w-72 border-r p-6 flex flex-col items-center" style="background-color: gray">
         <!-- 프로필 -->
         <img src="resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
         <h2 class="text-lg font-semibold">Sarah Johnson</h2>
@@ -46,7 +46,7 @@
           <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">1:1 Contact</a>
           <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a>
           <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Product Review</a>
-          <a href="${path}/admin_main.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">Log Out</a>
+          <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">Log Out</a>
         </nav>
       </aside>
 
