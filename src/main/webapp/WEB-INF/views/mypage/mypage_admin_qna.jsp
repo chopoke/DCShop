@@ -55,7 +55,7 @@
         <h1 class="text-2xl font-bold mb-6">${sessionid}님의 마이페이지입니다.</h1>
 
         <!-- 주문 내역 -->
-        <h1>상품관리</h1>
+        <h2>문의관리</h2>
         <section class="mb-8">
           <h2 class="text-lg font-semibold mb-3">주문 내역 <font size=1>최신순</font></h2>
           <div class="bg-white border rounded-lg divide-y">
@@ -91,5 +91,6 @@
 	<!-- 푸터 시작 -->
 	<%@ include file="../setting/footer.jsp" %>
 	<!-- 푸터 끝 -->
+
 </body>
 </html>

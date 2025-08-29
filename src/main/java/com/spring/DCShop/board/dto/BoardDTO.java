@@ -20,6 +20,11 @@ public class BoardDTO {
 	private int b_comments;			// 댓글 개수
 	private List<UserDTO> userDTO;
 	
+	private String writerNickname;
+
+    public String getWriterNickname() { return writerNickname; }
+    public void setWriterNickname(String writerNickname) { this.writerNickname = writerNickname; }
+	
 	public BoardDTO() {
 		super();
 	}

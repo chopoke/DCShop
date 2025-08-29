@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.spring.DCShop.mypage.dao">
+	
+	<!-- 회원가입자 최신 5건 조회 -->
+	<select id="mypageAdminUserList1" resultType="com.spring.DCShop.user.dto.UserDTO">
+		<![CDATA[
+	    SELECT A.*
+	    	 , ROWNUM
+	    FROM (
+	        SELECT u_member_id, u_id, u_name, u_address, u_email, u_birthday, u_nickname, u_regdate
+	        FROM user_tbl
+	        ORDER BY u_regdate DESC
+	    ) A
+	    WHERE ROWNUM <= 5
+	    ]]>
+	</select>
+	
+	<select id="adminBoardList" parameterType="map" resultType="com.spring.DCShop.board.dto.BoardDTO">
+    SELECT *
+    FROM (
+      SELECT t.*, ROWNUM rn
+      FROM (
+        <![CDATA[
+        SELECT
+          b.b_num,
+          b.b_title,
+          b.b_category,
+          u.u_nickname AS writerNickname,
+          b.b_dateposted,
+          b.b_views,
+          b.b_recommend,
+          b.b_image
+        FROM board_tbl b
+        JOIN user_tbl u ON u.u_member_id = b.u_member_id
+        WHERE 1=1
+        ]]>
+        <if test="category != null and category != ''">
+          <![CDATA[ AND b.b_category = #{category} ]]>
+        </if>
+        <if test="from != null and from != ''">
+          <![CDATA[ AND b.b_dateposted >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
+        </if>
+        <if test="to != null and to != ''">
+          <![CDATA[ AND b.b_dateposted <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
+        </if>
+        <if test="q != null and q != ''">
+          <![CDATA[
+          AND (
+            b.b_title LIKE '%'||#{q}||'%' OR
+            DBMS_LOB.INSTR(b.b_contents, #{q}) > 0 OR
+            u.u_nickname LIKE '%'||#{q}||'%'
+          )
+          ]]>
+        </if>
+        <![CDATA[
+        ORDER BY b.b_dateposted DESC, b.b_num DESC
+        ]]>
+      ) t
+    )
+    WHERE rn BETWEEN #{startRow} AND #{endRow}
+  </select>
+
+  <!-- 총 건수 -->
+  <select id="adminBoardCount" parameterType="map" resultType="int">
+    <![CDATA[
+    SELECT COUNT(*)
+    FROM board_tbl b
+    JOIN user_tbl u ON u.u_member_id = b.u_member_id
+    WHERE 1=1
+    ]]>
+    <if test="category != null and category != ''">
+      <![CDATA[ AND b.b_category = #{category} ]]>
+    </if>
+    <if test="from != null and from != ''">
+      <![CDATA[ AND b.b_dateposted >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
+    </if>
+    <if test="to != null and to != ''">
+      <![CDATA[ AND b.b_dateposted <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
+    </if>
+    <if test="q != null and q != ''">
+      <![CDATA[
+      AND (
+        b.b_title LIKE '%'||#{q}||'%' OR
+        DBMS_LOB.INSTR(b.b_contents, #{q}) > 0 OR
+        u.u_nickname LIKE '%'||#{q}||'%'
+      )
+      ]]>
+    </if>
+  </select>
+
+</mapper>

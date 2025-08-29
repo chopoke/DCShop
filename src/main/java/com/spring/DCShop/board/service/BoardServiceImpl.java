@@ -278,7 +278,7 @@ public class BoardServiceImpl implements BoardService {
 		if (content == null || content.trim().isEmpty()) { response.sendError(400, "content required"); return; }
 		CommentDTO dto = new CommentDTO();
 		dto.setB_num(bnum);
-		dto.setU_member_id(me); // ★ 클라이언트 값 신뢰 X, 세션만 사용
+		dto.setU_member_id(me); 
 		dto.setC_content(content.trim());
 		String nick = (String) request.getSession().getAttribute("session_u_nickname");
 		if (nick != null) dto.setC_writer(nick);
