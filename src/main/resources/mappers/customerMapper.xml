@@ -10,7 +10,7 @@
 	<insert id="insertCustomer" parameterType="com.spring.DCShop.join.dto.CustomerDTO"> 
 		<!-- PK 선점 --> 
 		<selectKey keyProperty="u_member_id" resultType="int" order="BEFORE"> 
-			SELECT USER_TBL_SEQ.NEXTVAL FROM DUAL 
+			SELECT USER_TBL_SEQ.NEXTVAL FROM DUAL
 		</selectKey> 
 		
 		INSERT INTO USER_TBL ( 

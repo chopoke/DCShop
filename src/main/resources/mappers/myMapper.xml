@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.spring.DCShop.mypage.dao.MypageDAO">
+ 	
+	<!-- OrderList 가져오기 -->
+	<select id="getOrderList" resultMap="cartMap">
+	    <![CDATA[
+			SELECT *
+			FROM (
+			  SELECT t.*,
+			         ROW_NUMBER() OVER (ORDER BY o_date DESC, o_num DESC) AS rn
+			  FROM   order_tbl t
+			  WHERE  u_member_id = #{u_member_id}
+			)
+			WHERE rn <= 5
+		]]>
+	</select>
+	
+	<resultMap id="cartMap" type="com.spring.DCShop.mypage.dto.OrderDTO">
+	  <id     property="o_Num"     	        column="o_num"/>
+	  <result property="pd_Id"      	    column="pd_id"/>
+	  <result property="u_Member_Id"	    column="u_member_id"/>
+	  <result property="o_Delivery_State"   column="o_delivery_state"/>
+	  <result property="o_Delivery_Date" 	column="o_delivery_date"/>
+	  <result property="o_Count" 	        column="o_count"/>
+	  <result property="o_Payment" 	        column="o_payment"/>
+	  <result property="o_Address" 	        column="o_address"/>
+	  <result property="o_Zip_Code" 	    column="o_zip_code"/>
+	  <result property="o_Request" 	        column="o_request"/>
+	  <result property="o_Status" 	        column="o_status"/>
+	  <collection property="productDto"     column="pd_id"     select="getProduct"/>
+	</resultMap>
+	
+	<select id="getProduct" resultType="com.spring.DCShop.mypage.dto.ProductDTO">
+		SELECT pd_id pdId
+		     , pd_name pdName
+		     , pd_price pdPrice
+		     , pd_brand pdBrand
+		     , pd_image_url pdImageUrl
+		     , pd_shipping_fee pdShippingFee
+		     , pd_status pdStatus
+		  FROM product_tbl
+		 WHERE pd_id = #{pd_id}
+	</select>
+ 
+ </mapper>

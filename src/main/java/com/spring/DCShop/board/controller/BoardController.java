@@ -25,10 +25,10 @@ public class BoardController {
 	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 	
 	@Autowired
-	BoardServiceImpl service;
+	private BoardServiceImpl service;
 	
 	// 게시판 목록
-	@RequestMapping("comm_main.do")
+	@RequestMapping("board_list")
 	public String board_list(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		logger.info("<<< url => board_list >>>");
@@ -84,11 +84,50 @@ public class BoardController {
 		response.sendRedirect(viewPage);
 	}
 	
-	// 게시판 수정
-	
-	// 게시판 수정 등록
+	// 게시판 수정 페이지 이동
+	@RequestMapping("board_update")
+	public String board_update(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("<<< url => board_update >>>");
+
+		// 수정할 게시글 번호
+		int b_num = Integer.parseInt(request.getParameter("b_num")); //b_num 파라미터가 숫자여야 하는데 "undefined" 문자열로 넘어옴
+
+		// 게시판 수정 정보 가져오기
+		service.boardUpdateDTOAction(request, response, model);
+
+		return "board/board_update"; // 수정 화면
+
+	}
+
+	// 게시판 수정 등록 및 상세페이지 이동
+	@RequestMapping("board_updateAction")
+	public void board_updateAction(MultipartHttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+
+		logger.info("<<< url => board_updateAction >>>");
+
+		// 수정후 상세페이지로 이동
+		int b_num = service.boardUpdateAction(request, response, model);
+
+		String viewPage = request.getContextPath() + "/board_detail?b_num=" + b_num + "&listClick=0";
+		response.sendRedirect(viewPage);
+
+	}
 	
 	// 게시판 삭제
+	@RequestMapping("board_delete")
+	public void board_delete(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		logger.info("<<< url => board_delete >>>");
+
+		// 서비스에서 삭제 실행
+		service.boardDeleteAction(request, response, model);
+		// 삭제 완료 여부를 표시하기 위해 쿼리 파라미터 붙여서 redirect
+		String viewPage = request.getContextPath() + "/board_list?delete=success";
+		response.sendRedirect(viewPage);
+	}
+
 	
 	// 댓글 목록
 	@RequestMapping("comment_list")

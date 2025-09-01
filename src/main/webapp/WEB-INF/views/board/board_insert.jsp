@@ -44,14 +44,7 @@
 		<%@ include file="/WEB-INF/views/setting/header.jsp" %>
 		
 		<section class="hero-section1">
-		<!-- <div class="hero-container">
-			<div class="hero-content">
-				<h1 class="hero-title">랜딩 페이지 제목</h1>
-				<p class="hero-description">실용성 있는 디자인과 직관적이며 대담한 추상적 조합으로, 사용하기
-					자연스럽고 유용한 소프트웨어를 초점에 맞춘다.</p>
-				<button class="hero-btn">더보기</button>
-			</div>
-		</div> -->
+		
 		</section>
 		
 		<!-- 컨텐츠 부분 -->
@@ -105,7 +98,7 @@
 								<br>
 								<input type="button" class="inputButton" value="등록" id="btnSave">
 								<input type="reset" class="inputButton" value="초기화">
-								<input type="button" class="inputButton" value="목록" onclick="window.location='${path}/comm_main.do'">
+								<input type="button" class="inputButton" value="목록" onclick="window.location='${path}/board_list'">
 							</div>
 						</form>
 					</div>

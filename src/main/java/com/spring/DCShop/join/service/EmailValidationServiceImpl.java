@@ -12,14 +12,19 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSendException;
+
+// JavaMail API
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailValidationServiceImpl implements EmailValidationService, InitializingBean {
 
+	
+	
 	private JavaMailSender mailSender;
 
 	// --- SMTP 기본 설정을 @Value로 주입 ---
@@ -44,7 +49,6 @@ public class EmailValidationServiceImpl implements EmailValidationService, Initi
 	@Value("${mail.from}")
 	private String from;
 
-	// 상세 속성
 	@Value("${mail.smtp.auth}")
 	private String smtpAuth;
 	@Value("${mail.smtp.starttls.enable}")
@@ -60,14 +64,16 @@ public class EmailValidationServiceImpl implements EmailValidationService, Initi
 	@Value("${mail.debug}")
 	private String debug;
 
-	// 인증코드 TTL
 	@Value("${email.code.ttl.millis}")
 	private long codeTtlMillis;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		System.out.println("EmailValidationServiceImpl - afterPropertiesSet");
+		
+		//JavaMail API 활용해서 gmail 서버세 요청을 보내고 stmp를 활용해서 해당 (수신자)to 주소로 메일이 전송됨
 
-		// 없으면 내부 생성(프로퍼티 기반)
+		// 기본 연결 정보와 인코딩 설정(인코딩 : UTF-8)
 		JavaMailSenderImpl sender = new JavaMailSenderImpl();
 		sender.setHost(host);
 		sender.setPort(port);
@@ -76,19 +82,17 @@ public class EmailValidationServiceImpl implements EmailValidationService, Initi
 		sender.setProtocol(protocol);
 		sender.setDefaultEncoding(defaultEncoding);
 
-		// ✅ STARTTLS/SSL 등 필수 속성 주입
+		// ✅ STARTTLS 등 필수 속성 주입
 		Properties props = sender.getJavaMailProperties();
 		props.setProperty("mail.smtp.auth", smtpAuth); // "true"
 		props.setProperty("mail.smtp.starttls.enable", starttlsEnable); // "true" (587일 때)
 		props.setProperty("mail.smtp.starttls.required", starttlsRequired); // "true"
-		// 587에서는 SSL off, 465에서는 SSL on
-		if (port == 465) {
-			props.setProperty("mail.smtp.ssl.enable", "true");
-			props.setProperty("mail.smtp.starttls.enable", "false");
-			props.setProperty("mail.smtp.starttls.required", "false");
-		} else {
-			props.setProperty("mail.smtp.ssl.enable", "false");
-		}
+		
+		// 587에서는 TLS 사용, 465에서는 SSL 사용 해야하는데, 현재 587이여서... 
+		// 참고 사이트 https://shanepark.tistory.com/426
+		// TLS는 인터넷 커뮤니케이션을 위한 개인 정보와 데이터 무결성을 제공하는 보안 프로토콜[전송 계층에서 보안]
+		
+		props.setProperty("mail.smtp.ssl.enable", "false");
 		props.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
 		props.setProperty("mail.smtp.connectiontimeout", connTimeout);
 		props.setProperty("mail.smtp.timeout", readTimeout);
@@ -107,97 +111,92 @@ public class EmailValidationServiceImpl implements EmailValidationService, Initi
 				+ props.getProperty("mail.smtp.ssl.enable"));
 	}
 
+	/**
+	 * 
+	 * @purpose 받는 사람, 인증코드, 텍스트 sendTextMail 전달...
+	 * 
+	 */
 	@Override
-	public String sendValidationCode(HttpServletRequest request) {
-
+	public void sendValidationCode(HttpServletRequest request) {
+		System.out.println("EmailValidationServiceImpl - sendValidationCode");
+		
 		String to = request.getParameter("to");
-		System.out.println(to);
 		String code = generate6Digits();
 		String subject = "[인증번호] " + code;
-		String body = new StringBuilder().append("인증번호는 ").append(code).append(" 입니다.\n").append("유효시간: ")
-				.append(codeTtlMillis / 1000).append("초").toString();
+		String body = new StringBuilder().append("인증번호는 ").append(code).append(" 입니다.\n").toString();
 
+		// sendTextMail로 매개변수 전달
 		sendTextMail(to, subject, body);
 
+		// 성공적으로 보냈다면, 세션에 저장 : 검증을 위해
 		long expireAt = System.currentTimeMillis() + codeTtlMillis;
 		request.getSession(true).setAttribute("EMAIL_CODE", code);
 		request.getSession().setAttribute("EMAIL_CODE_EXPIRE", expireAt);
 
-		return code;
 	}
 
+	/**
+	 * 
+	 * @purpose 코드 6자리 검증
+	 * 
+	 */
 	@Override
 	public Map<String, Object> verifyCode(HttpServletRequest request) {
+		System.out.println("EmailValidationServiceImpl - verifyCode");
+		
 		Map<String, Object> res = new HashMap<String, Object>();
 
+		// 비교할 세션에 저장된 6자리 코드 및 만료 시간
 		Object saved = request.getSession().getAttribute("EMAIL_CODE");
 		Object expObj = request.getSession().getAttribute("EMAIL_CODE_EXPIRE");
+		
+		// 사용자가 이메일 보고 입력한 코드
 		String input = request.getParameter("code");
-
-		if (!(saved instanceof String) || !(expObj instanceof Long)) {
-			res.put("ok", false);
-			res.put("reason", "NO_SESSION"); // 코드 발송 전이거나 세션 만료
-			return res;
-		}
-
-		long now = System.currentTimeMillis();
-		long exp = (Long) expObj;
-
-		if (now > exp) {
-			res.put("ok", false);
-			res.put("reason", "EXPIRED");
-			return res;
-		}
-
+		
+		// 코드가 불일치 여부
 		boolean ok = ((String) saved).equals(input);
 		res.put("ok", ok);
+		// 일치하지 않으면, 인증 실패, 코드를 확인하세요.
 		if (!ok) {
 			res.put("reason", "MISMATCH");
 		} else {
-			// 일회성 사용
+			// 성공 후 세션 제거
 			request.getSession().removeAttribute("EMAIL_CODE");
 			request.getSession().removeAttribute("EMAIL_CODE_EXPIRE");
 		}
 		return res;
 	}
 
+	/**
+	 * 
+	 * @purpose 메일 보내는 메서드
+	 * 
+	 */
 	private void sendTextMail(String to, String subject, String text) {
-		MimeMessage mime = mailSender.createMimeMessage();
+		System.out.println("EmailValidationServiceImpl - sendTextMail");
+		
+		MimeMessage mail  = mailSender.createMimeMessage();
 		try {
-			MimeMessageHelper helper = new MimeMessageHelper(mime, false, defaultEncoding);
-			InternetAddress fromAddr = parseFrom(from); // "Name <addr>" 지원
-			helper.setFrom(fromAddr);
+			System.out.println(from);
+			// MimeMessageHelper는 내부적으로 위에서 수동으로 한 일을 “편하게” 해 주는 래퍼이며, 인코딩(UTP-8), HTML 여부, 멀티파트 경계(boundary), 첨부/인라인 파트
+			MimeMessageHelper helper = new MimeMessageHelper(mail, false, defaultEncoding);
+			helper.setFrom(from);
 			helper.setTo(to);
 			helper.setSubject(subject);
 			helper.setText(text, false);
-			mailSender.send(mime);
+			mailSender.send(mail);
 		} catch (MessagingException e) {
 			throw new MailSendException("메일 전송 실패", e);
 		}
 	}
 
-	private InternetAddress parseFrom(String fromProp) {
-		try {
-			String name = fromProp;
-			String addr = fromProp;
-			int lt = fromProp.indexOf('<');
-			int gt = fromProp.indexOf('>');
-			if (lt >= 0 && gt > lt) {
-				name = fromProp.substring(0, lt).trim();
-				addr = fromProp.substring(lt + 1, gt).trim();
-			}
-			return new InternetAddress(addr, name, defaultEncoding);
-		} catch (Exception e) {
-			// 형식이 이상하면 그대로 세팅 시도
-			try {
-				return new InternetAddress(fromProp);
-			} catch (Exception ex) {
-				throw new IllegalArgumentException("mail.from 형식 오류: " + fromProp);
-			}
-		}
-	}
-
+	/**
+	 * 
+	 * @purpose 6자리 난수 생성
+	 * 
+	 */
 	private String generate6Digits() {
+		System.out.println("EmailValidationServiceImpl - generate6Digits");
 		int randomNumber = (int) (Math.random() * 899999) + 100000;
 		return Integer.toString(randomNumber);
 	}

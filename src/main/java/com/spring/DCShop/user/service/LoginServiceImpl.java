@@ -37,10 +37,10 @@ public class LoginServiceImpl implements LoginService {
 		map.put("id", id);
 		map.put("pw", pw);
 		
-		int test = 0;
-		String test1 = "";
-		String test2 = "";
-		String test3 = "";
+//		int test = 0;
+//		String test1 = "";
+//		String test2 = "";
+//		String test3 = "";
 		UserDTO dto = dao.idpasswordchk(map);
 		//6. 로그인 성공시 세션 id를 설정
 		if(dto != null) {

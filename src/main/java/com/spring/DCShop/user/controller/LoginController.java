@@ -62,7 +62,7 @@ public class LoginController {
 		return "main";
 	}
 	
-	@RequestMapping("comm_main1.do")
+	@RequestMapping("comm_main.do")
 	public String comm_main() {
 		logger.info("=== url -> comm_main ===");
 		
@@ -81,5 +81,19 @@ public class LoginController {
 		logger.info("=== url -> comm_CSD ===");
 		
 		return "comm/comm_CSD";
+	}
+	
+	@RequestMapping("cart.do")
+	public String cart() {
+		logger.info("=== url -> cart ===");
+		
+		return "shop/cart";
+	}
+	
+	@RequestMapping("pay.do")
+	public String pay() {
+		logger.info("=== url -> pay ===");
+		
+		return "shop/pay";
 	}
 }

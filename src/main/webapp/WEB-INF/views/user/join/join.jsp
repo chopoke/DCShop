@@ -69,12 +69,11 @@
 
 	<div class="wrap">
 		<!-- Header 시작 -->
-		<%@ include file="../../setting/header.jsp" %>
+		<%@ include file="../../setting/header.jsp"%>
 		<!-- Header 끝 -->
 
 
-		<section class="hero-section1">
-	</section>
+		<section class="hero-section1"></section>
 
 		<!-- 컨텐츠 시작 -->
 		<main class="container my-4 my-md-5">
@@ -102,24 +101,27 @@
 				</div>
 				<hr style="border: 3px solid">
 				<!-- 상단 중앙2 시작 -->
-				<div id=section2">
+				<div id="section2">
 					<div id="s2_inner">
 						<!-- join 시작 -->
 						<div class="join">
 							<form name="inputform" action="insertPet.do" method="post"
-									onsubmit="return singleCheck()">
+								onsubmit="return singleCheck()">
 
 								<!-- 2-1. 중복확인 버튼 안 눌렀을때 0으로 설정 -->
-								<input type="hidden" name="hiddenUserid" value="0"> 
-								<input type="hidden" name="hiddenUserNickName" value="0"> 
-								<input type="hidden" id="emailVerified" name="emailVerified" value="N">
-								<input type="hidden" id="agreePrivacy" name="agreePrivacy" value="${agreementdto.agreePrivacy}">
-								<input type="hidden" id="agreeMarketing" name="agreeMarketing" value="${agreementdto.agreeMarketing}">
+								<input type="hidden" name="hiddenUserid" value="0"> <input
+									type="hidden" name="hiddenUserNickName" value="0"> <input
+									type="hidden" id="emailVerified" name="emailVerified" value="N">
+								<input type="hidden" id="agreePrivacy" name="agreePrivacy"
+									value="${agreementdto.agreePrivacy}"> <input
+									type="hidden" id="agreeMarketing" name="agreeMarketing"
+									value="${agreementdto.agreeMarketing}">
 								<table>
 									<tr>
 										<th><label for="u_id">아이디<span style="color: red">*</span></label></th>
 										<td><input type="text" id="u_id" name="u_id"
-											class="input" size="20" placeholder="공백없이 20자 이내로 작성" autofocus>
+											class="input" size="20" placeholder="공백없이 20자 이내로 작성"
+											autofocus>
 											<button type="button" class="btn btn-dark btn-sm ms-2"
 												onclick="confirmId()">아이디 중복확인</button></td>
 									</tr>
@@ -127,7 +129,8 @@
 										<th><label for="u_nickname">닉네임<span
 												style="color: red">*</span></label></th>
 										<td><input type="text" id="u_nickname" name="u_nickname"
-											class="input" size="20" placeholder="공백없이 20자 이내로 작성" autofocus>
+											class="input" size="20" placeholder="공백없이 20자 이내로 작성"
+											autofocus>
 											<button type="button" class="btn btn-dark btn-sm ms-2"
 												onclick="confirmNickName()">닉네임 중복확인</button></td>
 									</tr>
@@ -158,29 +161,31 @@
 											size="8" placeholder="-없이 생년월일 6자리 입력" required autofocus></td>
 									</tr>
 									<tr>
-										<th rowspan="2">
-											<label for="u_address">주소<span style="color: red">*</span></label>
-										</th>
-										<td>
-											<input type="text" id="u_address" name="u_address" class="input" style="width: 500px;" placeholder="주소를 검색하세요.(선택)" required autofocus>
-											<div id="addrResult" style="border: 1px solid #ccc; background: #fff; max-height: 200px; overflow-y: auto; display: none; position: absolute; z-index: 100;"></div>
-											<input type="text" id="u_zip_code" name="u_zip_code" class="input" style="width: 100px;" placeholder="우편 번호 입력해주세요." required autofocus>
-										</td>
+										<th rowspan="2"><label for="u_address">주소<span
+												style="color: red">*</span></label></th>
+										<td><input type="text" id="u_address" name="u_address"
+											class="input" style="width: 500px;"
+											placeholder="주소를 검색하세요.(선택)" required autofocus>
+											<div id="addrResult"
+												style="border: 1px solid #ccc; background: #fff; max-height: 200px; overflow-y: auto; display: none; position: absolute; z-index: 100;"></div>
+											<input type="text" id="u_zip_code" name="u_zip_code"
+											class="input" style="width: 100px;"
+											placeholder="우편 번호 입력해주세요." required autofocus></td>
 									</tr>
 									<tr>
-										<td>
-											<input type="text" id="u_deTailaddress" name="u_deTailAddress" class="input" size="30" placeholder="상세 주소 입력해주세요." required autofocus>
-										</td>
+										<td><input type="text" id="u_deTailaddress"
+											name="u_deTailAddress" class="input" size="30"
+											placeholder="상세 주소 입력해주세요." required autofocus></td>
 									</tr>
 									<tr>
-										<th><label for="u_phone1">휴대폰 번호<span style="color: red">*</span></label></th>
-										<td>
-											<input type="text" id="u_phone1" name="u_phone1" class="input" maxlength="3" style="width: 100px"> 
-											- 
-											<input type="text" id="u_phone2" name="u_phone2" class="input" maxlength="4" style="width: 100px"> 
-											- 
-											<input type="text" id="u_phone3" name="u_phone3" class="input" maxlength="4" style="width: 100px">
-										</td>
+										<th><label for="u_phone1">휴대폰 번호<span
+												style="color: red">*</span></label></th>
+										<td><input type="text" id="u_phone1" name="u_phone1"
+											class="input" maxlength="3" style="width: 100px"> - <input
+											type="text" id="u_phone2" name="u_phone2" class="input"
+											maxlength="4" style="width: 100px"> - <input
+											type="text" id="u_phone3" name="u_phone3" class="input"
+											maxlength="4" style="width: 100px"></td>
 									</tr>
 
 									<tr>
@@ -191,9 +196,13 @@
 												<div class="col-12 col-md">
 													<!-- 한 줄로 붙는 input-group (좁으면 자동 줄바꿈) -->
 													<div class="input-group">
-														<input type="text" id="u_mail1" name="u_mail1" class="form-control" placeholder="아이디" required>
-														<span class="input-group-text">@</span> <input type="text" id="u_mail2" name="u_mail2" class="form-control" placeholder="도메인" required> 
-														<select class="form-select" id="u_mail3" name="u_mail3" onchange="selectEmailChk(this)">
+														<input type="text" id="u_mail1" name="u_mail1"
+															class="form-control" placeholder="아이디" required>
+														<span class="input-group-text">@</span> <input type="text"
+															id="u_mail2" name="u_mail2" class="form-control"
+															placeholder="도메인" required> <select
+															class="form-select" id="u_mail3" name="u_mail3"
+															onchange="selectEmailChk(this)">
 															<option value="">직접입력</option>
 															<option value="naver.com">naver.com</option>
 															<option value="gmail.com">gmail.com</option>
@@ -211,9 +220,10 @@
 
 											<div id="emailMsg" class="msg"></div> <!-- 인증코드 입력 영역: 최초 숨김 -->
 											<!-- 인증코드 영역 (초기 숨김) -->
-											<div id="emailVerifyBox" class="hidden">
-												<div class="row">
-													<label>인증코드</label> <input type="text" id="emailCode"
+											<div id="emailVerifyBox" class="hidden mt-2">
+												<div class="input-group">
+													<span class="input-group-text">인증코드</span>
+													<input type="text" id="emailCode"
 														class="inp" maxlength="6" inputmode="numeric"
 														placeholder="6자리" />
 													<div class="col-auto">
@@ -221,12 +231,19 @@
 															class="btn btn-outline-secondary"
 															onclick="verifyEmailCode()">검증</button>
 													</div>
-													<div class="col-auto">
-														<span id="emailTimer" class="badge text-bg-secondary"></span>
-													</div>
 												</div>
-												<input type="hidden" id="user_email" name="user_email">
-											</div>
+												<!-- 줄 바꿈 -->
+												<div class="w-100"></div>
+
+												<!-- 타이머: 아래 줄 왼쪽 위치 -->
+												<div class="col-12 d-flex justify-content-left">
+													<span id="emailTimer"
+														class="badge text-bg-secondary rounded-pill px-3 py-2 font-monospace shadow-sm"
+														aria-live="polite">03:00</span>
+												</div>
+											</div> 
+											<input type="hidden" id="user_email" name="user_email">
+
 										</td>
 									</tr>
 
@@ -257,8 +274,7 @@
 	<!-- 컨텐츠 끝 -->
 
 	<!-- Footer 시작 -->
-	<%@ include file="../../setting/footer.jsp" %>
+	<%@ include file="../../setting/footer.jsp"%>
 	<!-- Footer 시작 -->
-	</div>
 </body>
 </html>

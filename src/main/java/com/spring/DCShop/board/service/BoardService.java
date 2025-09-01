@@ -37,7 +37,7 @@ public interface BoardService {
 			throws ServletException, IOException;
 	
 	// 게시판 수정 등록
-	public void boardUpdateAction(MultipartHttpServletRequest request, HttpServletResponse response, Model model)
+	public int boardUpdateAction(MultipartHttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
 	
 	// 게시판 삭제

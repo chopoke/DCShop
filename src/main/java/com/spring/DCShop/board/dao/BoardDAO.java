@@ -56,6 +56,15 @@ public interface BoardDAO {
 	
 	// 게시판 삭제
 	public int boardDeleteAction(int b_num);
+
+	// 게시글의 추천 삭제 (자식 선삭제)
+	public int deleteRecommendsByBoard(int b_num);
+
+	// 게시글의 댓글 삭제 (자식 선삭제)
+	public int deleteCommentsByBoard(int b_num);
+
+	// 게시글 작성자 아이디 조회
+	public String selectBoardAuthorId(int b_num);
 	
 	// 댓글 목록
 	public List<CommentDTO> commentListAction(int b_num);

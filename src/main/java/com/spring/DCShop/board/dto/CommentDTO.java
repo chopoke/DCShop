@@ -12,6 +12,7 @@ public class CommentDTO {
 	private int c_num2;			//대댓글
 	private String c_deleted;	//삭제
 	private String c_writer;	//작성자
+	
 	public CommentDTO() {
 		super();
 	}

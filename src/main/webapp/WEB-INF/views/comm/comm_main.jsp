@@ -120,7 +120,7 @@ Specificity: (0,0,1)
     <!-- 가운데 : 메뉴 -->
     <div class="flex justify-center space-x-6">
       <a href="#">공지/이벤트 게시판</a>&nbsp;&nbsp;
-      <a href="#">자유 게시판</a>&nbsp;&nbsp;
+      <a href="board_list">자유 게시판</a>&nbsp;&nbsp;
       <a href="#">묘한발견?(준비중)</a>
     </div>
 

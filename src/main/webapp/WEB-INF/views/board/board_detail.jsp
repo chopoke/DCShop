@@ -17,38 +17,46 @@
 		    var btn = $("#recommendBtn");
 		    var b_num = btn.data("bnum");
 		    
-		    if (!btn.hasClass("active")) {
-		        // 추천 추가
-		        $.ajax({
-		            url: "${path}/recommend",
-		            type: "POST",
-		            data: { b_num: b_num, click: 1 },
-		            success: function(result) {
-		                if (parseInt(result.success) === 1) {
-		                    btn.addClass("active"); // 이미지 교체
-			                $("#recommendTotal").text(result.b_recommend); 
-		                }
-		            },
-		            error: function() {
-		                alert("추천 처리 중 오류가 발생했습니다.");
-		            }
-		        });
+		    if(${sessionScope.sessionid != null}) {
+			    if (!btn.hasClass("active")) {
+			        // 추천 추가
+			        $.ajax({
+			            url: "${path}/recommend",
+			            type: "POST",
+			            data: { b_num: b_num, click: 1 },
+			            success: function(result) {
+			                if (parseInt(result.success) === 1) {
+			                    btn.addClass("active"); // 이미지 교체
+				                $("#recommendTotal").text(result.b_recommend); 
+			                }
+			            },
+			            error: function() {
+			                alert("추천 처리 중 오류가 발생했습니다.");
+			            }
+			        });
+			    } else {
+			        // 추천 취소
+			        $.ajax({
+			            url: "${path}/recommend",
+			            type: "POST",
+			            data: { b_num: b_num, click: 0 },
+			            success: function(result) {
+			                if (parseInt(result.success) === 1) {
+			                    btn.removeClass("active"); // 이미지 원복
+			                    $("#recommendTotal").text(result.b_recommend); 
+			                }
+			            },
+			            error: function() {
+			                alert("추천 취소 중 오류가 발생했습니다.");
+			            }
+			        });
+			    }
 		    } else {
-		        // 추천 취소
-		        $.ajax({
-		            url: "${path}/recommend",
-		            type: "POST",
-		            data: { b_num: b_num, click: 0 },
-		            success: function(result) {
-		                if (parseInt(result.success) === 1) {
-		                    btn.removeClass("active"); // 이미지 원복
-		                    $("#recommendTotal").text(result.b_recommend); 
-		                }
-		            },
-		            error: function() {
-		                alert("추천 취소 중 오류가 발생했습니다.");
-		            }
-		        });
+		    	if(confirm("로그인이 필요합니다.")) {	// 확인 눌렀을 때
+					// 로그인 페이지로 이동	
+					location.href="${path}/login_main.do";
+				}
+				// 취소 누르면 목록페이지 그대로
 		    }
 		});
 	});
@@ -210,6 +218,32 @@
 	});
 	
 </script>
+	<script>
+		//삭제확인
+		function confirmDelete(b_num) {
+		    if (confirm("해당 게시물을 삭제하시겠습니까?")) {
+		        location.href = "${path}/board_delete?b_num=" + b_num;
+		    }
+		}
+		
+		// 수정 페이지 이동
+		function goUpdate(b_num) {
+		    location.href = "${path}/board_update?b_num=" + b_num;
+		}
+
+	</script>
+	
+	<script>
+	function goUpdate(b_num) {
+	    if (!b_num || b_num === "undefined" || isNaN(b_num)) {
+	        alert("게시글 번호가 유효하지 않습니다.");
+	        return;
+	    }
+	    location.href = "${path}/board_update?b_num=" + b_num;
+	}
+</script>
+
+
 </head>
 <body>
 
@@ -256,19 +290,16 @@
 								</tr>
 								<tr>
 									<td> 
-										<div style="min-height: 700px" align="left">
+										<div style="min-height: 700px; white-space: pre-line;" align="left">
 											${board.b_contents} 
-											<img src="${board.b_image}">
+											<img src="${board.b_image}" style="width:350px">
 										</div>
 										<div align="right" style="height: 20px">
 											<div style="font-size: 15px"> 등록일 : ${board.b_dateposted} </div> 
-											<c:if test="${board.b_updateDate != null}">
-												<div style="font-size: 15px"> 수정일 : ${board.b_updateDate} </div>
-											</c:if>
 										</div>
 										<c:if test="${board.b_updateDate != null}">
 											<div align="right" style="height: 20px">
-											<div style="font-size: 15px"> 수정일 : ${board.b_updateDate} </div>
+												<div style="font-size: 15px"> 수정일 : ${board.b_updateDate} </div>
 											</div>
 										</c:if>
 									</td>
@@ -286,9 +317,14 @@
 							</table>
 							<div align="right">
 								<br>
-								<input type="button" class="inputButton" value="수정" id="">
-								<input type="reset" class="inputButton" value="삭제" id="">
-								<input type="button" class="inputButton" value="목록" onclick="window.location='${path}/comm_main.do'">
+								<!-- 작성자 본인일 때만 수정/삭제 버튼 노출 -->
+								<c:if test="${sessionScope.sessionid == user.u_id}">
+									<input type="button" class="inputButton" value="수정" 
+									   onclick="goUpdate('${board.b_num}')">
+									<input type="button" class="inputButton" value="삭제" 
+									   onclick="confirmDelete('${board.b_num}')">
+								</c:if>
+								<input type="button" class="inputButton" value="목록" onclick="window.location='${path}/board_list'">
 							</div>
 						</form>
 					</div>
@@ -302,7 +338,7 @@
 					<c:choose>
 						<c:when test="${not empty sessionScope.sessionid}">
 							<table>
-								<tr>
+								<tr style="border-top: 1px solid #e5e5e5;">
 									<th style="width:150px">댓글작성</th>
 									<td style="width:270px; text-align:left">
 										<textarea style="width:600px" rows="5" cols="93" name="c_content" id="c_content" placeholder="댓글입력"></textarea>

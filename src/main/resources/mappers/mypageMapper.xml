@@ -4,7 +4,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
- <mapper namespace="com.spring.DCShop.mypage.dao">
+ <mapper namespace="com.spring.DCShop.mypage.dao.MypageDAO">
 	
 	<!-- 회원가입자 최신 5건 조회 -->
 	<select id="mypageAdminUserList1" resultType="com.spring.DCShop.user.dto.UserDTO">

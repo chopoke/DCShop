@@ -11,11 +11,9 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-<<<<<<< HEAD
+
 	<logger name="com.spring.DCShop">
-=======
-	<logger name="spring.mvc.pet_join2">
->>>>>>> origin/jimin
+
 		<level value="info" />
 	</logger>
 	

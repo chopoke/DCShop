@@ -22,6 +22,7 @@
  	
  	<resultMap id="getUser" type="com.spring.DCShop.user.dto.UserDTO">
  		<id property="u_member_id" column="u_member_id"/>
+ 		<result property="u_id" column="u_id"/>
  		<result property="u_nickname" column="u_nickname"/>
  	</resultMap>
  
@@ -37,6 +38,7 @@
 					 	 		WHERE b.b_num = c.b_num) AS b_comments
 						FROM user_tbl u, board_tbl b
 						WHERE u.u_member_id = b.u_member_id
+						  AND b.b_category IN ('자유', '꿀팁', '리뷰', '질문')
 						ORDER BY b.b_num DESC) A 
 				) 
 		 WHERE rn BETWEEN #{start} AND #{end}
@@ -68,9 +70,9 @@
  	
  	<!-- 회원 번호  -->
  	<select id="selectU_member_id" parameterType="String" resultType="int">
- 		SELECT NVL(MAX(u_member_id), 0)
-    FROM user_tbl
-   WHERE u_id = #{u_id, jdbcType=VARCHAR}
+ 		SELECT u_member_id
+	      FROM user_tbl
+	     WHERE u_id = #{u_id, jdbcType=VARCHAR}
  	</select>
  	
  	<!-- 게시글 번호 -->
@@ -83,6 +85,7 @@
  	<!-- 게시판 상세페이지 -->
  	<select id="boardDetailAction" parameterType="int" resultMap="boardMap">
  		SELECT b.*
+ 			 , u.u_id
 			 , u.u_nickname
 		  FROM user_tbl u, board_tbl b
 		 WHERE u.u_member_id = b.u_member_id
@@ -137,23 +140,25 @@
  	<!-- 댓글 목록 -->
  	<select id="commentListAction" parameterType="int" resultType="com.spring.DCShop.board.dto.CommentDTO">
  		SELECT
-	      c.c_num,
-	      c.b_num,
-	      c.u_member_id,
-	      c.c_content,
-	      c.c_regDate,
-	      c.c_num2,
-	      c.c_deleted,
-	      c.c_writer
-	  FROM comment_tbl c
-	  WHERE c.b_num = #{b_num}
-	  ORDER BY c.c_num asc
+		      c.c_num,
+		      c.b_num,
+		      c.u_member_id,
+		      c.c_content,
+		      c.c_regDate,
+		      c.c_num2,
+		      c.c_deleted,
+		      (SELECT u_nickname 
+		         FROM user_tbl u
+		        WHERE u.u_member_id = c.u_member_id ) AS c_writer
+		  FROM comment_tbl c
+		  WHERE c.b_num = #{b_num}
+		  ORDER BY c.c_num asc
  	</select>
  	
  	<!-- 댓글 등록 -->
  	<insert id="commentInsertAction" parameterType="com.spring.DCShop.board.dto.CommentDTO">
- 		INSERT INTO comment_tbl(c_num, b_num, u_member_id, c_content, c_regDate, c_num2, c_deleted, c_writer)
-		VALUES ((SELECT NVL(MAX(c_num)+1, 1) FROM comment_tbl), #{b_num}, #{u_member_id}, #{c_content}, sysdate, NVL(#{c_num2, jdbcType=INTEGER}, 0), NVL(#{c_deleted, jdbcType=CHAR}, 'N'), (SELECT u_nickname FROM user_tbl WHERE u_member_id = #{u_member_id}))
+ 		INSERT INTO comment_tbl(c_num, b_num, u_member_id, c_content, c_regDate, c_num2, c_deleted)
+		VALUES ((SELECT NVL(MAX(c_num)+1, 1) FROM comment_tbl), #{b_num}, #{u_member_id}, #{c_content}, sysdate, NVL(#{c_num2, jdbcType=INTEGER}, 0), NVL(#{c_deleted, jdbcType=CHAR}, 'N'))
  	</insert>
  	
  	<!-- 댓글 수정 -->
@@ -168,5 +173,43 @@
 		DELETE FROM comment_tbl
 	  	WHERE c_num = #{c_num}
 	</delete>
+	
+	
  
+ 	<!-- 게시글 작성자 아이디 조회 -->
+	<select id="selectBoardAuthorId" parameterType="int" resultType="string">
+		SELECT u.u_id
+		FROM user_tbl u JOIN board_tbl b ON u.u_member_id = b.u_member_id
+		WHERE b.b_num = #{value}
+	</select>
+	
+	<!-- 게시판 수정 정보 -->
+	<select id="boardUpdateDTOAction" parameterType="int" resultMap="boardMap"> 
+		SELECT * FROM board_tbl WHERE b_num = #{b_num} 
+	</select>
+	
+	<!-- 게시판 수정 등록 -->
+	<update id="boardUpdateAction" parameterType="com.spring.DCShop.board.dto.BoardDTO"> 
+		UPDATE board_tbl 
+		SET b_title = #{b_title}, 
+			b_contents = #{b_contents},
+			b_category = #{b_category},
+			b_updateDate = SYSDATE
+		WHERE b_num = #{b_num} 
+	</update>
+	
+	<!-- 게시판 삭제 -->
+	<delete id="boardDeleteAction" parameterType="int"> 
+		DELETE FROM board_tbl WHERE b_num = #{b_num} 
+	</delete>
+
+	<!-- 추천(자식) 선삭제 -->
+	<delete id="deleteRecommendsByBoard" parameterType="int">
+		DELETE FROM recommend_tbl WHERE b_num = #{value}
+	</delete>
+
+	<!-- 댓글(자식) 선삭제 -->
+	<delete id="deleteCommentsByBoard" parameterType="int">
+		DELETE FROM comment_tbl WHERE b_num = #{value}
+	</delete>
   </mapper>

@@ -139,9 +139,11 @@ a, a:hover {
 }
 
 .form-check-input:checked {
-    background-color: black;
-    border-color: black;
+    background-color: #000000 !important;
+    border-color: #000000 !important;
 }
+
+
 
 .form-text {
 	align-self: flex-start;

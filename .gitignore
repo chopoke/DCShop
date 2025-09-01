@@ -1,36 +1,9 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 93f47c71138d52e702947cfa466aae2d62d1d345
-pom.xml
-pom.properties
-=======
-.MF
-
-.properties
-
-
->>>>>>> 28baff37244119859986a89dafcd5bea5c3e5bc6
-=======
-<<<<<<< HEAD
-=======
-=======
->>>>>>> d0a31d40dff59a71f15c549e832381f00ee6486d
->>>>>>> 93f47c71138d52e702947cfa466aae2d62d1d345
 # Maven 설정 파일 무시
 .project
 .classpath
 .springBeans
 .settings/
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 config/
->>>>>>> d0a31d40dff59a71f15c549e832381f00ee6486d
->>>>>>> 93f47c71138d52e702947cfa466aae2d62d1d345
 
 # Build / Packaging
 target/
@@ -38,14 +11,4 @@ build/
 *.class
 *.jar
 *.war
-<<<<<<< HEAD
 *.ear
->>>>>>> f0ce842999b23c7f4bb130891ded042a128b9270
-=======
-<<<<<<< HEAD
-*.ear
->>>>>>> f0ce842999b23c7f4bb130891ded042a128b9270
-=======
-*.ear
->>>>>>> d0a31d40dff59a71f15c549e832381f00ee6486d
->>>>>>> 93f47c71138d52e702947cfa466aae2d62d1d345

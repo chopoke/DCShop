@@ -11,5 +11,5 @@
 
 <!-- JS에서 쓸 전역 변수 -->
 <script>
-  window.CTX = '${fn:escapeXml(path)}';
+  window.CTX = '<c:out value="${pageContext.request.contextPath}"/>';
 </script>

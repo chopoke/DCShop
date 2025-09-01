@@ -8,8 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.ui.Model;
 
-
 public interface MypageService {
+
+	public void getCartList(HttpServletRequest request, HttpServletResponse response, Model model);
 	
 	//관리자페이지-가입자5건조회
 	public void mypageAdminUser(HttpServletRequest request, HttpServletResponse response, Model model)

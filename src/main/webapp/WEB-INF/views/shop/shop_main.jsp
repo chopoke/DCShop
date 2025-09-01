@@ -69,9 +69,9 @@
 							href="#"
 							class="text-gray-700 hover:text-primary transition-colors">Toys</a>
 						<a href="#"
-							class="text-gray-700 hover:text-primary transition-colors">Supplies</a>
+							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/pay.do'">Supplies</a>
 						<a href="#"
-							class="text-gray-700 hover:text-primary transition-colors">Recommendations</a>
+							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/cart.do'">Recommendations</a>
 					</div>
 				</div>
 				<div class="flex items-center space-x-4">

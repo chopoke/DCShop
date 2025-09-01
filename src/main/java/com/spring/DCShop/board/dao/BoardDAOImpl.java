@@ -133,19 +133,36 @@ public class BoardDAOImpl implements BoardDAO{
 	// 게시판 수정 정보
 	@Override
 	public BoardDTO boardUpdateDTOAction(int b_num) {
-		return null;
+		return sqlSession.selectOne("com.spring.DCShop.board.dao.BoardDAO.boardUpdateDTOAction", b_num);
 	}
-
 	// 게시판 수정 등록
 	@Override
 	public int boardUpdateAction(BoardDTO dto) {
-		return 0;
+		return sqlSession.update("com.spring.DCShop.board.dao.BoardDAO.boardUpdateAction", dto);
 	}
 
 	// 게시판 삭제
 	@Override
 	public int boardDeleteAction(int b_num) {
-		return 0;
+		return sqlSession.delete("com.spring.DCShop.board.dao.BoardDAO.boardDeleteAction", b_num);
+	}
+
+	// 게시글의 추천 삭제 (자식 선삭제)
+	@Override
+	public int deleteRecommendsByBoard(int b_num) {
+		return sqlSession.delete("com.spring.DCShop.board.dao.BoardDAO.deleteRecommendsByBoard", b_num);
+	}
+
+	// 게시글의 댓글 삭제 (자식 선삭제)
+	@Override
+	public int deleteCommentsByBoard(int b_num) {
+		return sqlSession.delete("com.spring.DCShop.board.dao.BoardDAO.deleteCommentsByBoard", b_num);
+	}
+
+	// 게시글 작성자 아이디 조회
+	@Override
+	public String selectBoardAuthorId(int b_num) {
+		return sqlSession.selectOne("com.spring.DCShop.board.dao.BoardDAO.selectBoardAuthorId", b_num);
 	}
 
 	// 댓글 목록

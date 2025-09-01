@@ -63,7 +63,6 @@
 	<%-- <a onclick="window.location='${path}/main'"> <img alt="" src="resources/홈으로.png" width="500px"></a> --%>
 	</div>
 	<%-- <button onclick="window.location='${path}/main'">홈</button> --%>
-	</section>
 	<!-- 푸터 시작 -->
 	<%@ include file="../../setting/footer.jsp" %>
 	<!-- 푸터 끝 -->
