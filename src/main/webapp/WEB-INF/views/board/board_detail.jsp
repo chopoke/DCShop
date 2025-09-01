@@ -75,7 +75,7 @@
 	
 	function comment_add(){
 		
-		const content = ($('#c_content').val() || '').trim();
+		const content = ($('#c_content').val() || '').trim(); //trim 문자열 앞뒤의 공백을 잘라내주는 역할
 		if(!content.length){
 			alert('내용을 입력해주세요.');
 			$('#c_content').focus();

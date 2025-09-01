@@ -23,10 +23,10 @@
 					<tr>
 						<td align="left">${dto.c_writer}</td>
 						<td align="right" style="width:120px;" rowspan="3">
-							<c:if test="${sessionScope.session_u_member_id == dto.u_member_id}">
+							<c:if test="${sessionScope.session_u_member_id == dto.u_member_id}"> <!-- 댓글 작성자id와 로그인한 id가 같을때 -->
 							<button type="button" class="inputButton btnCommentEdit" data-cnum="${dto.c_num}" id="btnCommentEdit">수정</button>
 							<br><br>
-							<button type="button" class="inputButton btnCommentDelete" data-cnum="${dto.c_num}" id="btnCommentDelete">삭제</button>
+							<button type="button" class="inputButton btnCommentDelete" data-cnum="${dto.c_num}" id="btnCommentDelete">삭제</button><!-- 지금 클릭한게 몇번째 댓글인지 서버에 알려주기위해 data-cnum을 사용한다. -->
 							</c:if>
 						</td>
 					</tr>

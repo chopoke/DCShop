@@ -269,11 +269,11 @@ public class BoardServiceImpl implements BoardService {
 		System.out.println("BoardServiceImpl - commentInsertAction()");
 		Integer me = (Integer) request.getSession().getAttribute("session_u_member_id");
 		System.out.println("me"+me);
-		if (me == null || me == 0) { response.setStatus(401); return; } // 로그인 필요
+		if (me == null || me == 0) { response.setStatus(401); return; } // 401브라우저 로그인 필요 403로그인은 했지만 권한없음
 
 		String b = request.getParameter("b_num");
 		String content = request.getParameter("c_content");
-		if (b == null || b.isBlank()) { response.sendError(400, "b_num required"); return; }
+		if (b == null || b.isBlank()) { response.sendError(400, "b_num required"); return; } //b_num이 없거나 잘못된경우 400
 		int bnum; try { bnum = Integer.parseInt(b.trim()); } catch (NumberFormatException e) { response.sendError(400, "b_num invalid"); return; }
 		if (content == null || content.trim().isEmpty()) { response.sendError(400, "content required"); return; }
 		CommentDTO dto = new CommentDTO();
