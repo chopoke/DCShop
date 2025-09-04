@@ -6,6 +6,7 @@
 
 
 <script type="text/javascript">
+	
 	function openCheckout(el) {
 		
 		const d = el.dataset;
@@ -21,37 +22,15 @@
 	}
 	
 	function addHidden(form, name, value){
-  	  const i = document.createElement('input');
-  	  i.type = 'hidden';
-  	  i.name = name;
-  	  i.value = value;
-  	  form.appendChild(i);
-  	}
+		  const i = document.createElement('input');
+		  i.type = 'hidden';
+		  i.name = name;
+		  i.value = value;
+		  form.appendChild(i);
+		}
 	
-	
-	  // 상세 이동 (원하면 유지)
-	  function openCheckout(ev, el) {
-	    ev.preventDefault();
-	    ev.stopPropagation();
+	/////////////////////////////////////////////////////////
 
-	    const d = el.dataset;
-	    const f = document.createElement('form');
-	    f.method = 'POST';
-	    f.action = CTX + '/ad_shop_detailAction.pd';
-	    addHidden(f, 'pdId', d.pdId);
-	    document.body.appendChild(f);
-	    f.submit();
-	    return false;
-	  }
-
-	  function addHidden(form, name, value){
-	    const i = document.createElement('input');
-	    i.type = 'hidden';
-	    i.name = name;
-	    i.value = value;
-	    form.appendChild(i);
-	  }
-//////////////////////////////////////////////////////////////
 	  // 장바구니 담기 (이동 없음)
 	  async function addToCart(ev, pdId){
 	    ev.preventDefault();

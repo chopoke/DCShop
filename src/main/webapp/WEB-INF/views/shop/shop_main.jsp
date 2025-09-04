@@ -70,9 +70,9 @@
 							<a href="#" 
 							class="text-gray-700 hover:text-primary no-underline transition-colors ">이벤트</a> 
 						<a href="#"
-							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/pay.do'">Supplies</a>
+							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/pay.do'">결제</a>
 						<a href="#"
-							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/cart.do'">Recommendations</a>
+							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/cartListShow.do'">장바구니</a>
 					</div>
 				</div>
 				<!-- 검색 -->
