@@ -29,7 +29,6 @@
   	}
 	
 	
-	>
 	  // 상세 이동 (원하면 유지)
 	  function openCheckout(ev, el) {
 	    ev.preventDefault();
@@ -52,7 +51,7 @@
 	    i.value = value;
 	    form.appendChild(i);
 	  }
-
+//////////////////////////////////////////////////////////////
 	  // 장바구니 담기 (이동 없음)
 	  async function addToCart(ev, pdId){
 	    ev.preventDefault();

@@ -27,7 +27,10 @@ public class CartServiceImpl implements CartService {
 		System.out.println("CartServiceImpl => addProductList");
 		
 		int uMemberId = (Integer) request.getSession().getAttribute("session_u_member_id");
-		int pdId = Integer.parseInt(request.getParameter("pd_id"));
+		
+		System.out.println(request.getParameter("pdId"));
+		
+		int pdId = Integer.parseInt(request.getParameter("pdId"));
 		int qty = Integer.parseInt(request.getParameter("qty"));
 
 		CartDTO dto = new CartDTO();

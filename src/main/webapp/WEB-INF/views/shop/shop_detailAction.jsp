@@ -177,7 +177,7 @@
 				      <div class="actions actions-main">
 						  <button type="button"
 						          class="btn-primary"
-						          onclick="location.href='${path}/cart.do?pd_id=${dto.pd_id}&qty=3'">장바구니 담기</button>
+						          onclick="location.href='${path}/cart.do?pdId=${dto.pd_id}&qty=3'">장바구니 담기</button>
 						
 						  <button type="button"
 						          class="btn-secondary"

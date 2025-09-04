@@ -39,7 +39,7 @@ public class CartController {
 	
 	/**
 	 * 
-	 * @purpose
+	 * @purpose 장바구니에 추가하기
 	 * 
 	*/
 	@RequestMapping("/cart.do")
@@ -49,12 +49,20 @@ public class CartController {
 		String sessionid = (String)request.getSession().getAttribute("sessionid");
 		
 		if(sessionid == null) {
-			
 			return "user/login/login_main";
-			
 		}
-		
 		cartservice.addProductList(request, response, model);
+		return "redirect:/cartListShow.do";
+	}
+	
+	/**
+	 * 
+	 * @purpose 장바구니 리스트로 가기
+	 * 
+	*/
+	@RequestMapping("/cartListShow.do")
+	public String cartListShow(HttpServletRequest request, HttpServletResponse response, Model model) {
+		logger.info("=== url -> cartListShow ===");
 		
 		
 		
@@ -149,5 +157,4 @@ public class CartController {
 		
 		return null;
 	}
-	
 }

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/setting/setting.jsp"%>
+<%@ include file="/WEB-INF/views/setting/setting.jsp" %>
 <fmt:setLocale value="ko_KR" />
-
+<!-- 설정 값 넣기 시작 -->
 <%-- 
   기대하는 모델:
   - cart : List<CartDTO> (각 DTO에 productDto: List<ProductDTO> 존재, 보통 1개)
@@ -50,7 +50,7 @@
 <c:set var="memberEmail"
 	value="${not empty member.email ? member.email : (not empty user.uEmail ? user.uEmail : 'john.smith@example.com')}" />
 
-
+<!-- 설정 값 넣기 끝 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -71,8 +71,13 @@
 	rel="stylesheet">
 <link rel="stylesheet" href="${path}/resources/css/cart.css">
 
-</head>
-<link rel="stylesheet" href="${path}/resources/css/footer.css">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+	rel="stylesheet">
+<link rel="stylesheet" href="${path}/resources/css/cart.css">
 <link rel="stylesheet" href="${path}/resources/css/main.css">
 <link rel="stylesheet" href="${path}/resources/css/shop/cart.css">
 <body
@@ -102,7 +107,7 @@
 	    		if (res.result === 'ok') {
 	    	        // 해당 카드의 수량 텍스트 교체
 	    			//document.getElementById(qtyId).textContent = res.qty;
-	    			window.location.href = CTX + '/cartgo.do';
+	    			window.location.href = CTX + '/cartListShow.do';
 	    		}
 	    	},
 	    	error : function(request, status, error) {
@@ -127,7 +132,7 @@
 	    		if (res.result === 'ok') {
 	    	        // 해당 카드의 수량 텍스트 교체
 	    			//document.getElementById(qtyId).textContent = res.qty;
-	    			window.location.href = CTX + '/cartgo.do';
+	    			window.location.href = CTX + '/cartListShow.do';
 	    		}
 	    	},
 	    	error : function(request, status, error) {
@@ -151,7 +156,7 @@
 	    	contentType: 'application/json;charset=UTF-8',
 	    	success : function(res) {
 	    		if (res.result === 'ok') {
-	    			window.location.href = CTX + '/cartgo.do';
+	    			window.location.href = CTX + '/cartListShow.do';
 	    		}
 	    	},
 	    	error : function(request, status, error) {
@@ -177,7 +182,7 @@
 	    	contentType: 'application/json;charset=UTF-8',
 	    	success : function(res) {
 	    		if (res.result === 'ok') {
-	    			window.location.href = CTX + '/cartgo.do';
+	    			window.location.href = CTX + '/cartListShow.do';
 	    		}
 	    	},
 	    	error : function(request, status, error) {
@@ -333,9 +338,7 @@
 								id="summaryShipping" class="fw-medium"> <c:choose>
 									<c:when test="${shippingFee == 0}">무료</c:when>
 									<c:otherwise>
-										<fmt:formatNumber value="${shippingFee}" type="currency"
-											currencySymbol="₩" minFractionDigits="0"
-											maxFractionDigits="0" />
+										<fmt:formatNumber value="${shippingFee}" type="currency" currencySymbol="₩" minFractionDigits="0" maxFractionDigits="0" />
 									</c:otherwise>
 								</c:choose>
 							</span>
@@ -343,24 +346,18 @@
 
 						<div class="d-flex justify-content-between small mb-3">
 							<span class="text-body-secondary">세금</span> <span id="summaryTax"
-								class="fw-medium"> <fmt:formatNumber value="${tax}"
-									type="currency" currencySymbol="₩" minFractionDigits="0"
-									maxFractionDigits="0" />
+								class="fw-medium"> 
+								<fmt:formatNumber value="${tax}" type="currency" currencySymbol="₩" minFractionDigits="0" maxFractionDigits="0" />
 							</span>
 						</div>
 
 						<div
 							class="d-flex justify-content-between align-items-center mb-3">
 							<span class="fw-semibold">총 결제금액</span> <span id="summaryTotal"
-								class="fs-5 fw-bold text-primary"> <fmt:formatNumber
-									value="${total}" type="currency" currencySymbol="₩"
-									minFractionDigits="0" maxFractionDigits="0" />
+								class="fs-5 fw-bold text-primary"> <fmt:formatNumber value="${total}" type="currency" currencySymbol="₩" minFractionDigits="0" maxFractionDigits="0" />
 							</span>
-						</div>
-
-						<form action="${path}/pay.do" method="post">
-							<button type="submit" class="btn btn-primary w-100">결제하기</button>
-						</form>
+						</div>					
+						<input type="button" onclick="window.location='${path}/pay.do'" class="btn btn-dark w-100" value="결제하기"/>
 					</div>
 				</div>
 			</aside>
