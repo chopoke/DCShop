@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+ <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/setting/setting.jsp" %>
 <!DOCTYPE html>
@@ -47,7 +47,7 @@
 			<div class="w-100 button-group">
 				<div class="flex" style="gap: 16px;">
 					<a class="paybtn w-100" href="#">주문내역</a> 
-					<a class="paybtn w-100" href="${path}/main.do" rel="noreferrer noopener">홈화면</a>
+					<a class="paybtn w-100" href="${path}/shop_main.do" rel="noreferrer noopener">상품목록</a>
 				</div>
 			</div>
 		</div>

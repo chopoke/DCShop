@@ -203,9 +203,9 @@ public class BoardServiceImpl implements BoardService {
 					fos.write(data);
 				}
 				
-				String b_image1 = "/DCShop_team/resources/board_upload/" + file.getOriginalFilename();
-				System.out.println("p_img1 : " + b_image1);
-				dto.setB_image(b_image1);
+				String b_image = "/resources/board_upload/" + file.getOriginalFilename();
+				System.out.println("b_image : " + b_image);
+				dto.setB_image(b_image);
 			} else {
 				dto.setB_image(null);
 			}
@@ -252,6 +252,7 @@ public class BoardServiceImpl implements BoardService {
 	    String b_title = request.getParameter("b_title");
 	    String b_contents = request.getParameter("b_contents");
 	    String b_category = request.getParameter("b_category");
+	    String b_image = request.getParameter("b_image");
 
 	    if (b_title == null || b_title.trim().isEmpty() ||
 	        b_contents == null || b_contents.trim().isEmpty() ||

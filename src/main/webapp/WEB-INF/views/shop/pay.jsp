@@ -191,11 +191,17 @@ input[type="checkbox"]:checked::after {
 			</c:forEach>
 			<div class="border-t pt-4">
 				<div class="flex justify-between text-sm mb-2">
-					<span>총 상품금액</span> <span> ${totalPrice}원 </span>
+					<span>총 상품금액</span> 
+					<span> 
+						<fmt:formatNumber value="${totalPrice}" type="number" maxFractionDigits="0"/>원
+					</span>
 				</div>
 			    <c:if test="${sessionScope.goPay.totalDiscount != 0}">
 					<div class="flex justify-between text-sm mb-2" id="discount">
-				        <span>총 할인금액</span> <span id="totalDiscount"> ${sessionScope.goPay.totalDiscount}원 </span>
+				        <span>총 할인금액</span> 
+				        <span id="totalDiscount"> 
+				        	<fmt:formatNumber value="${sessionScope.goPay.totalDiscount}" type="number" maxFractionDigits="0"/>원 
+				        </span>
 					</div>
 			    </c:if>
 			    <div class="flex justify-between text-sm mb-2">
@@ -205,12 +211,17 @@ input[type="checkbox"]:checked::after {
 					        <span>무료</span>
 					    </c:when>
 					    <c:otherwise>
-					        <span>${sessionScope.goPay.pdShippingFee}원</span>
+					        <span>
+					        	<fmt:formatNumber value="${sessionScope.goPay.pdShippingFee}" type="number" maxFractionDigits="0"/>원
+					        </span>
 					    </c:otherwise>
 					</c:choose>
 				</div>
 				<div class="flex justify-between font-medium">
-					<span>총 결제금액</span> <span class="text-primary"> ${sessionScope.goPay.totalClient}원 </span>
+					<span>총 결제금액</span> 
+					<span class="text-primary"> 
+						<fmt:formatNumber value="${sessionScope.goPay.totalClient}" type="number" maxFractionDigits="0"/>원 
+					</span>
 				</div>
 			</div>
 	       <%-- <c:out value="${sessionScope.goPay}">결과</c:out> --%>
