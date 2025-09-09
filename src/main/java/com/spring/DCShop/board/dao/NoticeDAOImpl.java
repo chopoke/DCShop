@@ -133,17 +133,20 @@ public class NoticeDAOImpl implements NoticeDAO {
 		return sqlSession.selectOne("com.spring.DCShop.board.dao.NoticeDAO.noticeSelectBoardAuthorId", b_num);
 	}
 	
-	
+
 	// 공지/이벤트 추천 삭제 (자식 선삭제)
+	
 	@Override
 	public void deleteRecommendsByNotice(int b_num) {
-		  sqlSession.delete("com.spring.DCShop.board.dao.NoticeDAO.deleteRecommendByBoard", b_num);
+		System.out.println("NoticeDAOImpl - deleteRecommendsByNotice()");
+	    sqlSession.delete("com.spring.DCShop.board.dao.NoticeDAO.deleteRecommendByBoard", b_num);
 	}
-
+	
 	public void deleteNotice(int b_num) {
-	    // 순서 중요: 추천 삭제 후 게시글 삭제
-	    deleteRecommendsByNotice(b_num);
-	    sqlSession.delete("com.spring.DCShop.board.dao.NoticeDAO.noticeDeleteAction", b_num);
+    // 순서 중요: 추천 삭제 후 게시글 삭제
+		deleteRecommendsByNotice(b_num);
+    	sqlSession.delete("com.spring.DCShop.board.dao.NoticeDAO.noticeDeleteAction", b_num);
+
 	}
 
 	

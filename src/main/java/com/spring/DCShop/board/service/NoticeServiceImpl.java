@@ -242,16 +242,15 @@ public class NoticeServiceImpl implements NoticeService {
 		if (loginId == null || authorId == null || !loginId.equals(authorId)) {
 			throw new ServletException("권한이 없습니다.");
 		}
-		
-//		int deleteCnt = noticeDAO.noticeDeleteAction(b_num);
-//		model.addAttribute("deleteCnt", deleteCnt);
-		
+
 		 // 추천(자식) 데이터 선삭제
 	    noticeDAO.deleteRecommendsByNotice(b_num);
 
 	    // 공지/이벤트 삭제
-	    int deleteCnt1 = noticeDAO.noticeDeleteAction(b_num);
-	    model.addAttribute("deleteCnt", deleteCnt1);
+
+		int deleteCnt = noticeDAO.noticeDeleteAction(b_num);
+		model.addAttribute("deleteCnt", deleteCnt);
+
 	}
 		
 	
