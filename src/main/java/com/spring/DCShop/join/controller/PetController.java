@@ -14,9 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.spring.DCShop.join.service.CustomerService;
-import com.spring.DCShop.join.service.CustomerServiceImpl;
 import com.spring.DCShop.join.service.PetService;
-import com.spring.DCShop.join.service.PetServiceImpl;
 
 @Controller
 public class PetController {

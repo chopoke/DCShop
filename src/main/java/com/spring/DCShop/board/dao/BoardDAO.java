@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.spring.DCShop.board.dto.BoardDTO;
 import com.spring.DCShop.board.dto.CommentDTO;
-import com.spring.DCShop.user.dto.UserDTO;
 
 public interface BoardDAO {
 

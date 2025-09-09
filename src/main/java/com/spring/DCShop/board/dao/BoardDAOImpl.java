@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.DCShop.board.dto.BoardDTO;
 import com.spring.DCShop.board.dto.CommentDTO;
-import com.spring.DCShop.user.dto.UserDTO;
 
 @Repository
 public class BoardDAOImpl implements BoardDAO{

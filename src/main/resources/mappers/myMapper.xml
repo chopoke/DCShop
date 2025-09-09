@@ -6,8 +6,8 @@
   
  <mapper namespace="com.spring.DCShop.mypage.dao.MypageDAO">
  	
-	<!-- OrderList 가져오기 -->
-	<select id="getOrderList" resultMap="cartMap">
+	<!-- OrderList 가져오기 : 주문 리스트 -->
+	<select id="getOrderList" resultMap="orderMap">
 	    <![CDATA[
 			SELECT *
 			FROM (
@@ -20,10 +20,14 @@
 		]]>
 	</select>
 	
-	<resultMap id="cartMap" type="com.spring.DCShop.mypage.dto.OrderDTO">
+	<resultMap id="orderMap" type="com.spring.DCShop.mypage.dto.OrderDTO">
 	  <id     property="o_Num"     	        column="o_num"/>
 	  <result property="pd_Id"      	    column="pd_id"/>
 	  <result property="u_Member_Id"	    column="u_member_id"/>
+	  <result property="o_name"	    		column="o_name"/>
+	  <result property="o_phone"	    	column="o_phone"/>
+	  <result property="o_date"	    		column="o_date"/>
+	  <result property="o_price"	    	column="o_price"/>
 	  <result property="o_Delivery_State"   column="o_delivery_state"/>
 	  <result property="o_Delivery_Date" 	column="o_delivery_date"/>
 	  <result property="o_Count" 	        column="o_count"/>
@@ -32,10 +36,47 @@
 	  <result property="o_Zip_Code" 	    column="o_zip_code"/>
 	  <result property="o_Request" 	        column="o_request"/>
 	  <result property="o_Status" 	        column="o_status"/>
-	  <collection property="productDto"     column="pd_id"     select="getProduct"/>
+	  <result property="o_payment_key" 	    column="o_payment_key"/>
+	  <collection property="productDto"     column="pd_id"     select="getProductList"/>
 	</resultMap>
 	
-	<select id="getProduct" resultType="com.spring.DCShop.mypage.dto.ProductDTO">
+	 <select id="getProductList" resultType="com.spring.DCShop.mypage.dto.ProductDTO">
+		SELECT pd_id pdId
+		     , pd_name pdName
+		     , pd_price pdPrice
+		     , pd_brand pdBrand
+		     , pd_image_url pdImageUrl
+		     , pd_shipping_fee pdShippingFee
+		     , pd_status pdStatus
+		  FROM product_tbl
+		 WHERE pd_id = #{pd_id}
+	</select>
+	
+	
+	<!-- CartList 가져오기 : 주문 리스트 -->
+ 	<select id="getCartList" resultMap="cartMap">
+	    <![CDATA[
+			SELECT *
+			FROM (
+			  SELECT t.*,
+			         ROW_NUMBER() OVER (ORDER BY ct_add_date DESC, ct_num DESC) AS rn
+			  FROM   cart_tbl t
+			  WHERE  u_member_id = #{u_member_id}
+			)
+			WHERE rn <= 5
+		]]>
+	</select>
+	
+	<resultMap id="cartMap" type="com.spring.DCShop.mypage.dto.CartDTO">
+	  <id     property="ctNum"     	        column="ct_num"/>
+	  <result property="pdId"      	    	column="pd_id"/>
+	  <result property="uMemberId"	    	column="u_member_id"/>
+	  <result property="ctQuantity"   		column="ct_quantity"/>
+	  <result property="ctAddDate" 			column="ct_add_date"/>
+	  <collection property="productDto"     column="pd_id"     select="getProduct"/>
+	</resultMap>
+ 
+ 	<select id="getProduct" resultType="com.spring.DCShop.mypage.dto.ProductDTO">
 		SELECT pd_id pdId
 		     , pd_name pdName
 		     , pd_price pdPrice

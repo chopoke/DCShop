@@ -1,4 +1,50 @@
 @charset "UTF-8";
+/* body{
+	min-height: 100vh; 
+	display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem 0;       위아래 2rem 여백
+  box-sizing: border-box; 
+} */
+
+/* .container {
+  min-height: 600px; 최소 높이
+  padding: 2rem;
+  background: #fff; 보기 쉽게 배경색
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+} */
+
+html, body {
+  height: 100%;            /* 전체 높이를 100%로 */
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;  /* 세로 배치 */
+  min-height: 100vh;       /* 화면 전체 높이 이상 확보 */
+}
+
+main {
+  flex: 1;                 /* 남는 공간 차지 */
+  padding: 2rem 0;         /* 위아래 여백 */
+  min-height: 600px;       /* 기본 최소 높이 (10줄 정도) */
+}
+
+footer {
+  background: #f2f2f2;
+  padding: 1rem;
+  text-align: left;
+}
+
+.hero-section1 {
+	width: 100%;
+	background: white;
+	/* padding: .5rem 0; */
+	margin-top: 6rem; 
+}
 
 .avatar {
 	width: 40px;

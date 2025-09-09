@@ -47,9 +47,7 @@
 		
 		<div class="container">
 			<div id="contents">
-				<div class="titleArea">
-					<h1 align="center"> 게시글 수정</h1>
-				</div>
+				<center><img alt="" src="resources/img_main/수정중.png" height="100px"></center>
 				<div>
 					<div class="table_div">
 						<form action="${path}/notice_updateAction" method="post"

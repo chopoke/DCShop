@@ -37,7 +37,8 @@ public class ProductServiceImpl implements ProductService{
 		// pd_id 안전 파싱
 	    int pdId;
 	    try {
-	        String s = request.getParameter("pd_id");
+	        String s = request.getParameter("pdId");
+	        System.out.println("ss" + s);
 	        pdId = (s == null || s.isEmpty()) ? 1 : Integer.parseInt(s);
 	    } catch (NumberFormatException e) {
 	        pdId = 1;
@@ -77,5 +78,6 @@ public class ProductServiceImpl implements ProductService{
 	    model.addAttribute("halfStar", half);
 	    model.addAttribute("emptyStars", empty);
 	    model.addAttribute("fillPct", fillPct);
+	    
 	}
 }

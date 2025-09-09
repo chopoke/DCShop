@@ -1,5 +1,6 @@
 package com.spring.DCShop.shop.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import com.spring.DCShop.shop.dto.ProductDTO;
 import com.spring.DCShop.shop.dao.CartDAO;
+import com.spring.DCShop.shop.dao.ProductDAO;
 import com.spring.DCShop.shop.dto.CartDTO;
+import com.spring.DCShop.shop.dto.CartItemRequest;
+import com.spring.DCShop.shop.dto.CheckoutRequest;
 import com.spring.DCShop.shop.dto.UserDTO;
 
 
@@ -21,14 +26,15 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	private CartDAO cartdao;
+	
+	@Autowired
+	private ProductDAO pDao;
 
 	@Override
 	public void addProductList(HttpServletRequest request, HttpServletResponse response, Model model) {
 		System.out.println("CartServiceImpl => addProductList");
 		
 		int uMemberId = (Integer) request.getSession().getAttribute("session_u_member_id");
-		
-		System.out.println(request.getParameter("pdId"));
 		
 		int pdId = Integer.parseInt(request.getParameter("pdId"));
 		int qty = Integer.parseInt(request.getParameter("qty"));
@@ -39,6 +45,70 @@ public class CartServiceImpl implements CartService {
 		dto.setCtQuantity(qty);
 		
 		cartdao.upsertCart(dto);
+		
+	}
+	
+	@Override
+	public void addProductListForGoPay(HttpServletRequest request, HttpServletResponse response, Model model) {
+		System.out.println("CartServiceImpl => addProductListForGoPay");
+		
+		int uMemberId = (Integer) request.getSession().getAttribute("session_u_member_id");
+		
+		int pdId = Integer.parseInt(request.getParameter("pdId"));
+		int qty = Integer.parseInt(request.getParameter("qty"));
+
+		CartDTO dto = new CartDTO();
+		dto.setuMemberId(uMemberId);
+		dto.setPdId(pdId);
+		dto.setCtQuantity(qty);
+		
+		// cartdao.upsertCart(dto);
+		
+		// 바로 결제로 넘길 상품 가져오기
+		ProductDTO pDto = pDao.productDetail(pdId);
+		
+		// 결제창으로 넘겨줄 값을 담을 List
+		List<CartItemRequest> list = new ArrayList<CartItemRequest>();
+		
+		CartItemRequest caritem = new CartItemRequest();
+		caritem.setPdId((long) pdId);
+		caritem.setPdName(pDto.getPd_name());
+		caritem.setPdPrice(pDto.getPd_price()*qty);
+		caritem.setQty(qty);
+		caritem.setPdImg(pDto.getPd_image_url());
+		caritem.setPdDiscountRate(pDto.getPd_discount_rate());
+		
+		Long totalClient;
+		int discountPrice;
+		int pdShippingFee;
+		int totalDiscount;
+		// 주문 금액이 10만원 이상이면 무료배송
+		// 총 금액 계산
+		if(caritem.getPdDiscountRate() > 0) {
+			discountPrice = (caritem.getPdPrice() * (100 - caritem.getPdDiscountRate())) / 100;
+			if(discountPrice >= 100000) {
+				pdShippingFee = 0;
+			} else {
+				pdShippingFee = pDto.getPd_shipping_fee();
+			}
+			totalClient = (long) (discountPrice + pdShippingFee);
+			totalDiscount = caritem.getPdPrice() - discountPrice;
+		} else {
+			if(caritem.getPdPrice() > 100000) {
+				pdShippingFee = 0;
+			} else {
+				pdShippingFee = pDto.getPd_shipping_fee();
+			}
+			totalClient = (long) (caritem.getPdPrice() + pdShippingFee);
+			totalDiscount = 0;
+		}
+		
+		list.add(caritem);
+		
+		CheckoutRequest cr = new CheckoutRequest(list, pdShippingFee, (long) totalClient, null, totalDiscount);
+		
+		request.getSession().setAttribute("goPay", cr);
+		
 	}
 	
 	@Override

@@ -37,7 +37,7 @@
 	});
 </script>
 </head>
-<body>
+<body class="page-comm">
 
 	<div class="wrap">
 		<!-- 헤더 부분 -->

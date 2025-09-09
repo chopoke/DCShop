@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	  
+<mapper namespace="com.spring.DCShop.shop.dao.QuestDAO">  <!-- namespace="패키지명.인터페이스" -->
+
+	<!-- 문의 조회 -->
+	<select id="questList" parameterType="int" resultType="com.spring.DCShop.shop.dto.QuestDTO">
+		SELECT *
+		  FROM
+			(SELECT A.*, rownum AS rn
+			   FROM (SELECT q.*
+			   		   FROM product_tbl p
+			   		      , qna_tbl q
+					  WHERE p.pd_id = q.pd_id 
+						AND p.pd_id = #{pd_id}
+				   ORDER BY q.q_regdate DESC) A 
+				)
+			ORDER BY rn DESC
+	</select>
+	
+	<!-- 문의 작성 처리 -->
+	<insert id="insertQuest" parameterType="com.spring.DCShop.shop.dto.QuestDTO">
+		INSERT INTO qna_tbl(
+				    q_num
+				  , pd_id
+				  , u_member_id
+				  , q_title
+				  , q_content
+				  , q_category
+				  , q_secret
+				  , q_answer
+				  , q_regDate)
+			 VALUES (
+			 		SEQ_QNA_TBL.NEXTVAL
+				  , #{pd_id}
+				  , #{u_member_id}
+				  , #{q_title}
+				  , #{q_content}
+				  , #{q_category}
+				  , #{q_secret}
+				  , 'N'
+				  , SYSDATE)
+	</insert>
+	
+	<select id="qusetDetail" parameterType="int" resultType="com.spring.DCShop.shop.dto.QuestDTO">
+		SELECT * FROM qna_tbl 
+		WHERE q_num = #{q_num}
+	</select>
+</mapper> 

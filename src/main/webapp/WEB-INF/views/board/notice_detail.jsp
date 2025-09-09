@@ -46,8 +46,9 @@
         <!-- 컨텐츠 부분 -->
         <div id="container">
             <div id="contents">
-                <div class="titleArea">
-                    <h1 align="center"> 상세페이지 </h1>
+                <center><img alt="" src="resources/img_main/카테.png" height="100px"></center>
+				<div class="text-overlay1">
+                    <h4><b>${board.b_category}</b></h4>
                 </div>
                 <c:set var="user" value="${board.userDTO[0]}"/>
                 <div>

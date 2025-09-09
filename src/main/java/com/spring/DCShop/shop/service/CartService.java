@@ -10,6 +10,8 @@ public interface CartService {
 
 	public void addProductList(HttpServletRequest request, HttpServletResponse response, Model model);
 	
+	public void addProductListForGoPay(HttpServletRequest request, HttpServletResponse response, Model model);
+	
 	public void getProductList(HttpServletRequest request, HttpServletResponse response, Model model);
 	
 	public int increaseProductCount(HttpServletRequest request, Map<String, Object> map);

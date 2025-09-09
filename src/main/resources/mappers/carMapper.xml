@@ -72,6 +72,7 @@
 		     , ct_add_date
 		  FROM cart_tbl
 		 WHERE u_member_id = #{uMemberId}
+	  ORDER BY ct_num DESC
 	</select>
 	
 	<resultMap id="cartMap" type="com.spring.DCShop.shop.dto.CartDTO">
@@ -90,6 +91,7 @@
 		     , pd_image_url pd_image_url
 		     , pd_shipping_fee pd_shipping_fee
 		     , pd_status pd_status
+		     , pd_discount_rate
 		  FROM product_tbl
 		 WHERE pd_id = #{pd_id}
 	</select>

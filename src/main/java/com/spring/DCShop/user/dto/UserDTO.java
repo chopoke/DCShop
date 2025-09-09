@@ -1,9 +1,7 @@
 package com.spring.DCShop.user.dto;
 	
 import java.sql.Date;
-import java.util.List;
 
-import com.spring.DCShop.board.dto.BoardDTO;
 
 public class UserDTO {
 

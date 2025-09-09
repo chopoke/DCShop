@@ -171,4 +171,46 @@
 		  WHERE pd_category = #{_parameter}
 	</select>
 	
+	<select id="productListAction1" resultType="com.spring.DCShop.shop.dto.ShopDTO">
+		 SELECT 
+                pd.pd_id,
+                pd.pd_name,
+                pd.pd_description,
+                pd.pd_price,
+                pd.pd_stock,
+                pd.pd_pet_category,
+                pd.pd_category,
+                pd.pd_subcategory,
+                pd.pd_created,
+                pd.pd_updated,
+                pd.pd_brand,
+                pd.pd_image_url,
+                pd.pd_shipping_fee,
+                pd.pd_discount_rate,
+                pd.pd_status,
+                pd.pd_option
+            FROM product_tbl pd
+            WHERE pd.pd_pet_category = 1
+	</select>
+	<select id="productListAction2" resultType="com.spring.DCShop.shop.dto.ShopDTO">
+		 SELECT 
+                pd.pd_id,
+                pd.pd_name,
+                pd.pd_description,
+                pd.pd_price,
+                pd.pd_stock,
+                pd.pd_pet_category,
+                pd.pd_category,
+                pd.pd_subcategory,
+                pd.pd_created,
+                pd.pd_updated,
+                pd.pd_brand,
+                pd.pd_image_url,
+                pd.pd_shipping_fee,
+                pd.pd_discount_rate,
+                pd.pd_status,
+                pd.pd_option
+            FROM product_tbl pd
+            WHERE pd.pd_pet_category = 2
+	</select>
 </mapper>

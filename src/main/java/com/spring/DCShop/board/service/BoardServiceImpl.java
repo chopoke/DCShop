@@ -24,7 +24,6 @@ import com.spring.DCShop.board.dao.BoardDAO;
 import com.spring.DCShop.board.dto.BoardDTO;
 import com.spring.DCShop.board.dto.CommentDTO;
 import com.spring.DCShop.board.page.Paging;
-import com.spring.DCShop.user.dto.UserDTO;
 
 
 @Service

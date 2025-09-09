@@ -8,6 +8,10 @@ public class OrderDTO {
 	private int o_Num;
 	private int pd_Id;
 	private int u_Member_Id;
+	private String o_name;
+	private String o_phone;
+	private Date o_date;
+	private int o_price;
 	private String o_Delivery_State;
 	private Date o_Delivery_Date;
 	private int o_Count;
@@ -16,17 +20,25 @@ public class OrderDTO {
 	private int o_Zip_Code;
 	private String o_Request;
 	private String o_Status;
+	private String o_payment_key;
 	private List<ProductDTO> productDto;
 	
-	public OrderDTO() {}
+	public OrderDTO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-	public OrderDTO(int o_Num, int pd_Id, int u_Member_Id, String o_Delivery_State, Date o_Delivery_Date, int o_Count,
-			String o_Payment, String o_Address, int o_Zip_Code, String o_Request, String o_Status,
-			List<ProductDTO> productDto) {
+	public OrderDTO(int o_Num, int pd_Id, int u_Member_Id, String o_name, String o_phone, Date o_date, int o_price,
+			String o_Delivery_State, Date o_Delivery_Date, int o_Count, String o_Payment, String o_Address,
+			int o_Zip_Code, String o_Request, String o_Status, String o_payment_key, List<ProductDTO> productDto) {
 		super();
 		this.o_Num = o_Num;
 		this.pd_Id = pd_Id;
 		this.u_Member_Id = u_Member_Id;
+		this.o_name = o_name;
+		this.o_phone = o_phone;
+		this.o_date = o_date;
+		this.o_price = o_price;
 		this.o_Delivery_State = o_Delivery_State;
 		this.o_Delivery_Date = o_Delivery_Date;
 		this.o_Count = o_Count;
@@ -35,6 +47,7 @@ public class OrderDTO {
 		this.o_Zip_Code = o_Zip_Code;
 		this.o_Request = o_Request;
 		this.o_Status = o_Status;
+		this.o_payment_key = o_payment_key;
 		this.productDto = productDto;
 	}
 
@@ -60,6 +73,38 @@ public class OrderDTO {
 
 	public void setU_Member_Id(int u_Member_Id) {
 		this.u_Member_Id = u_Member_Id;
+	}
+
+	public String getO_name() {
+		return o_name;
+	}
+
+	public void setO_name(String o_name) {
+		this.o_name = o_name;
+	}
+
+	public String getO_phone() {
+		return o_phone;
+	}
+
+	public void setO_phone(String o_phone) {
+		this.o_phone = o_phone;
+	}
+
+	public Date getO_date() {
+		return o_date;
+	}
+
+	public void setO_date(Date o_date) {
+		this.o_date = o_date;
+	}
+
+	public int getO_price() {
+		return o_price;
+	}
+
+	public void setO_price(int o_price) {
+		this.o_price = o_price;
 	}
 
 	public String getO_Delivery_State() {
@@ -126,6 +171,14 @@ public class OrderDTO {
 		this.o_Status = o_Status;
 	}
 
+	public String getO_payment_key() {
+		return o_payment_key;
+	}
+
+	public void setO_payment_key(String o_payment_key) {
+		this.o_payment_key = o_payment_key;
+	}
+
 	public List<ProductDTO> getProductDto() {
 		return productDto;
 	}
@@ -136,10 +189,11 @@ public class OrderDTO {
 
 	@Override
 	public String toString() {
-		return "OrderDTO [o_Num=" + o_Num + ", pd_Id=" + pd_Id + ", u_Member_Id=" + u_Member_Id + ", o_Delivery_State="
+		return "OrderDTO [o_Num=" + o_Num + ", pd_Id=" + pd_Id + ", u_Member_Id=" + u_Member_Id + ", o_name=" + o_name
+				+ ", o_phone=" + o_phone + ", o_date=" + o_date + ", o_price=" + o_price + ", o_Delivery_State="
 				+ o_Delivery_State + ", o_Delivery_Date=" + o_Delivery_Date + ", o_Count=" + o_Count + ", o_Payment="
 				+ o_Payment + ", o_Address=" + o_Address + ", o_Zip_Code=" + o_Zip_Code + ", o_Request=" + o_Request
-				+ ", o_Status=" + o_Status + ", productDto=" + productDto + "]";
+				+ ", o_Status=" + o_Status + ", o_payment_key=" + o_payment_key + ", productDto=" + productDto + "]";
 	}
 	
 }

@@ -7,6 +7,6 @@ import org.springframework.ui.Model;
 
 public interface MypageService {
 
-	public void getCartList(HttpServletRequest request, HttpServletResponse response, Model model);
+	public void getCartAndOrderList(HttpServletRequest request, HttpServletResponse response, Model model);
 	
 }

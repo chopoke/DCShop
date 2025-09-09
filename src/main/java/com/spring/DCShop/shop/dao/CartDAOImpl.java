@@ -20,7 +20,7 @@ public class CartDAOImpl implements CartDAO {
 	
 	@Override
 	public int upsertCart(CartDTO dto) {
-		System.out.println("CartDAOImpl => addProductList");
+		System.out.println("CartDAOImpl => upsertCart");
 		
 		int insertResult = sqlSession.update("com.spring.DCShop.shop.dao.CartDAO.upsertCart", dto);
 		

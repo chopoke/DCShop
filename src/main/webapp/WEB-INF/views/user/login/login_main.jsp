@@ -71,7 +71,8 @@
 			<div id="contents">
 				<!-- 상단 중앙1 시작 -->
 				<div id="section1">
-					<h1 align="center">로그인</h1>
+					<!-- <h1 align="center">로그인</h1> -->
+					<center><div id="login-image"></div></center>
 				</div>
 				<!-- 상단 중앙2 시작 -->
 				<div id="section2" align="center">
@@ -109,15 +110,31 @@
 					</div>
 				</div>
 				<!-- 상단 중앙2 끝 -->
-				
+				<c:if test="${param.error == '1'}">
+				    <script>
+				        alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+				    </script>
+				</c:if>
 			</div>
 		<br><br><br><br>
 		<br><br><br><br>
-		<br><br><br>   
+		   
 		</div>
 		</section>
 		<!-- 컨텐츠 끝 -->
-	
+	<script>
+	  window.onload = function() {
+	    const path = "${path}"; // JSP에서 EL로 contextPath 전달
+	    const images = [
+	      path + "/resources/img_main/로그인2.png",
+	      path + "/resources/img_main/로그인1.png"
+	    ];
+	    
+	    const randomImage = images[Math.floor(Math.random() * images.length)];
+	    document.getElementById("login-image").innerHTML =
+	      '<img src="' + randomImage + '" alt="로그인 이미지" style="width:300px;">';
+	  }
+	</script>
 	<!-- 푸터 시작 -->
 	<%@ include file="../../setting/footer.jsp" %>
 	<!-- 푸터 끝 -->

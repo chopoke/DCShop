@@ -8,8 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>공지/이벤트</title>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/board.css">
+<link rel="stylesheet" href="${path}/resources/css/board.css">
 <script type="text/javascript">
 	$(function() {
 		var isLoggedIn = '${not empty sessionScope.sessionid}' === 'true';
@@ -37,7 +36,7 @@
 	</script>
 </c:if>
 </head>
-<body>
+<body class="page-comm">
 	<div class="wrap">
 		<!-- 헤더부분 -->
 		<%@ include file="/WEB-INF/views/setting/header.jsp"%>
@@ -50,22 +49,15 @@
 				<div class="titleArea mx-auto w-[400px]">
 					<div class="image-container">
 						<input type="text" placeholder="Search" class="board_search" /> <a
-							href="#"><img alt="" src="resources/img_main/icon/돋보기.png"></a>
-						<img alt="" src="resources/img_main/고개틀2.png">
+							href="#"><a class="a_icon1" href="#"><img alt="" src="resources/img_main/icon/돋보기.png"></a>
+						<img class="p_img1" alt="" src="resources/img_main/고개틀2.png">
 						<div class="text-overlay">
-							<h4>
-								<b>공지이벤트</b>
-							</h4>
+								<b>공지/이벤트</b>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-
-
-
-
-
 
 
 		<!-- 게시글 목록 -->
@@ -96,7 +88,7 @@
 								<td>${board.b_category}</td>
 								<td class="title"><a
 									href="${path}/notice_detail?b_num=${board.b_num}&listClick=1">
-										${board.b_title} <c:if test="${board.b_comments != 0}">[${board.b_comments}]</c:if>
+										${board.b_title} <c:if test="${board.b_comments != 0}"><span class="comment-count">${board.b_comments}</span></c:if>
 								</a></td>
 								<td>${user.u_nickname}</td>
 								<td>${board.b_recommend}</td>

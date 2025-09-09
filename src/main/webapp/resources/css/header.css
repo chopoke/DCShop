@@ -28,6 +28,49 @@ body {
 	z-index: 50;
 }
 
+.page-shop .header1 {
+	width: 100%;
+	background: rgba(255, 255, 255, 0.9);
+	background-color: rgba(225, 234, 247, 0.7);
+	backdrop-filter: blur(8px);
+	border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+	position: fixed;
+	top: 0;
+	z-index: 50;
+}
+
+.product-detail-page .header1 {
+	width: 100%;
+	background: rgba(255, 255, 255, 0.9);
+	background-color: rgba(225, 234, 247, 0.7);
+	backdrop-filter: blur(8px);
+	border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+	position: fixed;
+	top: 0;
+	z-index: 50;
+}
+
+.bg-body-tertiary .header1 {
+	width: 100%;
+	background: rgba(255, 255, 255, 0.9);
+	background-color: rgba(225, 234, 247, 0.7);
+	backdrop-filter: blur(8px);
+	border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+	position: fixed;
+	top: 0;
+	z-index: 50;
+}
+
+.board-update .header1 {
+	width: 100%;
+	background: rgba(255, 255, 255, 0.9);
+	background-color: rgba(255, 224, 178, 0.7);
+	backdrop-filter: blur(8px);
+	border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+	position: fixed;
+	top: 0;
+	z-index: 50;
+}
 
 .header-container1 {
 	max-width: 1280px;

@@ -1,13 +1,10 @@
 package com.spring.DCShop.shop.controller;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spring.DCShop.shop.dto.CartDTO;
 import com.spring.DCShop.shop.dto.CartItemRequest;
 import com.spring.DCShop.shop.dto.CheckoutRequest;
 import com.spring.DCShop.shop.service.CartService;
@@ -51,10 +47,17 @@ public class CartController {
 		if(sessionid == null) {
 			return "user/login/login_main";
 		}
-		cartservice.addProductList(request, response, model);
-		return "redirect:/cartListShow.do";
+		
+		try {
+			cartservice.addProductList(request, response, model);
+			return "redirect:/cartgo.do";
+		} catch (Exception ex) {
+			//ex.printStackTrace();
+			return "redirect:/cartListShow.do";
+		}
+		
 	}
-	
+
 	/**
 	 * 
 	 * @purpose 장바구니 리스트로 가기
@@ -63,8 +66,6 @@ public class CartController {
 	@RequestMapping("/cartListShow.do")
 	public String cartListShow(HttpServletRequest request, HttpServletResponse response, Model model) {
 		logger.info("=== url -> cartListShow ===");
-		
-		
 		
 		return "redirect:/cartgo.do";
 	}
@@ -136,25 +137,57 @@ public class CartController {
 	}
 	
 	@RequestMapping(value="/payQty.do", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> payQty(@RequestBody MultiValueMap<String, String> body, HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+	public String payQty(@RequestBody MultiValueMap<String, String> body, HttpServletRequest request, Model model) throws JsonMappingException, JsonProcessingException {
 		logger.info("=== url -> payQty ===");
 		ObjectMapper om = new ObjectMapper();
-		String payload = body.getFirst("_payload");
-		String fixed = new String(payload.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-		CheckoutRequest req = om.readValue(fixed, CheckoutRequest.class);
-		
-		System.out.println(req.getTotalClient()); // 토탈 가격
-		List<CartItemRequest> item = req.getItems();
-		
-		for(int i = 0; i < item.size(); i++) {
-			System.out.println(item.get(i).getPdName());
-			System.out.println(item.get(i).getPdPrice()); // 가격
-			System.out.println(item.get(i).getPdId()); // 상품 번호
-			System.out.println(item.get(i).getQty()); // 갯수
+
+		String payload = body.getFirst("_payload");  // 그대로 사용
+		CheckoutRequest req = om.readValue(payload, CheckoutRequest.class);
+
+		int discountPrice;
+		int totalDiscount = 0;
+		System.out.println(req.getTotalClient());
+		for (CartItemRequest it : req.getItems()) {
+			System.out.println(it.getPdId());
+		    System.out.println(it.getPdName());
+		    System.out.println(it.getPdPrice());
+		    System.out.println(it.getQty());
+		    System.out.println(it.getPdImg());
+		    System.out.println(it.getPdDiscountRate());
+		    
+		    if(it.getPdDiscountRate() > 0) {
+		    	discountPrice = ((it.getPdPrice() * it.getQty()) * (100 - it.getPdDiscountRate())) / 100;
+		    	totalDiscount += (it.getPdPrice() * it.getQty()) - discountPrice;
+		    }
 		}
 		
+		req.setTotalDiscount(totalDiscount);
 		
-		return null;
+		request.getSession().setAttribute("goPay", req);
+		
+		return "redirect:/checkout";
+	}
+	
+	/*
+	 * @purpose 바로구매 -> 결제
+	 * 
+	 */
+	@RequestMapping("/cartTOPay.do")
+	public String cartTOPay(HttpServletRequest request, HttpServletResponse response, Model model) {
+		logger.info("=== url -> cartTOPay ===");
+		
+		String sessionid = (String)request.getSession().getAttribute("sessionid");
+		
+		if(sessionid == null) {
+			return "user/login/login_main";
+		}
+		
+		try {
+			cartservice.addProductListForGoPay(request, response, model);
+			return "redirect:/checkout";
+		} catch (Exception ex) {
+			//ex.printStackTrace();
+			return "redirect:/cartListShow.do";
+		}
 	}
 }
