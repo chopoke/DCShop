@@ -79,8 +79,20 @@
 				<c:if test="${empty sessionScope.sessionid}">
 				<a href="#" class="nav-link1" onclick="window.location='${path}/termsAgreement.do'">회원가입</a>
 				</c:if>
-				<c:if test="${!(empty sessionScope.sessionid)}">
+				<%-- <c:if test="${!(empty sessionScope.sessionid)}">
 				<a href="#" class="nav-link1" onclick="window.location='${path}/admin_main'">나의정보</a>
+				</c:if> --%>
+				<c:if test="${!(empty sessionScope.sessionid)}">
+				    <c:choose>
+				        <%-- 세션 아이디가 admin일 때 --%>
+				        <c:when test="${sessionScope.session_u_role eq 'ADMIN'}">
+				            <a href="#" class="nav-link1" onclick="window.location='${path}/admin_main'">관리페이지</a>
+				        </c:when>
+				        <%-- 일반 유저일 때 --%>
+				        <c:otherwise>
+				            <a href="#" class="nav-link1" onclick="window.location='${path}/mypage_main.do'">나의 정보</a>
+				        </c:otherwise>
+				    </c:choose>
 				</c:if>
 				
 				<c:if test="${empty sessionScope.sessionid}">

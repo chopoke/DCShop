@@ -8,8 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>공지/이벤트</title>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/board.css">
+<link rel="stylesheet" href="${path}/resources/css/board.css">
 <script type="text/javascript">
 	$(function() {
 		var isLoggedIn = '${not empty sessionScope.sessionid}' === 'true';
@@ -61,11 +60,6 @@
 		</div>
 
 
-
-
-
-
-
 		<!-- 게시글 목록 -->
 		<div class="board-list table_div">
 			<form>
@@ -94,7 +88,7 @@
 								<td>${board.b_category}</td>
 								<td class="title"><a
 									href="${path}/notice_detail?b_num=${board.b_num}&listClick=1">
-										${board.b_title} <c:if test="${board.b_comments != 0}">[${board.b_comments}]</c:if>
+										${board.b_title} <c:if test="${board.b_comments != 0}"><span class="comment-count">${board.b_comments}</span></c:if>
 								</a></td>
 								<td>${user.u_nickname}</td>
 								<td>${board.b_recommend}</td>

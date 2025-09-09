@@ -16,7 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.spring.DCShop.shop.dao.ProductDAO;
 import com.spring.DCShop.shop.dao.ReviewDAO;
+import com.spring.DCShop.shop.dto.ProductDTO;
 import com.spring.DCShop.shop.dto.ReviewDTO;
 import com.spring.DCShop.shop.page.Paging;
 
@@ -25,6 +27,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
     private ReviewDAO dao;
+    
+    @Autowired
+    private ProductDAO pdao;
 
     // 리뷰 목록
     @Override
@@ -95,6 +100,13 @@ public class ReviewServiceImpl implements ReviewService {
         // DB에서 리뷰 한 건 조회
         ReviewDTO dto = dao.getReviewDetail(r_num);
         model.addAttribute("dto", dto);
+        
+        // 리뷰가 가진 pd_id로 상품 기본정보 올리기
+        ProductDTO pd = pdao.productDetail(dto.getPd_id()); // pd_name, pd_image_url
+        if (pd != null) {
+            request.setAttribute("pd_name", pd.getPd_name());
+            request.setAttribute("pd_image_url", pd.getPd_image_url());
+        }
     }
     
     // 수정/삭제 체크
@@ -180,49 +192,63 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void reviewUpdateAction(HttpServletRequest request, HttpServletResponse response, Model model)
             throws ServletException, IOException {
-        System.out.println("ReviewServiceImpl - reviewUpdateAction()");
 
-        // 파라미터 추출
         int rNum   = Integer.parseInt(request.getParameter("r_num"));
         int score  = Integer.parseInt(request.getParameter("r_score"));
         String content = request.getParameter("r_content");
 
-        String newFileName = null;
+        String newPath = null; // 새 이미지가 있을 때 DB에 저장할 전체경로
 
-        // 멀티파트 요청(파일 업로드)인지 확인하고, r_imgFile을 꺼냄
         if (request instanceof MultipartHttpServletRequest) {
             MultipartHttpServletRequest mreq = (MultipartHttpServletRequest) request;
-            MultipartFile file = mreq.getFile("r_imgFile"); 
-            
-            // 파일이 있다면 원래 파일명에서 확장자만 뽑아옴 (없으면 빈 문자열)
-            if (file != null && !file.isEmpty()) {
-                String originName = file.getOriginalFilename();
-                String ext = (originName != null && originName.lastIndexOf('.') > -1)
-                           ? originName.substring(originName.lastIndexOf('.')) : "";
-                // 충돌 방지를 위해 랜덤한 파일명 생성
-                String uuid = java.util.UUID.randomUUID().toString().replace("-", "");
-                newFileName = uuid + ext;
+            MultipartFile file = mreq.getFile("r_imgFile");
 
-                // 실제 저장 경로(/resources/upload/review)를 만들고 거기에 파일 저장
-                String root = request.getSession().getServletContext().getRealPath("/");
-                java.nio.file.Path dir = java.nio.file.Paths.get(root, "resources", "upload", "review");
-                java.nio.file.Files.createDirectories(dir);
-                file.transferTo(dir.resolve(newFileName).toFile());
+            if (file != null && !file.isEmpty()) {
+                // 1) 배포 경로(서버 런타임 경로)
+                String saveDir = request.getServletContext()
+                        .getRealPath("/resources/upload/review/");
+                new java.io.File(saveDir).mkdirs();
+
+                // 2) 소스 폴더(프로젝트 경로) - 본인 환경에 맞게 유지
+                String realDir = "D:\\DEV05\\workspace_DCshop\\DCShop\\src\\main\\webapp\\resources\\upload\\review\\";
+                new java.io.File(realDir).mkdirs();
+
+                // 파일명: UUID + 원본 확장자
+                String origin = file.getOriginalFilename();
+                String ext = (origin != null && origin.lastIndexOf('.') > -1)
+                        ? origin.substring(origin.lastIndexOf('.')) : "";
+                String fname = java.util.UUID.randomUUID().toString().replace("-", "") + ext;
+
+                // 배포 경로 저장
+                java.io.File deployFile = new java.io.File(saveDir, fname);
+                file.transferTo(deployFile);
+
+                // 배포 → 소스 폴더 복사
+                try (java.io.FileInputStream fis = new java.io.FileInputStream(deployFile);
+                     java.io.FileOutputStream fos = new java.io.FileOutputStream(new java.io.File(realDir, fname))) {
+                    byte[] buf = new byte[8192];
+                    int len;
+                    while ((len = fis.read(buf)) != -1) {
+                        fos.write(buf, 0, len);
+                    }
+                }
+
+                // DB에는 항상 전체경로
+                newPath = "/resources/upload/review/" + fname;
             }
         }
 
-        // dto에 변경사항 세팅
         ReviewDTO dto = new ReviewDTO();
         dto.setR_num(rNum);
         dto.setR_score(score);
         dto.setR_content(content);
-        // 새 파일이 있을 때만 r_img 갱신(없으면 기존 유지)
-        if (newFileName != null) {           
-            dto.setR_img(newFileName);
+        if (newPath != null) {
+            dto.setR_img(newPath); // 새 파일이 있을 때만 교체
         }
 
-        dao.updateReview(dto);               
+        dao.updateReview(dto);
     }
+
 
 
     // 리뷰 삭제
@@ -236,6 +262,33 @@ public class ReviewServiceImpl implements ReviewService {
         
         dao.deleteReview(num);
     }
+    
+    // 리뷰 작성 화면
+    @Override
+	public String reviewInsertForm(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+    	// 1) pd_id 필수
+        String pdIdParam = request.getParameter("pd_id");
+        if (pdIdParam == null || !pdIdParam.matches("\\d+")) {
+            // 적절한 곳으로 보냄 (원하면 상품목록/상세로)
+            return "redirect:/ad_product_list.pd";
+        }
+        int pdId = Integer.parseInt(pdIdParam);
+
+        // 2) 상품 기본정보 조회 (이미 있는 DAO 메서드 재사용)
+        ProductDTO pd = pdao.productDetail(pdId);
+        if (pd == null) {
+            return "redirect:/ad_product_list.pd";
+        }
+
+        // 3) JSP에서 바로 쓰도록 올려주기
+        request.setAttribute("pd_id",        pd.getPd_id());
+        request.setAttribute("pd_name",      pd.getPd_name());
+        request.setAttribute("pd_image_url", pd.getPd_image_url());
+
+        // 4) 작성 폼 JSP로 forward
+        return "/shop/review_insert"; 
+	}
 
     // 리뷰 작성 
     @Override
@@ -243,34 +296,32 @@ public class ReviewServiceImpl implements ReviewService {
             throws ServletException, IOException {
         System.out.println("ReviewServiceImpl - reviewInsertAction()");
 
-        // 멀티파트 요청이면 캐스팅해서 파일을 다룰 수 있게 준비
+        // 멀티파트 캐스팅
         MultipartHttpServletRequest mreq = (request instanceof MultipartHttpServletRequest)
                 ? (MultipartHttpServletRequest) request : null;
-        
+
+        // 필수 파라미터
         String pdIdParam    = request.getParameter("pd_id");
         String scoreParam   = request.getParameter("r_score");
         String contentParam = request.getParameter("r_content");
 
-        // 필수값(상품/점수/내용)이 하나라도 빠지면 목록으로 돌려보냄
         if (pdIdParam == null || pdIdParam.isEmpty()
          || scoreParam == null || scoreParam.isEmpty()
          || contentParam == null || contentParam.trim().isEmpty()) {
             return "redirect:/review_list.bc";
         }
 
-        // 상품ID와 점수가 숫자인지 확인. 숫자 아니면 목록으로
         int pdId, score;
         try {
-            pdId = Integer.parseInt(pdIdParam);
+            pdId  = Integer.parseInt(pdIdParam);
             score = Integer.parseInt(scoreParam);
         } catch (NumberFormatException e) {
             return "redirect:/review_list.bc?pd_id=" + pdIdParam;
         }
 
-        // 기존 세션 가져오고, 로그인 회원번호 변수 준비
+        // 로그인 회원 번호
         HttpSession sess = request.getSession(false);
         Integer uMemberId = null;
-        // 세션에서 회원번호를 꺼냄
         if (sess != null) {
             Object v = sess.getAttribute("session_u_member_id");
             if (v == null) v = sess.getAttribute("sessionid");
@@ -279,42 +330,63 @@ public class ReviewServiceImpl implements ReviewService {
                 try { uMemberId = Integer.parseInt((String) v); } catch (Exception ignore) {}
             }
         }
-        // 로그인 안 되어 있으면 로그인 화면으로
-        if (uMemberId == null) {
-            return "redirect:/login.do";
-        }
-        
-     // ====== 파일 저장 ======
-     // 첨부 이미지가 있으면 확장자 뽑고 UUID 파일명 만들기
-        String savedName = null;
+        if (uMemberId == null) return "redirect:/login.do";
+
+        // ===== 파일 저장 (배포 경로 + 소스 폴더 모두 저장) =====
+        String rImgPath = null; // DB에 저장할 전체경로(/resources/...)
         if (mreq != null) {
             MultipartFile file = mreq.getFile("r_imgFile");
             if (file != null && !file.isEmpty()) {
-                String origin = file.getOriginalFilename();
-                String ext = (origin != null && origin.lastIndexOf('.') > -1) ? origin.substring(origin.lastIndexOf('.')) : "";
-                String uuid = java.util.UUID.randomUUID().toString().replace("-", "");
-                savedName = uuid + ext;
 
-                // 저장 경로 : /resources/upload/review에 파일 저장
-                String root = request.getSession().getServletContext().getRealPath("/");
-                java.nio.file.Path dir = java.nio.file.Paths.get(root, "resources", "upload", "review");
-                java.nio.file.Files.createDirectories(dir);
-                java.nio.file.Path dst = dir.resolve(savedName);
-                file.transferTo(dst.toFile());
+                // 1) 배포 경로
+                String saveDir = request.getServletContext()
+                        .getRealPath("/resources/upload/review/");
+                new java.io.File(saveDir).mkdirs();
+
+                // 2) 소스 폴더 (당신의 로컬 경로로 수정)
+                String realDir = "D:\\DEV05\\workspace_DCshop\\DCShop\\src\\main\\webapp\\resources\\upload\\review\\";
+                new java.io.File(realDir).mkdirs();
+
+                // 파일명: UUID + 원본 확장자
+                String origin = file.getOriginalFilename();
+                String ext = (origin != null && origin.lastIndexOf('.') > -1)
+                        ? origin.substring(origin.lastIndexOf('.')) : "";
+                String fname = java.util.UUID.randomUUID().toString().replace("-", "") + ext;
+
+                // 배포 경로 저장
+                file.transferTo(new java.io.File(saveDir, fname));
+
+                // 배포 → 소스 폴더 복사
+                try (java.io.FileInputStream fis = new java.io.FileInputStream(saveDir + fname);
+                     java.io.FileOutputStream fos = new java.io.FileOutputStream(realDir + fname)) {
+                    byte[] buf = new byte[8192];
+                    int len;
+                    while ((len = fis.read(buf)) != -1) {
+                        fos.write(buf, 0, len);
+                    }
+                }
+
+                // DB에는 항상 전체경로
+                rImgPath = "/resources/upload/review/" + fname;
             }
         }
 
-        // DB에 넣을 리뷰 데이터 채우기
+        // DB 저장
         ReviewDTO dto = new ReviewDTO();
         dto.setPd_id(pdId);
         dto.setU_member_id(uMemberId);
         dto.setR_score(score);
         dto.setR_content(contentParam.trim());
-        dto.setR_img(savedName);
+        dto.setR_img(rImgPath); // 업로드 없으면 null
 
         dao.insertReview(dto);
-        
-        // 방금 작성한 그 상품의 리뷰 목록으로 이동
-        return "redirect:/review_list.bc?pd_id=" + pdId;
+
+        // 등록 후 상품 상세로
+        return "redirect:/ad_shop_detailAction.pd?pdId=" + pdId;
     }
+
+	
+
+
+
 }

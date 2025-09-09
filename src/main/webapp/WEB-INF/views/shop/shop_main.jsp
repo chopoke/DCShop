@@ -67,8 +67,6 @@
 							<a href="#" 
 							class="text-gray-700 hover:text-primary no-underline transition-colors ">이벤트</a> 
 						<a href="#"
-							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/pay.do'">Supplies</a>
-						<a href="#"
 							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/cartListShow.do'"><img alt="" src="resources/img_main/장바구니강.png" width="35px"></a>
 					</div>
 				</div>
@@ -388,7 +386,7 @@
 		<!-- Header -->
 		<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
 			<div>
-				<h1 class="text-2xl md:text-3xl font-bold text-gray-900">Dog Shop</h1>
+				<h1 class="text-2xl md:text-3xl font-bold text-gray-900">해당 상품</h1>
 				<p class="text-gray-600 mt-1">${total} results</p>
 			</div>
 			<!-- 세부 카테고리 -->

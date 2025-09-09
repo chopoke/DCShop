@@ -61,9 +61,8 @@
 <body class="product-detail-page">
   <div class="wrap">
     <%@ include file="/WEB-INF/views/setting/header.jsp" %>
+	<div id="header-spacer" style="height: var(--header-height, 96px)"></div>
 
-	<section class="hero-section1">
-	</section>
     <div id="container">
       <div id="contents">
         <div id="section2">
@@ -95,7 +94,7 @@
 				  <tr>
 				    <!-- 왼쪽: 상품 이미지 -->
 				    <td class="left image-cell">
-				      <img src="<c:url value='${dto.pd_image_url}'/>" alt="<c:out value='${dto.pd_name}'/>" class="pd-photo">
+				      <img src="<c:url value='${img}'/>" alt="<c:out value='${dto.pd_name}'/>" class="pd-photo">
 				    </td>
 				
 				    <!-- 오른쪽: 상세 정보 + 버튼 -->
@@ -280,40 +279,65 @@
 				    <c:choose>
 					  <c:when test="${empty recentReviews}">
 					    <p class="empty">아직 등록된 리뷰가 없습니다.</p>
-					    <a class="link" href="<c:url value='/review_insert.bc'/>?pd_id=${pid}">리뷰 작성하기</a>
+					    <c:url var="revLink1" value="/review_insert.bc">
+		                    <c:param name="pd_id"         value="${dto.pd_id}" />
+		                    <c:param name="pd_name"       value="${dto.pd_name}" />
+		                    <c:param name="pd_image_url"  value="${dto.pd_image_url}" />
+		                  </c:url>
+		                  <a class="link" href="${revLink1}">리뷰 작성하기</a>
 					  </c:when>
 				      <c:otherwise>
 					    <%-- 최신 리뷰 5개 --%>
-					    <ul class="recent-reviews">
-					      <c:forEach var="r" items="${recentReviews}">
-					        <li class="rv-item">
-					          <c:if test="${not empty r.r_img}">
-					            <a href="<c:url value='/review_detailAction.bc'/>?r_num=${r.r_num}">
-					              <img class="rv-thumb"
-					                   src="<c:url value='/resources/upload/review/${r.r_img}'/>"
-					                   alt="리뷰 이미지">
-					            </a>
-					          </c:if>
-					
-					          <div class="rv-meta">
-					            <div class="rv-stars" aria-label="별점 ${r.r_score}">
-								  <c:forEach var="i" begin="1" end="5">
-								    <i class="${i <= r.r_score ? 'fa-solid' : 'fa-regular'} fa-star"></i>
-								  </c:forEach>
-								</div>
-					            <div class="rv-text"><c:out value="${r.r_content}"/></div>
-					            <div class="rv-date">
-					              <fmt:formatDate value="${r.r_regDate}" pattern="yyyy-MM-dd"/>
-					            </div>
-					           </div>
-					        </li>
-					      </c:forEach>
-					    </ul>
+					     <ul class="recent-reviews">
+                    <c:forEach var="r" items="${recentReviews}">
+                      <%-- 상세 링크를 먼저 만들기 (항상) --%>
+                      <c:url var="rvDetail" value="/review_detailAction.bc">
+                        <c:param name="r_num"         value="${r.r_num}" />
+                        <c:param name="pd_name"       value="${dto.pd_name}" />
+                        <c:param name="pd_image_url"  value="${dto.pd_image_url}" />
+                      </c:url>
+                  
+                      <li class="rv-item">
+                        <c:if test="${not empty r.r_img}">
+                          <a href="${rvDetail}">
+                            <img class="rv-thumb" src="<c:url value='${r.r_img}'/>" alt="리뷰 이미지">
+                          </a>
+                        </c:if>
+                  
+                        <a href="${rvDetail}" class="rv-meta-link" style="text-decoration:none; color:inherit;">
+                          <div class="rv-meta">
+                            <div class="rv-stars" aria-label="별점 ${r.r_score}">
+                              <c:forEach var="i" begin="1" end="5">
+                                <i class="${i <= r.r_score ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+                              </c:forEach>
+                            </div>
+                            <div class="rv-text"><c:out value="${r.r_content}"/></div>
+                            <div class="rv-date">
+                              <fmt:formatDate value="${r.r_regDate}" pattern="yyyy-MM-dd"/>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                    </c:forEach>
+                  </ul>
+
 					
 					    <%-- 전체 보기 & 작성 --%>
 					    <div class="review-actions text-right" style="margin-top:8px">
-						  <a href="<c:url value='/review_list.bc'/>?pd_id=${pid}" class="btn-review-list">리뷰 전체보기</a>
-						  <a href="<c:url value='/review_insert.bc'/>?pd_id=${pid}" class="btn-review-write">리뷰 작성</a>
+						  <c:url var="rvListLink" value="/review_list.bc">
+                       <c:param name="pd_id"         value="${dto.pd_id}" />
+                       <c:param name="pd_name"       value="${dto.pd_name}" />
+                       <c:param name="pd_image_url"  value="${dto.pd_image_url}" />
+                     </c:url>
+                     <a href="${rvListLink}" class="btn-review-list">리뷰 전체보기</a>
+
+                    <c:url var="revLink2" value="/review_insert.bc">
+                       <c:param name="pd_id"         value="${dto.pd_id}" />
+                       <c:param name="pd_name"       value="${dto.pd_name}" />
+                       <c:param name="pd_image_url"  value="${dto.pd_image_url}" />
+                     </c:url>
+                     <a href="${revLink2}" class="btn-review-write">리뷰 작성</a>
+
 						</div>
 					  </c:otherwise>
 					 </c:choose>
@@ -328,7 +352,6 @@
 				  <section id="panel-qa" class="pd-panel" role="tabpanel" aria-labelledby="tab-qa">
 				    
 				    <!-- qna.jsp로 상품 번호(pd_id) 넘김. -->
-				    <%-- qna.jsp는 ${path가 아닌} 상세경로로 지정해주기. --%>
 				  	<jsp:include page="/WEB-INF/views/shop/qna.jsp">
 					    <jsp:param name="pd_id" value="${dto.pd_id}"></jsp:param>
 					</jsp:include>
