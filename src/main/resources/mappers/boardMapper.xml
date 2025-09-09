@@ -256,7 +256,13 @@
 		SET b_title = #{b_title}, 
 			b_contents = #{b_contents},
 			b_category = #{b_category},
-			b_updateDate = SYSDATE
+			b_updateDate = SYSDATE,
+			b_image = <if test='b_image != null'>
+						#{b_image}
+					  </if>
+					  <if test='b_image == null'>
+						null
+					  </if>
 		WHERE b_num = #{b_num} 
 	</update>
 	
