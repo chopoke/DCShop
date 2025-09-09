@@ -37,4 +37,8 @@ public interface AdminService {
 	// 상품관리 - 상품등록폼
 	public void adminProductInsert(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
+	
+	// 문의관리 - 문의 리스트
+	public void adminQnaList(HttpServletRequest request, HttpServletResponse response, Model model)
+ 			throws ServletException, IOException;
 }

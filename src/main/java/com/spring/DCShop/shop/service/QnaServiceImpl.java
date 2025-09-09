@@ -104,6 +104,12 @@ public class QnaServiceImpl implements QnaService{
 		System.out.println(dto);
 		return dto;
 	}
+	
+	@Override
+	public QuestDTO updateQuestion(int q_num) {
+		//QuestDTO dto =
+		return null;
+	}
 }
 
 

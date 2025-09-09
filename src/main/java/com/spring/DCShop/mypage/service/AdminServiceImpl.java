@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import com.spring.DCShop.board.dto.BoardDTO;
 import com.spring.DCShop.board.page.Paging;
 import com.spring.DCShop.mypage.dao.AdminDAO;
+import com.spring.DCShop.shop.dto.QuestDTO;
 import com.spring.DCShop.shop.dto.ShopDTO;
 import com.spring.DCShop.user.dto.UserDTO;
 
@@ -246,4 +247,39 @@ public class AdminServiceImpl implements AdminService{
     }
     // ---------------------------------
 	
+    // 문의관리 - 문의 리스트 
+ 	@Override
+ 	public void adminQnaList(HttpServletRequest request, HttpServletResponse response, Model model)
+ 			throws ServletException, IOException {
+ 		
+ 		String q_answer = request.getParameter("q_answer");
+		String q_category = request.getParameter("q_category");
+		String from = request.getParameter("from");
+		String to = request.getParameter("to");
+		
+		String pageNum = request.getParameter("pageNum");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if(q_answer != null){map.put("q_answer", q_answer);}
+		if(q_category != null){map.put("q_category", q_category);}
+		if(q_answer != null){map.put("from", from);}
+		if(q_answer != null){map.put("to", to);}
+		
+		Paging paging = new Paging(pageNum);
+		
+		int total = dao.adminQnaCnt(map);			// paging을 위한 갯수 호출
+		
+		paging.setTotalCount(total);
+		
+		map.put("start", paging.getStartRow());
+		map.put("end", paging.getEndRow());
+		
+		List<QuestDTO> list = dao.adminQnaList(map);//list 호출
+		
+		System.out.println("list => "+list);
+		
+ 		model.addAttribute("list", list);
+ 		model.addAttribute("paging", paging);
+ 	}
 }

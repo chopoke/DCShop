@@ -36,7 +36,6 @@
   <div class="min-h-screen flex justify-center py-8">
     <!-- 메인 래퍼 -->
     <div class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
-      
       <!-- 사이드바 (네비게이션 건들지 않음) -->
       <aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
         <!-- 프로필 -->
@@ -66,22 +65,23 @@
           <div class="bg-white border rounded-lg p-4 grid grid-cols-1 md:grid-cols-12 gap-3">
             <div class="md:col-span-3">
               <label class="block text-sm text-gray-600 mb-1">처리상태</label>
-              <select name="status" class="w-full border rounded px-3 py-2">
+              <select name="q_answer" class="w-full border rounded px-3 py-2">
                 <option value="">전체</option>
-                <option value="WAIT"  <c:if test="${param.status == 'WAIT'}">selected</c:if>>대기</option>
-                <option value="DONE"  <c:if test="${param.status == 'DONE'}">selected</c:if>>완료</option>
-                <option value="HOLD"  <c:if test="${param.status == 'HOLD'}">selected</c:if>>보류</option>
+                <option value="Y"  <c:if test="${param.q_answer == 'Y'}">selected</c:if>>답변 완료</option>
+                <option value="N"  <c:if test="${param.q_answer == 'N'}">selected</c:if>>답변 대기</option>
               </select>
             </div>
             <div class="md:col-span-3">
               <label class="block text-sm text-gray-600 mb-1">카테고리</label>
-              <select name="category" class="w-full border rounded px-3 py-2">
+              <select name="q_category" class="w-full border rounded px-3 py-2">
                 <option value="">전체</option>
-                <option value="ORDER"   <c:if test="${param.category == 'ORDER'}">selected</c:if>>주문</option>
-                <option value="PRODUCT" <c:if test="${param.category == 'PRODUCT'}">selected</c:if>>상품</option>
-                <option value="PAY"     <c:if test="${param.category == 'PAY'}">selected</c:if>>결제</option>
-                <option value="DELIV"   <c:if test="${param.category == 'DELIV'}">selected</c:if>>배송</option>
-                <option value="ETC"     <c:if test="${param.category == 'ETC'}">selected</c:if>>기타</option>
+                <option value="교환" <c:if test="${param.q_category == '교환'}">selected</c:if>>교환</option>
+                <option value="환불" <c:if test="${param.q_category == '환불'}">selected</c:if>>환불</option>
+                <option value="배송" <c:if test="${param.q_category == '배송'}">selected</c:if>>배송</option>
+                <option value="가격" <c:if test="${param.q_category == '가격'}">selected</c:if>>가격</option>
+                <option value="품절" <c:if test="${param.q_category == '품절'}">selected</c:if>>품절</option>
+                <option value="입고" <c:if test="${param.q_category == '입고'}">selected</c:if>>입고</option>
+                <option value="기타" <c:if test="${param.q_category == '기타'}">selected</c:if>>기타</option>
               </select>
             </div>
             <div class="md:col-span-3">
@@ -125,7 +125,7 @@
                 <col style="width:90px;">
                 <col style="width:110px;">
                 <col style="width:110px;">
-                <col style="width:90px;">
+                <col style="width:100px;">
                 <col style="width:160px;">
               </colgroup>
               <thead class="bg-gray-100 text-sm">
@@ -151,55 +151,60 @@
                 <c:forEach var="q" items="${list}">
                   <tr class="border-t">
                     <td class="py-2 px-3 align-top">
-                      <input type="checkbox" name="q_ids" value="${q.q_id}" class="rowChk"/>
+                      <input type="checkbox" name="q_nums" value="${q.q_num}" class="rowChk"/>
                     </td>
-                    <td class="py-2 px-3 align-top">#${q.q_id}</td>
+                    <td class="py-2 px-3 align-top">#${q.q_num}</td>
                     <td class="py-2 px-3 align-top">
                       <span class="text-gray-700">
                         <c:choose>
-                          <c:when test="${q.category=='ORDER'}">주문</c:when>
-                          <c:when test="${q.category=='PRODUCT'}">상품</c:when>
-                          <c:when test="${q.category=='PAY'}">결제</c:when>
-                          <c:when test="${q.category=='DELIV'}">배송</c:when>
+                          <c:when test="${q.q_category == '환불'}">환불</c:when>
+                          <c:when test="${q.q_category == '배송'}">배송</c:when>
+                          <c:when test="${q.q_category == '가격'}">가격</c:when>
+                          <c:when test="${q.q_category == '품절'}">품절</c:when>
+                          <c:when test="${q.q_category == '입고'}">입고</c:when>
+                          <c:when test="${q.q_category == '기타'}">기타</c:when>
                           <c:otherwise>기타</c:otherwise>
                         </c:choose>
                       </span>
                     </td>
                     <td class="py-2 px-3 align-top">
-                      <div class="ellipsis" title="${q.title}">
+                      <div class="ellipsis" title="${q.q_title}">
                         <a href="javascript:void(0)" class="text-blue-600 hover:underline"
-                           onclick="openModal(${q.q_id})">${q.title}</a>
+                           onclick="window.location='${path}/question_update.qa?q_num=${q.q_num}'">${q.q_title}</a>
                       </div>
-                      <div class="text-gray-400 text-xs ellipsis" title="${q.preview}">${q.preview}</div>
+                      <%-- <div class="text-gray-400 text-xs ellipsis" title="${q.preview}">${q.preview}</div> --%>
                     </td>
-                    <td class="py-2 px-3 align-top ellipsis" title="${q.writer_nick}">${q.writer_nick}</td>
-                    <td class="py-2 px-3 align-top"><fmt:formatDate value="${q.created_at}" pattern="yyyy-MM-dd" /></td>
+                    <td class="py-2 px-3 align-top ellipsis" title="${q.u_id}">${q.u_id}</td>
+                    <td class="py-2 px-3 align-top"><fmt:formatDate value="${q.q_regDate}" pattern="yyyy-MM-dd" /></td>
                     <td class="py-2 px-3 align-top">
-                      <c:choose>
+                      <%-- <c:choose>	처리일
                         <c:when test="${not empty q.completed_at}">
                           <fmt:formatDate value="${q.completed_at}" pattern="yyyy-MM-dd" />
                         </c:when>
                         <c:otherwise>-</c:otherwise>
-                      </c:choose>
+                      </c:choose> --%>
                     </td>
-                    <td class="py-2 px-3 align-top">
-                      <c:choose>
-                        <c:when test="${q.status=='WAIT'}"><span class="badge badge-wait">대기</span></c:when>
-                        <c:when test="${q.status=='DONE'}"><span class="badge badge-done">완료</span></c:when>
-                        <c:otherwise><span class="badge badge-hold">보류</span></c:otherwise>
-                      </c:choose>
-                    </td>
+                    <c:if test="${not (q.q_answer eq 'Y')}">
+						<td class="text-center">
+							<span class="bg-pink-100 text-red-500 px-1 py-1 rounded text-xs">
+								답변대기 
+							</span>
+						</td>
+					</c:if>
+					<c:if test="${(q.q_answer eq 'Y')}">
+						<td class="text-center">
+							<span class="bg-blue-100 text-blue-500 px-1 py-1 rounded text-xs">
+								답변완료 
+							</span>
+						</td>
+					</c:if>
                     <td class="py-2 px-3 align-top">
                       <div class="flex flex-wrap gap-1">
                         <button type="button" class="px-2 py-1 border rounded hover:bg-gray-50"
-                                onclick="openModal(${q.q_id})">보기</button>
-                        <a href="${path}/admin_qna/replyForm?q_id=${q.q_id}"
+                                onclick="openModal(${q.q_num})">보기</button>
+                        <a href="${path}/admin_qna/replyForm?q_num=${q.q_num}"
                            class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">답변</a>
-                        <a href="${path}/admin_qna/mark?q_id=${q.q_id}&status=DONE"
-                           class="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700">완료</a>
-                        <a href="${path}/admin_qna/mark?q_id=${q.q_id}&status=HOLD"
-                           class="px-2 py-1 bg-gray-600 text-white rounded hover:bg-gray-700">보류</a>
-                        <a href="${path}/admin_qna/delete?q_id=${q.q_id}"
+                        <a href="${path}/admin_qna/delete?q_num=${q.q_num}"
                            class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
                            onclick="return confirm('삭제하시겠습니까?');">삭제</a>
                       </div>
@@ -214,17 +219,19 @@
         <!-- 페이지네이션 -->
         <div class="mt-4 flex justify-center">
           <nav class="inline-flex -space-x-px overflow-hidden rounded-md border bg-white">
-            <c:if test="${page.prev}">
-              <a href="${path}/admin_qna?pageNum=${page.startPage-1}" class="px-3 py-2 text-sm hover:bg-gray-50 border-r">Prev</a>
+            <c:if test="${paging.startPage > 10}">
+              <a href="${path}/admin_qna?pageNum=${paging.prev}" class="px-3 py-2 text-sm hover:bg-gray-50 border-r">Prev</a>
             </c:if>
-            <c:forEach var="i" begin="${page.startPage}" end="${page.endPage}">
-              <a href="${path}/admin_qna?pageNum=${i}"
-                 class="px-3 py-2 text-sm border-r <c:if test='${page.currentPage==i}'>bg-blue-600 text-white</c:if>">
-                ${i}
-              </a>
+            <c:forEach var="i" begin="${paging.startPage}" end="${paging.endPage}">
+	            <c:if test="${num != 0}">
+	              <a href="${path}/admin_qna?pageNum=${i}"
+	                 class="px-3 py-2 text-sm border-r <c:if test='${paging.currentPage==i}'>bg-blue-600 text-white</c:if>">
+	                ${i}
+	              </a>
+	             </c:if>
             </c:forEach>
-            <c:if test="${page.next}">
-              <a href="${path}/admin_qna?pageNum=${page.endPage+1}" class="px-3 py-2 text-sm hover:bg-gray-50">Next</a>
+            <c:if test="${paging.startPage < paging.pageCount}">
+              <a href="${path}/admin_qna?pageNum=${paging.next}" class="px-3 py-2 text-sm hover:bg-gray-50">Next</a>
             </c:if>
           </nav>
         </div>
@@ -259,7 +266,7 @@
 
         <!-- 간단 답변 등록 -->
         <form action="${path}/admin_qna/replyQuick" method="post" class="mt-2">
-          <input type="hidden" name="q_id" id="m_qid_input" value="">
+          <input type="hidden" name="q_num" id="m_qid_input" value="">
           <textarea name="reply" rows="4" class="w-full border rounded px-3 py-2" placeholder="간단한 답변을 입력하세요."></textarea>
           <div class="mt-3 flex justify-end gap-2">
             <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded hover:bg-gray-50">닫기</button>

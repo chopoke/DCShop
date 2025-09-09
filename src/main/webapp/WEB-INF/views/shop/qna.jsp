@@ -186,7 +186,7 @@
                       <button
                         type="button"
                         id="SaveQuestion"
-                        class="bg-primary text-white px-6 py-2 !rounded-button font-medium hover:bg-orange-600 transition-colors whitespace-nowrap">
+                        class="btn-primary">
                         작성
                       </button>
                     </td>

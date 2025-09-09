@@ -20,4 +20,6 @@ public interface QnaService {
 			throws ServletException, IOException;
 	
 	public QuestDTO qnaDetail(int q_num);
+	
+	public QuestDTO updateQuestion(int q_num);
 }
