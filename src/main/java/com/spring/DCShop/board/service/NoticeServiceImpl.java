@@ -36,18 +36,19 @@ public class NoticeServiceImpl implements NoticeService {
 			throws ServletException, IOException {
 		System.out.println("NoticeServiceImpl - noticeListAction()");
 		
+		// 화면에서 입력받은 값을 가져오기
 		String pageNum = request.getParameter("pageNum");
 		String category = request.getParameter("category"); // 공지, 이벤트, 전체
 		if (category == null || category.trim().isEmpty()) {
 			category = "전체";
 		}
-		
+		// 전체 게시글 갯수 카운트
 		Paging paging = new Paging(pageNum);
 		int total = noticeDAO.noticeListTotal(category);
 		System.out.println("notice total : " + total);
 		
 		paging.setTotalCount(total);
-		
+		// 게시글 목록 조회
 		int start = paging.getStartRow();
 		int end = paging.getEndRow();
 		
@@ -58,7 +59,8 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		List<BoardDTO> list = noticeDAO.noticeListAction(map);
 		System.out.println("notice list : " + list);
-		
+
+		//jsp로 처리결과 전달
 		model.addAttribute("list", list);
 		model.addAttribute("paging", paging);
 		model.addAttribute("category", category);
@@ -230,7 +232,8 @@ public class NoticeServiceImpl implements NoticeService {
 	public void noticeDeleteAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		int b_num = Integer.parseInt(request.getParameter("b_num"));
-		
+	    
+		// 작성자 확인
 		String loginId = (String) request.getSession().getAttribute("sessionID");
 		if (loginId == null) {
 			loginId = (String) request.getSession().getAttribute("sessionid");
@@ -240,9 +243,22 @@ public class NoticeServiceImpl implements NoticeService {
 			throw new ServletException("권한이 없습니다.");
 		}
 		
-		int deleteCnt = noticeDAO.noticeDeleteAction(b_num);
-		model.addAttribute("deleteCnt", deleteCnt);
+//		int deleteCnt = noticeDAO.noticeDeleteAction(b_num);
+//		model.addAttribute("deleteCnt", deleteCnt);
+		
+		 // 추천(자식) 데이터 선삭제
+	    noticeDAO.deleteRecommendsByNotice(b_num);
+
+	    // 공지/이벤트 삭제
+	    int deleteCnt1 = noticeDAO.noticeDeleteAction(b_num);
+	    model.addAttribute("deleteCnt", deleteCnt1);
 	}
+		
+	
+	
+	
+		
+	
 	
 	// 공지/이벤트 추천 클릭
 	@Override

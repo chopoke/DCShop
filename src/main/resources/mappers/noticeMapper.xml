@@ -3,240 +3,317 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
- <mapper namespace="com.spring.DCShop.board.dao.NoticeDAO">
- 	
- 	<resultMap id="noticeMap" type="com.spring.DCShop.board.dto.BoardDTO">
- 		<id property="b_num" column="b_num"/>
- 		<result property="b_title" column="b_title"/>
- 		<result property="b_contents" column="b_contents"/>
- 		<result property="b_category" column="b_category"/>
- 		<result property="b_dateposted" column="b_dateposted"/>
- 		<result property="b_updateDate" column="b_updateDate"/>
- 		<result property="b_views" column="b_views"/>
- 		<result property="b_recommend" column="b_recommend"/>
- 		<result property="b_image" column="b_image"/>
- 		<result property="b_comments" column="b_comments"/>
- 		<collection property="userDTO" column="u_member_id" resultMap="getUser"/>
- 	</resultMap>
- 	
- 	<resultMap id="getUser" type="com.spring.DCShop.user.dto.UserDTO">
- 		<id property="u_member_id" column="u_member_id"/>
- 		<result property="u_id" column="u_id"/>
- 		<result property="u_nickname" column="u_nickname"/>
- 	</resultMap>
 
- 	<!-- 공지/이벤트 목록 (category='전체'이면 공지+이벤트 모두) -->
- 	<select id="noticeListAction" parameterType="java.util.Map" resultMap="noticeMap">
- 		SELECT *
- 		  FROM (SELECT A.*
- 					 , rownum AS rn 
- 				  FROM (SELECT b.*
- 						 , u.u_nickname
- 						 ,(SELECT COUNT(*)
- 					 		 FROM comment_tbl c
- 					 		WHERE b.b_num = c.b_num) AS b_comments
- 						FROM user_tbl u, board_tbl b
- 						WHERE u.u_member_id = b.u_member_id
- 						  <if test="category == '전체'">
- 						  AND b.b_category IN ('공지','이벤트')
- 						  </if>
- 						  <if test="category != '전체'">
- 						  AND b.b_category = #{category}
- 						  </if>
- 						ORDER BY b.b_num DESC) A 
- 				) 
- 			 WHERE rn BETWEEN #{start} AND #{end}
- 	</select>
- 	
- 	<!-- 공지/이벤트 통합 목록 (공지+이벤트) -->
- 	<select id="noticeUnifiedListAction" parameterType="java.util.Map" resultMap="noticeMap">
- 		SELECT *
- 		  FROM (SELECT A.* , rownum AS rn
- 		          FROM (SELECT b.*
- 		                       , u.u_nickname
- 		                       , (SELECT COUNT(*) FROM comment_tbl c WHERE b.b_num = c.b_num) AS b_comments
- 		                  FROM user_tbl u, board_tbl b
- 		                 WHERE u.u_member_id = b.u_member_id
- 		                   AND b.b_category IN ('공지','이벤트')
- 		                 ORDER BY b.b_num DESC) A)
- 		 WHERE rn BETWEEN #{start} AND #{end}
- 	</select>
- 	
- 	<!-- 공지/이벤트 전체 개수 (category='전체'이면 공지+이벤트 합산) -->
- 	<select id="noticeListTotal" parameterType="String" resultType="int">
- 		SELECT COUNT(*) FROM board_tbl
- 		<if test="_parameter == '전체'">
- 		 WHERE b_category IN ('공지','이벤트')
- 		</if>
- 		<if test="_parameter != '전체'">
- 		 WHERE b_category = #{_parameter, jdbcType=VARCHAR}
- 		</if>
- 	</select>
- 
- 	<!-- 공지/이벤트 통합 전체 개수 (공지+이벤트) -->
- 	<select id="noticeUnifiedListTotal" resultType="int">
- 		SELECT COUNT(*) FROM board_tbl WHERE b_category IN ('공지','이벤트')
- 	</select>
- 
- 	<!-- 공지/이벤트 상세페이지 -->
- 	<select id="noticeDetailAction" parameterType="int" resultMap="noticeMap">
- 		SELECT b.*
- 			 , u.u_id
- 			 , u.u_nickname
- 		  FROM user_tbl u, board_tbl b
- 		 WHERE u.u_member_id = b.u_member_id
- 		   AND b.b_num = #{b_num}
- 	</select>
- 	
- 	<!-- 공지/이벤트 등록 -->
- 	<insert id="noticeInsertAction" parameterType="com.spring.DCShop.board.dto.BoardDTO">
- 		<selectKey keyProperty="b_num" resultType="int" order="BEFORE">
- 			SELECT NVL(MAX(b_num)+1,1) FROM board_tbl
- 		</selectKey>
- 		INSERT INTO board_tbl (b_num, u_member_id, b_title, b_contents, b_category, b_dateposted, b_updateDate, b_views, b_recommend, b_image)
- 		VALUES (#{b_num}, #{u_member_id}, #{b_title}, #{b_contents}, #{b_category}, sysdate, NULL, 0, 0, 
- 			<if test='b_image != null'>
- 				#{b_image}
- 			</if>
- 			<if test='b_image == null'>
- 				null
- 			</if>)
- 	</insert>
- 	
- 	<!-- 공지/이벤트 수정 -->
- 	<update id="noticeUpdateAction" parameterType="com.spring.DCShop.board.dto.BoardDTO">
- 		UPDATE board_tbl
- 		   SET b_title = #{b_title}
- 		     , b_contents = #{b_contents}
- 		     , b_category = #{b_category}
- 		     , b_updateDate = sysdate
- 		     <if test='b_image != null'>
- 		     , b_image = #{b_image}
- 		     </if>
- 		 WHERE b_num = #{b_num}
- 	</update>
- 	
- 	<!-- 공지/이벤트 삭제 -->
- 	<delete id="noticeDeleteAction" parameterType="int">
- 		DELETE FROM board_tbl WHERE b_num = #{b_num}
- 	</delete>
- 	
- 	<!-- 공지/이벤트 조회수 증가 -->
- 	<update id="noticeViewsUpdateAction" parameterType="int">
- 		UPDATE board_tbl
- 		   SET b_views = b_views + 1
- 		 WHERE b_num = #{b_num}
- 	</update>
- 	
- 	<!-- 공지/이벤트 추천 여부 -->
- 	<select id="noticeIsRecommended" parameterType="java.util.Map" resultType="int">
- 		SELECT COUNT(*)
- 		  FROM recommend_tbl
- 		 WHERE b_num = #{b_num}
- 		   AND u_member_id = #{u_member_id}
- 	</select>
- 	
- 	<!-- 공지/이벤트 추천 추가 (boardMapper.xml과 동일 스키마 사용) -->
- 	<insert id="noticeRecommendAddAction" parameterType="java.util.Map">
- 		INSERT INTO recommend_tbl(rec_num, u_member_id, b_num)
- 		VALUES ((SELECT NVL(MAX(rec_num)+1, 1) FROM recommend_tbl), #{u_member_id}, #{b_num})
- 	</insert>
- 	
- 	<!-- 공지/이벤트 추천 삭제 -->
- 	<delete id="noticeRecommendRemoveAction" parameterType="java.util.Map">
- 		DELETE FROM recommend_tbl
- 		 WHERE b_num = #{b_num}
- 		   AND u_member_id = #{u_member_id}
- 	</delete>
- 	
- 	<!-- 공지/이벤트 추천수 변경 -->
- 	<update id="noticeRecommendUpdateAction" parameterType="int">
- 		UPDATE board_tbl
- 		   SET b_recommend = (SELECT COUNT(*)
- 					   FROM recommend_tbl
- 					  WHERE b_num = #{b_num})
- 		 WHERE b_num = #{b_num}
- 	</update>
- 	
- 	<!-- 공지/이벤트 추천수 조회 -->
- 	<select id="noticeSelectB_recommend" parameterType="int" resultType="int">
- 		SELECT b_recommend
- 		  FROM board_tbl
- 		 WHERE b_num = #{b_num}
- 	</select>
- 	
- 	<!-- 공지/이벤트 작성자 아이디 조회 -->
- 	<select id="noticeSelectBoardAuthorId" parameterType="int" resultType="String">
- 		SELECT u.u_id
- 		  FROM user_tbl u, board_tbl b
- 		 WHERE u.u_member_id = b.u_member_id
- 		   AND b.b_num = #{b_num}
- 	</select>
- 	
- 	<!-- 통합 게시판 목록 (공지/이벤트/커뮤니티) -->
- 	<select id="unifiedBoardListAction" parameterType="java.util.Map" resultMap="noticeMap">
- 		SELECT *
- 		  FROM (SELECT A.*
- 					 , rownum AS rn 
- 				  FROM (SELECT b.*
- 						 , u.u_nickname
- 						 ,(SELECT COUNT(*)
- 					 		 FROM comment_tbl c
- 					 		WHERE b.b_num = c.b_num) AS b_comments
- 						FROM user_tbl u, board_tbl b
- 						WHERE u.u_member_id = b.u_member_id
- 						  <if test='category != null and category != "전체"'>
- 						  AND b.b_category = #{category}
- 						  </if>
- 						ORDER BY b.b_num DESC) A 
- 				) 
- 			 WHERE rn BETWEEN #{start} AND #{end}
- 	</select>
- 	
- 	<!-- 통합 게시판 전체 개수 -->
- 	<select id="unifiedBoardListTotal" parameterType="String" resultType="int">
- 		SELECT COUNT(*) FROM board_tbl
- 		<if test='_parameter != null and _parameter != "전체"'>
- 		WHERE b_category = #{_parameter, jdbcType=VARCHAR}
- 		</if>
- 	</select>
- 	
- 	<!-- 카테고리별 게시판 목록 -->
- 	<select id="categoryBoardListAction" parameterType="java.util.Map" resultMap="noticeMap">
- 		SELECT *
- 		  FROM (SELECT A.*
- 					 , rownum AS rn 
- 				  FROM (SELECT b.*
- 						 , u.u_nickname
- 						 ,(SELECT COUNT(*)
- 					 		 FROM comment_tbl c
- 					 		WHERE b.b_num = c.b_num) AS b_comments
- 						FROM user_tbl u, board_tbl b
- 						WHERE u.u_member_id = b.u_member_id
- 						  AND b.b_category = #{category}
- 						ORDER BY b.b_num DESC) A 
- 				) 
- 			 WHERE rn BETWEEN #{start} AND #{end}
- 	</select>
- 	
- 	<!-- 카테고리별 게시판 전체 개수 -->
- 	<select id="categoryBoardListTotal" parameterType="String" resultType="int">
- 		SELECT COUNT(*) FROM board_tbl WHERE b_category = #{_parameter, jdbcType=VARCHAR}
- 	</select>
- 	
- 	<!-- 회원 번호 조회 -->
- 	<select id="selectU_member_id" parameterType="String" resultType="int">
- 		SELECT u_member_id
- 	     FROM user_tbl
- 	    WHERE u_id = #{u_id, jdbcType=VARCHAR}
- 	</select>
- 	
- 	<!-- 작성자 닉네임 조회 -->
- 	<select id="selectU_nicknameAction" parameterType="String" resultType="String">
- 		SELECT u_nickname
- 		  FROM user_tbl
- 		 WHERE u_id = #{u_id}
- 	</select>
- 	
- </mapper>
+<mapper namespace="com.spring.DCShop.board.dao.NoticeDAO">
+
+	<resultMap id="noticeMap"
+		type="com.spring.DCShop.board.dto.BoardDTO">
+		<id property="b_num" column="b_num" />
+		<result property="b_title" column="b_title" />
+		<result property="b_contents" column="b_contents" />
+		<result property="b_category" column="b_category" />
+		<result property="b_dateposted" column="b_dateposted" />
+		<result property="b_updateDate" column="b_updateDate" />
+		<result property="b_views" column="b_views" />
+		<result property="b_recommend" column="b_recommend" />
+		<result property="b_image" column="b_image" />
+		<result property="b_comments" column="b_comments" />
+		<collection property="userDTO" column="u_member_id"
+			resultMap="getUser" />
+	</resultMap>
+
+	<resultMap id="getUser"
+		type="com.spring.DCShop.user.dto.UserDTO">
+		<id property="u_member_id" column="u_member_id" />
+		<result property="u_id" column="u_id" />
+		<result property="u_nickname" column="u_nickname" />
+	</resultMap>
+
+	<!-- 공지/이벤트 목록 (category='전체'이면 공지+이벤트 모두) -->
+	<select id="noticeListAction" parameterType="java.util.Map"
+		resultMap="noticeMap">
+		SELECT *
+		FROM (SELECT A.*
+		, rownum AS rn
+		FROM (SELECT b.*
+		, u.u_nickname
+		,(SELECT COUNT(*)
+		FROM comment_tbl c
+		WHERE b.b_num = c.b_num) AS
+		b_comments
+		FROM user_tbl u, board_tbl b
+		WHERE u.u_member_id =
+		b.u_member_id
+		<if test="category == '전체'">
+			AND b.b_category IN ('공지','이벤트')
+		</if>
+		<if test="category != '전체'">
+			AND b.b_category = #{category}
+		</if>
+		ORDER BY b.b_num DESC) A
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+
+	<!-- 공지/이벤트 통합 목록 (공지+이벤트) -->
+	<select id="noticeUnifiedListAction"
+		parameterType="java.util.Map" resultMap="noticeMap">
+		SELECT *
+		FROM (SELECT A.* ,
+		rownum AS rn
+		FROM (SELECT b.*
+		, u.u_nickname
+		, (SELECT COUNT(*) FROM
+		comment_tbl c WHERE b.b_num = c.b_num) AS
+		b_comments
+		FROM user_tbl u,
+		board_tbl b
+		WHERE u.u_member_id = b.u_member_id
+		AND b.b_category IN
+		('공지','이벤트')
+		ORDER BY b.b_num DESC) A)
+		WHERE rn BETWEEN #{start} AND
+		#{end}
+	</select>
+
+	<!-- 공지/이벤트 전체 개수 (category='전체'이면 공지+이벤트 합산) -->
+	<select id="noticeListTotal" parameterType="String"
+		resultType="int">
+		SELECT COUNT(*) FROM board_tbl
+		<if test="_parameter == '전체'">
+			WHERE b_category IN ('공지','이벤트')
+		</if>
+		<if test="_parameter != '전체'">
+			WHERE b_category = #{_parameter, jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<!-- 공지/이벤트 통합 전체 개수 (공지+이벤트) -->
+	<select id="noticeUnifiedListTotal" resultType="int">
+		SELECT COUNT(*)
+		FROM board_tbl WHERE b_category IN ('공지','이벤트')
+	</select>
+
+	<!-- 공지/이벤트 상세페이지 -->
+	<select id="noticeDetailAction" parameterType="int"
+		resultMap="noticeMap">
+		SELECT b.*
+		, u.u_id
+		, u.u_nickname
+		FROM user_tbl u, board_tbl b
+		WHERE u.u_member_id = b.u_member_id
+		AND b.b_num = #{b_num}
+	</select>
+
+	<!-- 공지/이벤트 등록 -->
+	<insert id="noticeInsertAction"
+		parameterType="com.spring.DCShop.board.dto.BoardDTO">
+		<selectKey keyProperty="b_num" resultType="int"
+			order="BEFORE">
+			SELECT NVL(MAX(b_num)+1,1) FROM board_tbl
+		</selectKey>
+		INSERT INTO board_tbl (b_num, u_member_id, b_title, b_contents,
+		b_category, b_dateposted, b_updateDate, b_views, b_recommend, b_image)
+		VALUES (#{b_num}, #{u_member_id}, #{b_title}, #{b_contents},
+		#{b_category}, sysdate, NULL, 0, 0,
+		<if test='b_image != null'>
+			#{b_image}
+		</if>
+		<if test='b_image == null'>
+			null
+		</if>
+		)
+	</insert>
+
+	<!-- 공지/이벤트 수정 -->
+	<update id="noticeUpdateAction"
+		parameterType="com.spring.DCShop.board.dto.BoardDTO">
+		UPDATE board_tbl
+		SET b_title = #{b_title}
+		, b_contents = #{b_contents}
+		,
+		b_category = #{b_category}
+		, b_updateDate = sysdate
+		<if test='b_image != null'>
+			, b_image = #{b_image}
+		</if>
+		WHERE b_num = #{b_num}
+	</update>
+
+	<!-- 공지/이벤트 삭제 -->
+	<delete id="noticeDeleteAction" parameterType="int">
+		DELETE FROM
+		board_tbl WHERE b_num = #{b_num}
+	</delete>
+
+	<!-- 공지/이벤트 조회수 증가 -->
+	<update id="noticeViewsUpdateAction" parameterType="int">
+		UPDATE
+		board_tbl
+		SET b_views = b_views + 1
+		WHERE b_num = #{b_num}
+	</update>
+
+	<!-- 공지/이벤트 추천 여부 -->
+	<select id="noticeIsRecommended" parameterType="java.util.Map"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM recommend_tbl
+		WHERE b_num = #{b_num}
+		AND
+		u_member_id = #{u_member_id}
+	</select>
+
+	<!-- 공지/이벤트 추천 추가 (boardMapper.xml과 동일 스키마 사용) -->
+	<insert id="noticeRecommendAddAction"
+		parameterType="java.util.Map">
+		INSERT INTO recommend_tbl(rec_num, u_member_id, b_num)
+		VALUES ((SELECT NVL(MAX(rec_num)+1, 1) FROM recommend_tbl),
+		#{u_member_id},
+		#{b_num})
+	</insert>
+
+	<!-- 공지/이벤트 추천 삭제 -->
+	<delete id="noticeRecommendRemoveAction"
+		parameterType="java.util.Map">
+		DELETE FROM recommend_tbl
+		WHERE b_num = #{b_num}
+		AND
+		u_member_id = #{u_member_id}
+	</delete>
+
+	<!-- 공지/이벤트 추천수 변경 -->
+	<update id="noticeRecommendUpdateAction" parameterType="int">
+		UPDATE
+		board_tbl
+		SET b_recommend = (SELECT COUNT(*)
+		FROM recommend_tbl
+		WHERE
+		b_num = #{b_num})
+		WHERE b_num = #{b_num}
+	</update>
+
+	<!-- 공지/이벤트 추천수 조회 -->
+	<select id="noticeSelectB_recommend" parameterType="int"
+		resultType="int">
+		SELECT b_recommend
+		FROM board_tbl
+		WHERE b_num = #{b_num}
+	</select>
+
+	<!-- 공지/이벤트 작성자 아이디 조회 -->
+	<select id="noticeSelectBoardAuthorId" parameterType="int"
+		resultType="String">
+		SELECT u.u_id
+		FROM user_tbl u, board_tbl b
+		WHERE
+		u.u_member_id = b.u_member_id
+		AND b.b_num = #{b_num}
+	</select>
+
+	<!-- 통합 게시판 목록 (공지/이벤트/커뮤니티) -->
+	<select id="unifiedBoardListAction"
+		parameterType="java.util.Map" resultMap="noticeMap">
+		SELECT *
+		FROM (SELECT A.*
+		, rownum AS rn
+		FROM (SELECT b.*
+		, u.u_nickname
+		,(SELECT COUNT(*)
+		FROM comment_tbl c
+		WHERE b.b_num = c.b_num) AS
+		b_comments
+		FROM user_tbl u, board_tbl b
+		WHERE u.u_member_id =
+		b.u_member_id
+		<if test='category != null and category != "전체"'>
+			AND b.b_category = #{category}
+		</if>
+		ORDER BY b.b_num DESC) A
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+
+	<!-- 통합 게시판 전체 개수 -->
+	<select id="unifiedBoardListTotal" parameterType="String"
+		resultType="int">
+		SELECT COUNT(*) FROM board_tbl
+		<if test='_parameter != null and _parameter != "전체"'>
+			WHERE b_category = #{_parameter, jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<!-- 카테고리별 게시판 목록 -->
+	<select id="categoryBoardListAction"
+		parameterType="java.util.Map" resultMap="noticeMap">
+		SELECT *
+		FROM (SELECT A.*
+		,
+		rownum AS rn
+		FROM (SELECT b.*
+		, u.u_nickname
+		,(SELECT COUNT(*)
+		FROM
+		comment_tbl c
+		WHERE b.b_num = c.b_num) AS b_comments
+		FROM user_tbl u,
+		board_tbl b
+		WHERE u.u_member_id = b.u_member_id
+		AND b.b_category =
+		#{category}
+		ORDER BY b.b_num DESC) A
+		)
+		WHERE rn BETWEEN #{start} AND
+		#{end}
+	</select>
+
+	<!-- 카테고리별 게시판 전체 개수 -->
+	<select id="categoryBoardListTotal" parameterType="String"
+		resultType="int">
+		SELECT COUNT(*) FROM board_tbl WHERE b_category =
+		#{_parameter,
+		jdbcType=VARCHAR}
+	</select>
+
+	<!-- 회원 번호 조회 -->
+	<select id="selectU_member_id" parameterType="String"
+		resultType="int">
+		SELECT u_member_id
+		FROM user_tbl
+		WHERE u_id = #{u_id,
+		jdbcType=VARCHAR}
+	</select>
+
+	<!-- 작성자 닉네임 조회 -->
+	<select id="selectU_nicknameAction" parameterType="String"
+		resultType="String">
+		SELECT u_nickname
+		FROM user_tbl
+		WHERE u_id = #{u_id}
+	</select>
+
+	<!-- 추천(자식) 선삭제 -->
+	
+<!-- <delete id="deleteRecommendsByNotice" parameterType="int">
+    DELETE FROM recommend_tbl WHERE b_num = #{b_num}
+</delete>
+ -->
+<!-- 댓글 삭제 -->
+<delete id="deleteCommentsByNotice" parameterType="int">
+    DELETE FROM comment_tbl WHERE b_num = #{b_num}
+</delete>
+
+<!-- 게시글 삭제 -->
+<delete id="deleteNotice" parameterType="int">
+    DELETE FROM board_tbl WHERE b_num = #{b_num}
+</delete>
+
+
+<!-- 추천(자식) 삭제 -->
+<delete id="deleteRecommendByBoard" parameterType="int">
+    DELETE FROM recommend_tbl
+    WHERE b_num = #{b_num}
+</delete>
+
+
+</mapper>
