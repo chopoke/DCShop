@@ -1,6 +1,7 @@
 package com.spring.DCShop.shop.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,16 @@ public class QuestDAOImpl implements QuestDAO{
 		
 	}
 
+	//문의 갯수
+	public int questCnt(int pd_id){
+		int total = sqlSession.selectOne("com.spring.DCShop.shop.dao.QuestDAO.questCnt", pd_id);
+		return total;
+	}
+	
 	//문의 목록 불러오기
 	@Override
-	public List<QuestDTO> questList(int pd_id) {
-		List<QuestDTO> list = sqlSession.selectList("com.spring.DCShop.shop.dao.QuestDAO.questList", pd_id);
+	public List<QuestDTO> questList(Map<String, Object> map) {
+		List<QuestDTO> list = sqlSession.selectList("com.spring.DCShop.shop.dao.QuestDAO.questList", map);
 		return list;
 	}
 	

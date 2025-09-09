@@ -46,7 +46,7 @@
 <script>
    $(function() {  // 상세페이지가 로딩되면
       // 페이지 로딩 시 문의 목록 호출
-      question_list();
+      question_list(1);
       // 문의 작성 버튼 클릭시 question_add함수 호출
       $('#SaveQuestion').click(function() {
     	  question_add();
@@ -98,11 +98,14 @@
    }
    
 	// 문의목록 불러오기
-   function question_list() {
+   function question_list(pageNum) {
       $.ajax({
          url: '${path}/quest_list.qa',  // 컨트롤러 이동
          type: 'POST',
-         data: 'pd_id=${param.pd_id}',
+         data: {
+        	pd_id: '${param.pd_id}',
+         	pageNum: pageNum
+      	 },
          success: function(result) {
             $('#quest_list').html(result);   // 콜백함수
          },
@@ -112,6 +115,7 @@
       });
    }
 </script>
+
 <body>
 	<!-- 문의 목록 코드 -->
 	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -119,6 +123,7 @@
 		<div id="quest_list" align="center">
 				<!-- 문의목록 불러오기 -->
 		</div>
+		
         <div class="p-8">
           <div class="border-t pt-8">
             <h3 class="text-lg font-bold text-gray-900 mb-6">문의 작성</h3>
@@ -177,9 +182,7 @@
                         class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 
                         focus:ring-primary focus:border-transparent resize-vertical"></textarea>
                     </td>
-                    <td
-                      class="px-4 py-3 border border-gray-200 text-center align-middle"
-                    >
+                    <td class="px-4 py-3 border border-gray-200 text-center align-middle">
                       <button
                         type="button"
                         id="SaveQuestion"

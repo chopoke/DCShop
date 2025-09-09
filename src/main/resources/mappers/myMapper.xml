@@ -87,5 +87,37 @@
 		  FROM product_tbl
 		 WHERE pd_id = #{pd_id}
 	</select>
+	
+	<select id="pwdcheck" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(*)
+	    FROM user_tbl
+	    WHERE u_id = #{u_id}
+	      AND u_password = #{u_password, jdbcType=VARCHAR}
+	      AND u_show = 'Y'
+	</select>
+	<select id="getUserInfo" parameterType="String" resultType="com.spring.DCShop.mypage.dto.MypageDTO">
+		SELECT * 
+		  FROM user_tbl
+		 WHERE u_id=#{loginId}
+	</select>
+	
+	<!-- update INfo -->
+	<update id="setUserInfo" parameterType="java.util.Map">
+		UPDATE user_tbl
+		   SET u_password=#{u_password},
+		   	   u_email = #{u_email},
+		   	   u_nickname = #{u_nickname},
+		   	   u_birthday = #{u_birthday},
+		   	   u_address = #{u_address},
+		   	   u_phone = #{u_phone}
+		 WHERE u_id = #{u_id}
+	</update>
+	
+	<!-- update Profile -->
+	<update id="profileupdate" parameterType="java.util.Map" >
+		UPDATE user_tbl
+		  SET u_image = #{u_image}
+		WHERE u_id = #{u_id}
+	</update>
  
  </mapper>
