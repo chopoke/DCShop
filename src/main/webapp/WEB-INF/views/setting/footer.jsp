@@ -62,7 +62,8 @@
     <!-- 5번째 칸: 찾아오기 -->
     <div class="footer-col">
       <h4>찾아오기</h4>
-      <p>내용</p>
+      <p class="icon"><a href="https://www.youtube.com/"><i class="fa-brands fa-youtube"></i>  youtube</a></p>
+      <p class="icon"><a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i>  instagram</a></p>
     </div>
   </div>
 </footer>

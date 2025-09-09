@@ -36,10 +36,7 @@ public class LoginServiceImpl implements LoginService {
 		map.put("id", id);
 		map.put("pw", pw);
 		
-//		int test = 0;
-//		String test1 = "";
-//		String test2 = "";
-//		String test3 = "";
+
 		UserDTO dto = dao.idpasswordchk(map);
 		//6. 로그인 성공시 세션 id를 설정
 		if(dto != null) {
@@ -49,13 +46,7 @@ public class LoginServiceImpl implements LoginService {
 			request.getSession().setAttribute("session_u_nickname", dto.getU_nickname());
 			request.getSession().setAttribute("session_u_email", dto.getU_email());
 			request.getSession().setAttribute("session_u_phone", dto.getU_phone());
-//			test = (Integer)request.getSession().getAttribute("session_u_member_id");
-//			test1 = (String)request.getSession().getAttribute("session_u_nickname");
-//			test2 = (String)request.getSession().getAttribute("session_u_email");
-//			test3 = (String)request.getSession().getAttribute("session_u_phone");
-			
 		}
-//		System.out.println("test : " + test + ", " + test1 + ", " + test2 + ", " + test3);
 	}
 
 }

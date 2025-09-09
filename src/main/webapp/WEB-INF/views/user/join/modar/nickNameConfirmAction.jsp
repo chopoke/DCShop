@@ -31,7 +31,7 @@
 				<!-- 상단 중앙1 시작 -->
 				<div id="section1">
 					<h1 align="center">
-						NickName 중복확인
+						닉네임(별명) 중복확인
 						</h2>
 				</div>
 

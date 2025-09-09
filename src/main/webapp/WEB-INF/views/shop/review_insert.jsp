@@ -9,8 +9,6 @@
 <title>리뷰 작성</title>
 
 <!-- css -->
-<link rel="stylesheet" href="${path}/resources/css/header.css">
-<link rel="stylesheet" href="${path}/resources/css/footer.css">
 <link rel="stylesheet" href="${path}/resources/css/product/reviewList.css">
 
 <!-- js -->
@@ -56,9 +54,12 @@ $(function(){
 </script>
 </head>
 
-<body>
+<body class="page-shop">
 <div class="wrap">
   <%@ include file="/WEB-INF/views/setting/header.jsp" %>
+
+	<section class="hero-section1">
+	</section>
 
   <div id="container">
     <div id="contents">

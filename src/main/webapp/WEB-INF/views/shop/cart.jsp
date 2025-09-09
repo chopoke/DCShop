@@ -109,7 +109,6 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 	rel="stylesheet">
 <link rel="stylesheet" href="${path}/resources/css/cart.css">
-<link rel="stylesheet" href="${path}/resources/css/main.css">
 <link rel="stylesheet" href="${path}/resources/css/shop/cart.css">
 <body
 	class="bg-body-tertiary<c:if test='${not empty cart}'> has-sticky-footer</c:if>">
@@ -274,6 +273,7 @@
 </script>
 
 	<!-- Main -->
+	<div class="container">
 	<main class="container-xxl py-4">
 		<div class="container-xxl py-3">
 			<div class="d-flex align-items-center gap-3">

@@ -41,11 +41,8 @@
     
 
 </head>
-<link rel="stylesheet" href="${path}/resources/css/footer.css">
-<link rel="stylesheet" href="${path}/resources/css/header.css">
-<link rel="stylesheet" href="${path}/resources/css/main.css">
 <link rel="stylesheet" href="${path}/resources/css/shop_main.css">
-<body>
+<body class="page-shop">
 	<!-- 헤더 시작 -->
 	<%@ include file="../setting/header.jsp" %> 
 	<!-- 헤더 끝 -->
@@ -55,11 +52,11 @@
 	<section class="main-image-section" id="main-image-section" width="600px">
 		 
 		<!-- Navigation -->
-	<nav class="bg-white shadow-sm border-b border-gray-200">
+	<nav class="shadow-sm border-b border-gray-200" id="navcol">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
 			<div class="flex items-center justify-between h-16">
 				<div class="flex items-center space-x-8">
-					<div class="font-['Pacifico'] text-2xl text-primary">logo</div>
+					<!-- <div class="font-['Pacifico'] text-2xl text-primary">logo</div> -->
 					<div class="hidden lg:flex items-center space-x-8">
 							<a href="${path}/shop_main.do?" 
 							class="text-gray-700 hover:text-primary no-underline transition-colors ">전체</a> 
@@ -72,23 +69,23 @@
 						<a href="#"
 							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/pay.do'">Supplies</a>
 						<a href="#"
-							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/cart.do'">Recommendations</a>
+							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/cartListShow.do'"><img alt="" src="resources/img_main/장바구니강.png" width="35px"></a>
 					</div>
 				</div>
 				<!-- 검색 -->
 				<div class="flex items-center space-x-4">
-					<div class="relative hidden md:block">
+					<div class="relative hidden md:block self-center">
 						<div
 							class="flex items-center bg-gray-100 rounded-lg px-4 py-2 w-80">
 							<div class="w-5 h-5 flex items-center justify-center mr-3">
 								<i class="ri-search-line text-gray-500"></i>
 							</div>
 							<form method="get" id="searchForm" action="${pageContext.request.contextPath}/shop_main.do"
-								onsubmit="submitWithParams('searchForm')">
+								onsubmit="submitWithParams('searchForm')" class="flex items-center flex-1 h-full">
 								<input type="hidden" name="petType" value="${petType}">
 								<input type="hidden" name="sortOrder" value="${sortOrder}">
 								<input type="text" value="${keyword}" placeholder="Search" name="searchKeyword" id="searchKeyword"
-									class="bg-transparent border-none outline-none flex-1 text-sm"/>
+									class="bg-transparent border-none outline-none flex-1 text-sm relative top-[7px]"/>
 							</form>
 						</div>
 					</div>
@@ -101,13 +98,12 @@
 		</div>
 	</nav>
 
-	<div id="mobile-menu" class="hidden flex flex-col bg-white border-t border-gray-200 px-4 py-2 space-y-2 sm:hidden">
-	  <a href="#" class="text-gray-700 hover:text-black">Pet Food</a>
-	  <a href="#" class="text-gray-700 hover:text-black">Cat Food</a>
-	  <a href="#" class="text-gray-700 hover:text-black">Dog Food</a>
-	  <a href="#" class="text-gray-700 hover:text-black">Toys</a>
-	  <a href="#" class="text-gray-700 hover:text-black">Supplies</a>
-	  <a href="#" class="text-gray-700 hover:text-black">Recommendations</a>
+	<div id="mobile-menu" class="hidden flex flex-col bg-white border-t border-gray-200 px-4 py-2 space-y-2 lg:hidden">
+	  <a href="${path}/shop_main.do?" class="text-gray-700 hover:text-primary no-underline transition-colors ">전체</a>
+	  <a href="${path}/shop_main.do?petType=1" data-readdy="true" class="text-gray-700 hover:text-primary no-underline transition-colors">강아지</a>
+	  <a href="${path}/shop_main.do?petType=2" class="text-gray-700 hover:text-primary no-underline transition-colors ">고양이</a>
+	  <a href="#" class="text-gray-700 hover:text-primary no-underline transition-colors ">이벤트</a>
+	  <a href="#" class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/cartListShow.do'"><img alt="" src="resources/img_main/장바구니강.png" width="35px"></a>
 	</div>
 
 	<!-- Filter Overlay -->
@@ -433,13 +429,13 @@
 			
 			<!-- 정렬부분!! -->
 			<div class="flex items-center space-x-4">
-				<div class="relative">
+				<div class="relative h-10">
 					<form id="sortform" method="get" 
 					action="${pageContext.request.contextPath}/shop_main.do" >
 						<input type="hidden" name="searchKeyword" id="searchKeyword" value="${keyword}">
 						<input type="hidden" name="subcategory" id="subcategory" value="${subcategory}">
 						<select id="sortOrder" name="sortOrder" onchange="return false;"
-							class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+							class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm leading-normal focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent top-[20px]">
 							<option value="new_pd" ${sortOrder=="new_pd"?"selected":""}>신상품순</option>
 							<option value="low_price" ${sortOrder=="low_price"?"selected":""}>낮은가격순</option>
 							<option value="high_price" ${sortOrder=="high_price"?"selected":""}>높은가격순</option>
@@ -448,8 +444,8 @@
 						</select>
 					</form>
 					<div
-						class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-						<i class="ri-arrow-down-s-line text-gray-500"></i>
+						class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+						<i class="ri-arrow-down-s-line text-gray-500 text-base"></i>
 					</div>
 				</div>
 			</div>

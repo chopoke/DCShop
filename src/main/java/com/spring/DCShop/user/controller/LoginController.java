@@ -15,7 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.spring.DCShop.user.service.LoginService;
-
+import com.spring.DCShop.user.service.MainlistServiceImpl;
 
 
 @Controller
@@ -25,9 +25,15 @@ public class LoginController {
 	@Autowired
 	private LoginService service;
 	
+	@Autowired
+	private MainlistServiceImpl ser;
+	
 	@RequestMapping("main.do")
-	public String main() {
+	public String main(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
 		logger.info("=== url -> main ===");
+		
+		ser.getlist(request, response, model);
 		
 		return "main";
 	}

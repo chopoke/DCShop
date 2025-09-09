@@ -1,5 +1,12 @@
 @charset "UTF-8";
 
+.hero-section1 {
+	width: 100%;
+	background: white;
+	padding: .5rem 0;
+	margin-top: 6rem; 
+}
+
 /* 이미지 */
 .pd-photo{
   display:block;
@@ -28,8 +35,9 @@
 
 /* 메인/보조 버튼 */
 .btn-primary{
-  min-width:180px; height:52px; padding:0 18px;
-  background:#ff9f1a; color:#fff; border:none; border-radius:12px;
+  min-width:140px; height:52px; padding:0 18px;
+  background:#b3d2ff; color:#fff; border:none; border-radius:12px;
+  /* text-shadow: -2px 0px 10px black; */
   font-size:16px; font-weight:700; cursor:pointer;
 }
 .btn-primary:hover{filter:brightness(.95);}
@@ -282,7 +290,7 @@ th.th-date, td.date-cell { white-space: nowrap; width: 120px; }
 .stars .star { color: #ddd !important; }
 
 /* 꽉 별 */
-.stars .star.full { color: #f59e0b !important; }
+.stars .star.full { color: #3b82f6 !important; }
 
 /* 반 별: 바탕은 회색, before로 왼쪽 50%만 주황 */
 .stars .star.half {
@@ -296,7 +304,7 @@ th.th-date, td.date-cell { white-space: nowrap; width: 120px; }
   left: 0; top: 0;
   width: 50%;
   overflow: hidden;
-  color: #f59e0b !important;           /* 주황 채움 */
+  color: #3b82f6 !important;           /* 주황 채움 */
 }
 
 /* 빈 별 명시(가독성용) */
@@ -310,7 +318,7 @@ th.th-date, td.date-cell { white-space: nowrap; width: 120px; }
 .product-detail-page .pd-rating .stars .star { margin-right: 1px; }
 
 /* 상품상세 > 최신 5개 리뷰 아이콘 별 색상 */
-.product-detail-page .rv-stars .fa-solid  { color: #f59e0b !important; } /* 채워진 별 */
+.product-detail-page .rv-stars .fa-solid  { color: #3b82f6 !important; } /* 채워진 별 */
 .product-detail-page .rv-stars .fa-regular{ color: #ddd     !important; } /* 빈 별    */
 
 /* (원하면 크기도 살짝) */

@@ -59,7 +59,7 @@
 							<h3 class="font-medium text-gray-900 mb-2" id="pd_name">${dto.pd_name}</h3>
 							<div class="text-lg font-bold text-gray-900 mb-2" id="pd_price">${dto.pd_price}</div>
 							<div class="flex items-center">
-								<div class="flex items-center text-yellow-400 mr-2"
+								<div class="flex items-center text-skyblue-400 mr-2"
 									aria-label="별점 ${dto.review_score}점">
 									<c:forEach begin="1" end="${dto.review_score}">
 										<i class="ri-star-fill text-sm"></i>

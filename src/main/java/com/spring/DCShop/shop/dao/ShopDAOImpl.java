@@ -35,5 +35,13 @@ public class ShopDAOImpl implements ShopDAO{
 		return total;
 	}
 
-
+	//메인 페이지 상품조회
+	public List<ShopDTO> productListAction1() {
+		List<ShopDTO> list_d = sqlSession.selectList("com.spring.DCShop.shop.dao.ShopDAO.productListAction1");
+		return list_d;
+	}
+	public List<ShopDTO> productListAction2() {
+		List<ShopDTO> list_c = sqlSession.selectList("com.spring.DCShop.shop.dao.ShopDAO.productListAction2");
+		return list_c;
+	}
 }

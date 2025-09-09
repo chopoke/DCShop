@@ -5,10 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>펫샵 - 사랑스러운 반려동물과 함께</title>
+<title>독캣배송</title>
 </head>
-<link rel="stylesheet" href="${path}/resources/css/footer.css">
-<link rel="stylesheet" href="${path}/resources/css/header.css">
 <link rel="stylesheet" href="${path}/resources/css/main.css">
 
 <style>
@@ -46,7 +44,7 @@
 						<br>서비스를 제공합니다.</p>
 					<div class="main-image-buttons">
 						<button class="primary-btn" onclick="window.location='${path}/shop_main.do'">SHOP</button>
-						<button class="secondary-btn" onclick="window.location='${path}/comm_main.do'">COMM</button>
+						<button class="secondary-btn" onclick="window.location='${path}/board_list'">COMM</button>
 					</div>
 				</div>
 			</div>
@@ -65,7 +63,7 @@
 						<br>서비스를 제공합니다.</p>
 					<div class="main-image-buttons">
 						<button class="primary-btn" onclick="window.location='${path}/shop_main.do'">SHOP</button>
-						<button class="secondary-btn" onclick="window.location='${path}/comm_main.do'">COMM</button>
+						<button class="secondary-btn" onclick="window.location='${path}/board_list'">COMM</button>
 					</div>
 				</div>
 			</div>
@@ -84,7 +82,7 @@
 						<br>서비스를 제공합니다.</p>
 					<div class="main-image-buttons">
 						<button class="primary-btn" onclick="window.location='${path}/shop_main.do'">SHOP</button>
-						<button class="secondary-btn" onclick="window.location='${path}/comm_main.do'">COMM</button>
+						<button class="secondary-btn" onclick="window.location='${path}/board_list'">COMM</button>
 					</div>
 				</div>
 			</div>
@@ -103,7 +101,7 @@
 						<br>서비스를 제공합니다.</p>
 					<div class="main-image-buttons">
 						<button class="primary-btn" onclick="window.location='${path}/shop_main.do'">SHOP</button>
-						<button class="secondary-btn" onclick="window.location='${path}/comm_main.do'">COMM</button>
+						<button class="secondary-btn" onclick="window.location='${path}/board_list'">COMM</button>
 					</div>
 				</div>
 			</div>
@@ -127,315 +125,115 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </section>
 	
-	<!-- <section class="product-section">
-		<div class="product-container">
-			<h2 class="product-title">멍</h2>
-			<div class="product-grid">
-				<div class="product-card">
-					<div class="product-image">
-						<img
-							src="resources/img_main/메인_상품1.jpg"
-							alt="">
-					</div>
-					<h3 class="product-card-title">상품1</h3>
-					<p class="product-card-description">카테고리<br>가격</p>
-				</div>
-				<div class="product-card">
-					<div class="product-image">
-						<img
-							src="resources/img_main/메인_상품2.png"
-							alt="스토어">
-					</div>
-					<h3 class="product-card-title">상품2</h3>
-					<p class="product-card-description">카테고리<br>가격</p>
-				</div>
-				<div class="product-card">
-					<div class="product-image">
-						<img
-							src="resources/img_main/메인_상품3.jpg"
-							alt="케어 서비스">
-					</div>
-					<h3 class="product-card-title">상품3</h3>
-					<p class="product-card-description">카테고리<br>가격</p>
-				</div>
-			</div>
-		</div>
-	</section> -->
 	<section class="product-section">
 	  <div class="container">
-	  	<div align="center"><img height="100px" src="resources/img_main/icon/멍3.png" alt="" /></div>
+	  <!-- 멍 파트 -->
+	  	<div align="center"><a href="${path }/shop_main.do?petType=1"><img height="100px" src="resources/img_main/icon/멍3.png" alt="" /></a></div>
 	    <!-- <h2 class="product-title">멍</h2> -->
 	
 	    <!-- 자동재생 / 3초마다 전환 -->
-	    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-	      <div class="carousel-inner">
-	
-	        <!-- 첫 번째 슬라이드 (상품 1,2,3) -->
-	        <div class="carousel-item active">
-	          <div class="row">
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품1.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품1</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품2.png" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품2</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품3.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품3</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-	
-	        <!-- 두 번째 슬라이드 (상품 4,5,6) -->
-	        <div class="carousel-item">
-	          <div class="row">
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품4.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품4</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품5.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품5</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품6.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품6</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-	
-	        <!-- 세 번째 슬라이드 (상품 7,8,9) -->
-	        <div class="carousel-item">
-	          <div class="row">
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품7.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품7</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품8.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품8</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품9.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품9</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-	
-	      </div>
-	
-	      <!-- 이전/다음 버튼 -->
-	      <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-	        <span class="carousel-control-prev-icon"></span>
-	      </button>
-	      <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-	        <span class="carousel-control-next-icon"></span>
-	      </button>
-	    </div>
+	    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> <%-- 못쓰면 아래 fmt줄을 그냥 ${product.price}로 바꾸세요 --%>
+
+		<div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+		  <div class="carousel-inner">
+		
+		    <c:forEach var="product" items="${list_d}" varStatus="s">
+				
+		      <!-- 슬라이드 시작 (3개 단위) -->
+		      <c:if test="${s.index % 3 == 0}">
+		        <c:choose>
+		          <c:when test="${s.index == 0}">
+		            <div class="carousel-item active">
+		          </c:when>
+		          <c:otherwise>
+		            <div class="carousel-item">
+		          </c:otherwise>
+		        </c:choose>
+		          <div class="row">
+		      </c:if>
+		
+		      <!-- 상품 카드 -->
+		      <div class="col-md-4">
+		        <div class="product-card"> 
+			        <a class="click_card" href="${path}/ad_shop_detailAction.pd?pdId=${product.pd_id}">
+			          <div class="product-image">
+			            <img src="${path}${product.pd_image_url}" alt="${product.pd_name}" class="d-block w-100">
+			          </div>
+			          <h3 class="product-card-title">${product.pd_name}</h3>
+			          <p class="product-card-description">
+			            ${product.pd_brand}<br>
+			            ₩<fmt:formatNumber value="${product.pd_price}" pattern="#,###"/>
+			            <%-- fmt 못쓰면: ₩${product.price} --%>
+			          </p>
+		          	</a>
+		        </div>
+		      </div>
+		
+		      <!-- 슬라이드 끝 (3개 단위 또는 마지막에서 닫기) -->
+		      <c:if test="${s.index % 3 == 2 || s.last}">
+		          </div> <!-- .row -->
+		        </div>   <!-- .carousel-item -->
+		      </c:if>
+		    </c:forEach>
+		  </div>
 	  </div>
+	 
 	</section>
 	
-	<!-- <section class="product-section">
-		<div class="product-container">
-			<h2 class="product-title">냥</h2>
-			<div class="product-grid">
-				<div class="product-card">
-					<div class="product-image">
-						<img
-							src="resources/img_main/메인_상품4.png"
-							alt="커뮤니티">
-					</div>
-					<h3 class="product-card-title">상품4</h3>
-					<p class="product-card-description">카테고리<br>가격</p>
-				</div>
-				<div class="product-card">
-					<div class="product-image">
-						<img
-							src="resources/img_main/메인_상품5.png"
-							alt="스토어">
-					</div>
-					<h3 class="product-card-title">상품5</h3>
-					<p class="product-card-description">카테고리<br>가격</p>
-				</div>
-				<div class="product-card">
-					<div class="product-image">
-						<img
-							src="resources/img_main/메인_상품6.jpg"
-							alt="케어 서비스">
-					</div>
-					<h3 class="product-card-title">상품6</h3>
-					<p class="product-card-description">카테고리<br>가격</p>
-				</div>
-			</div>
-		</div>
-	</section> -->
+	<!-- 냥 파트 -->
 	<div align="center"><hr width="400px"></div>
 	<section class="product-section">
 	  <div class="container">
-	  	<div align="center"><img height="100px" src="resources/img_main/icon/냥1.png" alt="" /></div>
+	  	<div align="center"><a href="${path }/shop_main.do?petType=2"><img height="100px" src="resources/img_main/icon/냥1.png" alt="" /></a></div>
 	    <!-- <h2 class="product-title">멍</h2> -->
 	
 	    <!-- 자동재생 / 3초마다 전환 -->
 	    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-	      <div class="carousel-inner">
-	
-	        <!-- 첫 번째 슬라이드 (상품 1,2,3) -->
-	        <div class="carousel-item active">
-	          <div class="row">
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품1.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품1</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품2.png" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품2</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품3.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품3</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-	
-	        <!-- 두 번째 슬라이드 (상품 4,5,6) -->
-	        <div class="carousel-item">
-	          <div class="row">
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품4.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품4</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품5.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품5</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품6.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품6</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-	
-	        <!-- 세 번째 슬라이드 (상품 7,8,9) -->
-	        <div class="carousel-item">
-	          <div class="row">
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품7.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품7</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품8.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품8</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	            <div class="col-md-4">
-	              <div class="product-card">
-	                <div class="product-image">
-	                  <img src="resources/img_main/메인_상품9.jpg" alt="">
-	                </div>
-	                <h3 class="product-card-title">상품9</h3>
-	                <p class="product-card-description">카테고리<br>가격</p>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-	
-	      </div>
-	
-	      <!-- 이전/다음 버튼 -->
-	      <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-	        <span class="carousel-control-prev-icon"></span>
-	      </button>
-	      <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-	        <span class="carousel-control-next-icon"></span>
-	      </button>
-	    </div>
+		  <div class="carousel-inner">
+		
+		    <c:forEach var="product" items="${list_c}" varStatus="s">
+				
+		      <!-- 슬라이드 시작 (3개 단위) -->
+		      <c:if test="${s.index % 3 == 0}">
+		        <c:choose>
+		          <c:when test="${s.index == 0}">
+		            <div class="carousel-item active">
+		          </c:when>
+		          <c:otherwise>
+		            <div class="carousel-item">
+		          </c:otherwise>
+		        </c:choose>
+		          <div class="row">
+		      </c:if>
+		
+		      <!-- 상품 카드 -->
+		      <div class="col-md-4">
+		        <div class="product-card"> 
+			        <a class="click_card" href="${path}/ad_shop_detailAction.pd?pdId=${product.pd_id}">
+			          <div class="product-image">
+			            <img src="${path}${product.pd_image_url}" alt="${product.pd_name}" class="d-block w-100">
+			          </div>
+			          <h3 class="product-card-title">${product.pd_name}</h3>
+			          <p class="product-card-description">
+			            ${product.pd_brand}<br>
+			            ₩<fmt:formatNumber value="${product.pd_price}" pattern="#,###"/>
+			            <%-- fmt 못쓰면: ₩${product.price} --%>
+			          </p>
+		          	</a>
+		        </div>
+		      </div>
+		
+		      <!-- 슬라이드 끝 (3개 단위 또는 마지막에서 닫기) -->
+		      <c:if test="${s.index % 3 == 2 || s.last}">
+		          </div> <!-- .row -->
+		        </div>   <!-- .carousel-item -->
+		      </c:if>
+		    </c:forEach>
+		  </div>
 	  </div>
+	
+	     
+	  
 	</section>
 	
 	<div align="center"><hr width="400px"></div>
@@ -484,6 +282,5 @@
 	<!-- 푸터 시작 -->
 		<%@ include file="setting/footer.jsp" %>
 	<!-- 푸터 끝 -->
-	<script src="script.js"></script>
 </body>
 </html>

@@ -69,10 +69,12 @@
 
 					<div class="image-container">
 						<input type="text" placeholder="Search" class="board_search" />
-						<a href="#"><img alt="" src="resources/img_main/icon/돋보기.png"></a>
-				      	<img alt="" src="resources/img_main/고개틀2.png">
+						<div class="son"><a href="${path}/main.do">최신순</a>&nbsp;<a href="${path}/main.do">추천순</a>&nbsp;<a href="${path}/main.do">댓글순</a>
+						</div>
+						<a class="a_icon" href="#"><img alt="" src="resources/img_main/icon/돋보기.png"></a>
+				      	<img  class="p_img" alt="" src="resources/img_main/고개틀2.png">
 				      	<div class="text-overlay">
-				        	<h4><b>자유게시판</b></h4>
+				        	<b>자유게시판</b>
 				      	</div>
 				    </div>
 					

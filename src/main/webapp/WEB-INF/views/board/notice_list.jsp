@@ -37,7 +37,7 @@
 	</script>
 </c:if>
 </head>
-<body>
+<body class="page-comm">
 	<div class="wrap">
 		<!-- 헤더부분 -->
 		<%@ include file="/WEB-INF/views/setting/header.jsp"%>
@@ -50,12 +50,10 @@
 				<div class="titleArea mx-auto w-[400px]">
 					<div class="image-container">
 						<input type="text" placeholder="Search" class="board_search" /> <a
-							href="#"><img alt="" src="resources/img_main/icon/돋보기.png"></a>
-						<img alt="" src="resources/img_main/고개틀2.png">
+							href="#"><a class="a_icon1" href="#"><img alt="" src="resources/img_main/icon/돋보기.png"></a>
+						<img class="p_img1" alt="" src="resources/img_main/고개틀2.png">
 						<div class="text-overlay">
-							<h4>
-								<b>공지이벤트</b>
-							</h4>
+								<b>공지/이벤트</b>
 						</div>
 					</div>
 				</div>

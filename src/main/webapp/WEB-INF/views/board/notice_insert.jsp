@@ -31,7 +31,7 @@
     });
     </script>
 </head>
-<body>
+<body class="page-comm">
     <!-- 헤더부분 -->
     <%@ include file="/WEB-INF/views/setting/header.jsp" %>
     <section class="hero-section1"></section>
@@ -39,7 +39,7 @@
     <div class="wrap">
         <div id="container">
             <div id="contents">
-                <div class="titleArea"><h1 align="center"> 공지/이벤트 작성</h1></div>
+                <center><img alt="" src="resources/img_main/작성중.png" height="100px"></center>
                 <div>
                     <div class="table_div">
                         <!-- 글쓰기 폼 시작 -->
