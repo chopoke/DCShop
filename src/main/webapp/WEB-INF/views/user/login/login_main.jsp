@@ -110,7 +110,11 @@
 					</div>
 				</div>
 				<!-- 상단 중앙2 끝 -->
-				
+				<c:if test="${param.error == '1'}">
+				    <script>
+				        alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+				    </script>
+				</c:if>
 			</div>
 		<br><br><br><br>
 		<br><br><br><br>

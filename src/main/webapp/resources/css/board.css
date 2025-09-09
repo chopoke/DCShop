@@ -210,6 +210,12 @@ table tr:hover {
   top: 49px;   /* 위에서 20px */
   left: 250px;
 }
+
+.son a {
+	text-decoration-line: none;
+	color: inherit;
+}
+
 .son1 {
   display: flex;        /* 가로 정렬 */
   gap: 10px;            /* 요소 사이 간격 */

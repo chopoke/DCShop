@@ -46,6 +46,11 @@ public class LoginServiceImpl implements LoginService {
 			request.getSession().setAttribute("session_u_nickname", dto.getU_nickname());
 			request.getSession().setAttribute("session_u_email", dto.getU_email());
 			request.getSession().setAttribute("session_u_phone", dto.getU_phone());
+			request.getSession().setAttribute("session_u_role", dto.getU_role());
+		}
+		if(dto == null) {
+			System.out.println("test");
+			response.sendRedirect(request.getContextPath() + "/login_main.do?error=1");
 		}
 	}
 

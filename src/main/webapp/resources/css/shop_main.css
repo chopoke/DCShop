@@ -175,6 +175,7 @@ section nav {
 /* 페이지네이션 css */
 .page-btn {
             display: inline-flex;
+            text-decoration-line: none;
             align-items: center;
             justify-content: center;
             min-width: 36px;
