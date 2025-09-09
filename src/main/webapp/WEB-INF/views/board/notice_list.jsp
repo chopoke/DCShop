@@ -107,11 +107,19 @@
 						</c:forEach>
 					</c:forEach>
 				</table>
-				<!-- 글쓰기 버튼 (로그인 시) -->
+				 <!-- 글쓰기 버튼 (로그인 시)
 				<div align="right">
 					<br> <input type="button" class="inputButton" value="글쓰기"
 						id="btnInsert">
 				</div>
+				 -->
+					<!-- 글쓰기 버튼 (admin 전용) -->
+				<c:if test="${sessionScope.sessionid eq 'admin'}">
+					<div align="right">
+						<br> <input type="button" class="inputButton" value="글쓰기"
+							id="btnInsert">
+					</div>
+				</c:if>
 			</form>
 		</div>
 
