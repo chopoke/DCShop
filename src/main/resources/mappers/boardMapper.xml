@@ -38,8 +38,45 @@
 					 	 		WHERE b.b_num = c.b_num) AS b_comments
 						FROM user_tbl u, board_tbl b
 						WHERE u.u_member_id = b.u_member_id
-						  AND b.b_category IN ('자유', '꿀팁', '리뷰', '질문')
-						ORDER BY b.b_num DESC) A 
+						  <if test="keyword != null and keyword != ''">
+						  AND b.b_title LIKE '%'||#{keyword}||'%'
+						  </if>
+						  <if test="category != null and category != ''">
+						  	and
+						  	<choose>
+						  		<when test="category=='free'">
+						  			b.b_category = '자유'
+						  		</when>
+						  		<when test="category=='honeytip'">
+						  			b.b_category = '꿀팁'
+						  		</when>
+						  		<when test="category=='review'">
+						  			b.b_category = '리뷰'
+						  		</when>
+						  		<when test="category=='question'">
+						  			b.b_category = '질문'
+						  		</when>
+						  		<otherwise>
+						  			b.b_category IN ('자유', '꿀팁', '리뷰', '질문')
+						  		</otherwise>
+						  	</choose>
+						  </if>
+						  <if test="sortOrder != null and sortOrder != ''">
+						  	ORDER BY
+						  	<choose>
+						  		<when test="sortOrder == 'viewCnt'">
+						  			b.b_views DESC, b.b_num DESC
+						  		</when>
+						  		<when test="sortOrder == 'commCnt'">
+						  			b_comments DESC, b.b_num DESC
+						  		</when>
+						  		<otherwise>
+						  			b.b_num DESC
+						  		</otherwise>
+						  	</choose>
+						  </if>
+						
+						) A 
 				) 
 		 WHERE rn BETWEEN #{start} AND #{end}
  	</select>
@@ -47,6 +84,31 @@
  	<!-- 게시글 전체 개수 -->
  	<select id="boardListTotal" resultType="int">
  		SELECT COUNT(*) FROM board_tbl
+ 		<where>
+ 			<if test="keyword != null and keyword != ''">
+			  AND b_title LIKE '%'||#{keyword}||'%'
+			  </if>
+			  <if test="category != null and category != ''">
+			  	and
+			  	<choose>
+			  		<when test="category=='free'">
+			  			b_category = '자유'
+			  		</when>
+			  		<when test="category=='honeytip'">
+			  			b_category = '꿀팁'
+			  		</when>
+			  		<when test="category=='review'">
+			  			b_category = '리뷰'
+			  		</when>
+			  		<when test="category=='question'">
+			  			b_category = '질문'
+			  		</when>
+			  		<otherwise>
+			  			b_category IN ('자유', '꿀팁', '리뷰', '질문')
+			  		</otherwise>
+			  	</choose>
+			  </if>
+ 		</where>
  	</select>
  	
  	<!-- 작성자 -->

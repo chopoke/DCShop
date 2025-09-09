@@ -27,10 +27,10 @@ public class BoardDAOImpl implements BoardDAO{
 
 	// 게시글 전체 개수
 	@Override
-	public int boardListTotal() {
+	public int boardListTotal(Map<String, Object> countP) {
 		System.out.println("BoardDAOImpl - boardListTotal()");
 
-		int total = sqlSession.selectOne("com.spring.DCShop.board.dao.BoardDAO.boardListTotal");
+		int total = sqlSession.selectOne("com.spring.DCShop.board.dao.BoardDAO.boardListTotal",countP);
 		
 		return total;
 	}
