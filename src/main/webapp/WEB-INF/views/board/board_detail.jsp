@@ -287,8 +287,15 @@
 								<tr>
 									<td> 
 										<div style="min-height: 700px; white-space: pre-line;" align="left">
-											${board.b_contents} 
-											<img src="${board.b_image}" style="width:350px">
+											<div>
+											${board.b_contents}
+											</div>
+											<c:if test="${board.b_image != null}">
+												<div>
+													<img src="<c:url value='${board.b_image}'/>" style="width:400px; height:auto;">
+												</div> 
+											</c:if>
+											<%-- <img src="${board.b_image}" style="width:350px"> --%>
 										</div>
 										<div align="right" style="height: 20px">
 											<div style="font-size: 15px"> 등록일 : ${board.b_dateposted} </div> 

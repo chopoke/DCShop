@@ -137,4 +137,22 @@ public class ShopServiceImpl implements ShopService{
 		model.addAttribute("subcategory", subcategory);
 	}
 
+	
+	// 카테고리 갯수 가져오기
+	@Override
+	public void getCategoryCnt(HttpServletRequest request, HttpServletResponse response, Model model) {
+		// 카테고리 리스트 받아오기 (ex -- 1100 : 3)
+	    List<Map<String, Object>> list = dao.getCateCnt();
+	    
+	    Map<String, Integer> out = new HashMap<>();
+	    // 반복해서 맵에 담아주깅~
+	    for (Map<String, Object> r : list) {
+	    	// 카데고리랑 갯수 출력용 out Map에 담아주기
+	    	out.put(r.get("CATEGORY").toString(), ((Number) r.get("CNT")).intValue());
+	    }
+
+	    // model에 넣어서 jsp에 전달
+	    model.addAttribute("categoryCounts", out); 
+	}
+
 }

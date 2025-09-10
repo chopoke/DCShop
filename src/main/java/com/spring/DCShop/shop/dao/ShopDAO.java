@@ -15,4 +15,7 @@ public interface ShopDAO {
 	
 	// 세부 카테고리 가져오기
 	public List<Integer> getSubcategory(int category);
+	
+	// 카테고리 갯수
+	public List<Map<String, Object>> getCateCnt();
 }

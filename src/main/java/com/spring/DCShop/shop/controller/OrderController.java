@@ -47,6 +47,15 @@ public class OrderController {
 
 		return "shop/pay";
 	}
+	
+	@RequestMapping("/saveOrderInfo")
+	public void saveOrderInfo(@RequestBody String jsonBody, HttpServletRequest request, HttpServletResponse response, Model model)
+		throws Exception{
+		logger.info("<<< url => saveOrderInfo >>>");
+		
+		service.orderInfoAction(jsonBody, request, response, model);
+		
+	}
 
 	
 	@RequestMapping("/pay_success") 
@@ -62,11 +71,11 @@ public class OrderController {
 			throws ServletException, IOException { 
 		logger.info("<<< url => fail >>>");
 		
-		System.out.println(request.getParameter("message"));
-		System.out.println(request.getParameter("code"));
-		
-		model.addAttribute("message", request.getParameter("message"));
-		model.addAttribute("code", request.getParameter("code"));
+//		System.out.println(request.getParameter("message"));
+//		System.out.println(request.getParameter("code"));
+//		
+//		model.addAttribute("message", request.getParameter("message"));
+//		model.addAttribute("code", request.getParameter("code"));
 	    
 		return "shop/pay_fail"; 
 	}
@@ -139,7 +148,7 @@ public class OrderController {
         
         if(isSuccess) {
         	// 결제가 정상적으로 승인이 되었다면 DB에 저장
-        	service.orderInsertAction(jsonBody, jsonObject, request);
+        	service.orderInsertAction(jsonObject, request);
         }
 
         

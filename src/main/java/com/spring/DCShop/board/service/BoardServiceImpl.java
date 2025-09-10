@@ -213,9 +213,11 @@ public class BoardServiceImpl implements BoardService {
 					fos.write(data);
 				}
 
-				String b_image1 = "/DCShop_team/resources/board_upload/" + file.getOriginalFilename();
-				System.out.println("p_img1 : " + b_image1);
-				dto.setB_image(b_image1);
+				
+				String b_image = "/resources/board_upload/" + file.getOriginalFilename();
+				System.out.println("b_image : " + b_image);
+				dto.setB_image(b_image);
+
 			} else {
 				dto.setB_image(null);
 			}
@@ -262,24 +264,68 @@ public class BoardServiceImpl implements BoardService {
 			throws ServletException, IOException {
 		// 1. 수정할 글 정보 파라미터 가져오기
 		int b_num = Integer.parseInt(request.getParameter("b_num"));
-		String b_title = request.getParameter("b_title");
-		String b_contents = request.getParameter("b_contents");
-		String b_category = request.getParameter("b_category");
-		// 2. 필수 항목 검증 (제목/내용/카테고리 필수)
-		if (b_title == null || b_title.trim().isEmpty() || b_contents == null || b_contents.trim().isEmpty()
-				|| b_category == null || b_category.trim().isEmpty()) {
-			throw new ServletException("필수 입력 항목이 비어 있습니다.");
+
+	    String b_title = request.getParameter("b_title");
+	    String b_contents = request.getParameter("b_contents");
+	    String b_category = request.getParameter("b_category");
+	    
+	    if (b_title == null || b_title.trim().isEmpty() ||
+	        b_contents == null || b_contents.trim().isEmpty() ||
+	        b_category == null || b_category.trim().isEmpty()) {
+	        throw new ServletException("필수 입력 항목이 비어 있습니다.");
+	    }
+	    
+	    MultipartFile file = request.getFile("b_image");
+	    System.out.println("file : " + file);
+	    
+	    FileInputStream fis = null;
+		FileOutputStream fos = null;
+		
+		try {
+			//화면에서 입력받은 값 가져와서 dto에 setter로 담는다
+			BoardDTO dto = new BoardDTO();
+		    dto.setB_num(b_num);
+		    dto.setB_title(b_title);
+		    dto.setB_contents(b_contents);
+		    dto.setB_category(b_category);
+			
+			if(!file.isEmpty()) {
+				ServletContext save = request.getSession().getServletContext();
+				System.out.println(save);
+				
+				String saveDir = request.getSession().getServletContext().getRealPath("/resources/board_upload/");
+				System.out.println("saveDir : " + saveDir);
+				
+				String realDir = "D:\\DEV05\\workspace_DCshop\\DCShop\\src\\main\\webapp\\resources\\board_upload\\";
+				System.out.println("realDir : " + realDir);
+				
+				file.transferTo(new File(saveDir + file.getOriginalFilename())); 	// import java.io.File
+				fis = new FileInputStream(saveDir + file.getOriginalFilename());
+				fos = new FileOutputStream(realDir + file.getOriginalFilename());
+				
+				int data = 0;
+				while((data = fis.read())!= -1) {
+					fos.write(data);
+				}
+				
+				String b_image = "/resources/board_upload/" + file.getOriginalFilename();
+				System.out.println("b_image : " + b_image);
+				dto.setB_image(b_image);
+			} else {
+				dto.setB_image(null);
+			}
+			
+			dao.boardUpdateAction(dto);
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(fis != null) fis.close();
+			if(fos != null) fos.close();
 		}
-		 // 3. DTO에 데이터 담기
-		BoardDTO dto = new BoardDTO();
-		dto.setB_num(b_num);
-		dto.setB_title(b_title);
-		dto.setB_contents(b_contents);
-		dto.setB_category(b_category);
-		 // 4. DAO 호출 → 실제 DB 수정 실행
-		dao.boardUpdateAction(dto);
-		 // 5. 수정 완료된 게시글 번호 반환 (Controller에서 redirect 용도로 사용)
-		return b_num;
+
+	    return b_num;
+
 	}
 
 	// 게시판 삭제

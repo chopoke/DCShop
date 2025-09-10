@@ -188,5 +188,13 @@
 		   AND u_member_id = #{u_member_id}
 	</delete>
 	
+	<!-- 회원탈퇴 -->
+	<update id="userInfoDelete" parameterType="java.util.Map">
+		UPDATE user_tbl
+		   SET u_show = 'N'
+		 WHERE u_member_id = #{u_member_id}
+		   AND u_password = #{u_password}
+	</update>
+	
  		
  </mapper>
