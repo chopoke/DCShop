@@ -238,7 +238,7 @@ input[type="checkbox"]:checked::after {
 				</div>
 				<div>
 					<label class="text-sm text-gray-500 block mb-1">연락처</label> 
-					<input type="tel" value="${sessionScope.session_u_phone}" class="w-full p-3 border rounded-lg" id="u_phone"/>
+					<input type="tel" value="${sessionScope.session_u_phone}" class="w-full p-3 border rounded-lg" id="u_phone" placeholder="010-0000-0000"/>
 				</div>
 			</div>
 		</section>

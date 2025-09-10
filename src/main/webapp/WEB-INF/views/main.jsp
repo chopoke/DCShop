@@ -283,7 +283,22 @@
 		<%@ include file="setting/footer.jsp" %>
 	<!-- 푸터 끝 -->
 <c:if test="${param.quit == '1'}">
-	<script>alert('회원 탈퇴가 완료되었습니다.');</script>
+	<script>
+		(function () {
+			// url에서 객체 찾아주기
+		    const params = new URLSearchParams(location.search);
+			// 찾은 객체가 quit이고, 값이 1이라면
+		    if (params.get('quit') === '1') {
+		      alert('회원 탈퇴가 완료되었습니다.');		// 알럿창 출력
+		      // URL에서 quit=1 제거 (뒤로가기 이력은 유지)
+		      params.delete('quit');
+		      const q = params.toString();
+		      // 현재 페이지 경로 + q가 true라면 ? 와 q를 붙이고 아니면 공백 + 쿼리스ㅡ트링 정리 
+		      const newUrl = location.pathname + (q ? '?' + q : '') + location.hash;
+		      history.replaceState(null, '', newUrl);
+		    }
+		})();
+	</script>
 </c:if>
 
 </body>
