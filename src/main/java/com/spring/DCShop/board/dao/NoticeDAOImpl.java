@@ -19,7 +19,7 @@ public class NoticeDAOImpl implements NoticeDAO {
 	@Override
 	public List<BoardDTO> noticeListAction(Map<String, Object> map) {
 		System.out.println("NoticeDAOImpl - noticeListAction()");
-		
+		// MyBatis 매퍼 호출 → 목록 조회
 		List<BoardDTO> list = sqlSession.selectList("com.spring.DCShop.board.dao.NoticeDAO.noticeListAction", map);
 		
 		return list;
@@ -29,7 +29,7 @@ public class NoticeDAOImpl implements NoticeDAO {
 	@Override
 	public int noticeListTotal(String category) {
 		System.out.println("NoticeDAOImpl - noticeListTotal()");
-
+	 	// 카테고리별 전체 게시글 수 조회
 		int total = sqlSession.selectOne("com.spring.DCShop.board.dao.NoticeDAO.noticeListTotal", category);
 		
 		return total;
@@ -39,7 +39,7 @@ public class NoticeDAOImpl implements NoticeDAO {
 	@Override
 	public BoardDTO noticeDetailAction(int b_num) {
 		System.out.println("NoticeDAOImpl - noticeDetailAction()");
-		
+		// 글 번호(b_num)로 1건 조회
 		BoardDTO dto = sqlSession.selectOne("com.spring.DCShop.board.dao.NoticeDAO.noticeDetailAction", b_num);
 		
 		return dto;
@@ -148,49 +148,7 @@ public class NoticeDAOImpl implements NoticeDAO {
     	sqlSession.delete("com.spring.DCShop.board.dao.NoticeDAO.noticeDeleteAction", b_num);
 
 	}
-
-	
-	// 통합 게시판 목록 (공지/이벤트/커뮤니티)
-	@Override
-	public List<BoardDTO> unifiedBoardListAction(Map<String, Object> map) {
-		System.out.println("NoticeDAOImpl - unifiedBoardListAction()");
-		
-		List<BoardDTO> list = sqlSession.selectList("com.spring.DCShop.board.dao.NoticeDAO.unifiedBoardListAction", map);
-		
-		return list;
-	}
-	
-	// 통합 게시판 전체 개수
-	@Override
-	public int unifiedBoardListTotal(String category) {
-		System.out.println("NoticeDAOImpl - unifiedBoardListTotal()");
-
-		int total = sqlSession.selectOne("com.spring.DCShop.board.dao.NoticeDAO.unifiedBoardListTotal", category);
-		
-		return total;
-	}
-	
-	// 카테고리별 게시판 목록
-	@Override
-	public List<BoardDTO> categoryBoardListAction(Map<String, Object> map) {
-		System.out.println("NoticeDAOImpl - categoryBoardListAction()");
-		
-		List<BoardDTO> list = sqlSession.selectList("com.spring.DCShop.board.dao.NoticeDAO.categoryBoardListAction", map);
-		
-		return list;
-	}
-	
-	// 카테고리별 게시판 전체 개수
-	@Override
-	public int categoryBoardListTotal(String category) {
-		System.out.println("NoticeDAOImpl - categoryBoardListTotal()");
-
-		int total = sqlSession.selectOne("com.spring.DCShop.board.dao.NoticeDAO.categoryBoardListTotal", category);
-		
-		return total;
-	}
-	
-	// 회원 번호 조회
+    // 회원 번호 조회
 	@Override
 	public int selectU_member_id(String u_id) {
 		System.out.println("NoticeDAOImpl - selectU_member_id()");
@@ -208,20 +166,6 @@ public class NoticeDAOImpl implements NoticeDAO {
 		String u_nickname = sqlSession.selectOne("com.spring.DCShop.board.dao.NoticeDAO.selectU_nicknameAction", u_id);
 		
 		return u_nickname;
-	}
-
-	// 공지/이벤트 통합 목록 (공지+이벤트)
-	@Override
-	public List<BoardDTO> noticeUnifiedListAction(Map<String, Object> map) {
-		System.out.println("NoticeDAOImpl - noticeUnifiedListAction()");
-		return sqlSession.selectList("com.spring.DCShop.board.dao.NoticeDAO.noticeUnifiedListAction", map);
-	}
-
-	// 공지/이벤트 통합 전체 개수 (공지+이벤트)
-	@Override
-	public int noticeUnifiedListTotal() {
-		System.out.println("NoticeDAOImpl - noticeUnifiedListTotal()");
-		return sqlSession.selectOne("com.spring.DCShop.board.dao.NoticeDAO.noticeUnifiedListTotal");
 	}
 
 	

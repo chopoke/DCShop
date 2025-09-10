@@ -38,7 +38,7 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		// 화면에서 입력받은 값을 가져오기
 		String pageNum = request.getParameter("pageNum");
-		String category = request.getParameter("category"); // 공지, 이벤트, 전체
+		String category = request.getParameter("category"); // 공지, 이벤트
 		if (category == null || category.trim().isEmpty()) {
 			category = "전체";
 		}
@@ -75,14 +75,14 @@ public class NoticeServiceImpl implements NoticeService {
 		int b_num = Integer.parseInt(request.getParameter("b_num"));
 		String u_id = (String)request.getSession().getAttribute("sessionid");
 		// 조회수 증가 - 목록에서 클릭했을시에만 증가하도록
-		int listClick = Integer.parseInt(request.getParameter("listClick"));
-		if(listClick == 1) {
+		int listClick = Integer.parseInt(request.getParameter("listClick")); 
+		if(listClick == 1) { //목록에서 클릭했을 경우에만 조회수 증가
 			noticeDAO.noticeViewsUpdateAction(b_num);
 		}
 		// 게시판 상세페이지 가져오기
 		BoardDTO board = noticeDAO.noticeDetailAction(b_num);
 		model.addAttribute("board", board);
-		
+		//  로그인 사용자가 추천 여부 확인
 		if (u_id != null) {
 			int u_member_id = noticeDAO.selectU_member_id(u_id);
 			
@@ -102,11 +102,11 @@ public class NoticeServiceImpl implements NoticeService {
 	public void selectU_nicknameAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		System.out.println("NoticeServiceImpl - selectU_nicknameAction()");
-		
+		// 1. 세션에서 로그인 아이디 가져오기
 		String u_id = (String)request.getSession().getAttribute("sessionid");
-		
+		// 2. DAO 호출 → 닉네임 조회
 		String u_nickname = noticeDAO.selectU_nicknameAction(u_id);
-		
+		// 3. Model에 담기
 		model.addAttribute("u_nickname", u_nickname);
 	}
 	
@@ -122,7 +122,7 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		int b_num = 0;
 		
-		try {
+		try { // 1. DTO 생성 및 값 세팅
 			BoardDTO dto = new BoardDTO();
 			String u_id = (String)request.getSession().getAttribute("sessionid");
 			
@@ -137,7 +137,7 @@ public class NoticeServiceImpl implements NoticeService {
 				ServletContext save = request.getSession().getServletContext();
 				String saveDir = request.getSession().getServletContext().getRealPath("/resources/board_upload/");
 				String realDir = "D:\\DEV05\\workspace_DCshop\\DCShop\\src\\main\\webapp\\resources\\board_upload\\";
-				
+				// 2. 파일 업로드 처리
 				file.transferTo(new File(saveDir + file.getOriginalFilename()));
 				fis = new FileInputStream(saveDir + file.getOriginalFilename());
 				fos = new FileOutputStream(realDir + file.getOriginalFilename());
@@ -160,6 +160,7 @@ public class NoticeServiceImpl implements NoticeService {
 			if(fos != null) fos.close();
 		}
 		
+		
 		return b_num;
 	}
 	
@@ -170,7 +171,9 @@ public class NoticeServiceImpl implements NoticeService {
 		System.out.println("NoticeServiceImpl - noticeUpdateDTOAction()");
 		
 		int b_num = Integer.parseInt(request.getParameter("b_num"));
+		// 1. DB에서 기존 데이터 조회
 		BoardDTO board = noticeDAO.noticeDetailAction(b_num);
+		// 2. Model에 담아 View로 전달
 		model.addAttribute("board", board);
 	}
 	
@@ -184,18 +187,18 @@ public class NoticeServiceImpl implements NoticeService {
 		FileInputStream fis = null;
 		FileOutputStream fos = null;
 		
-		try {
+		try {// 1. 파라미터 추출
 			int b_num = Integer.parseInt(request.getParameter("b_num"));
 			String b_title = request.getParameter("b_title");
 			String b_contents = request.getParameter("b_contents");
 			String b_category = request.getParameter("b_category");
-			
+			// 2. DTO 생성
 			BoardDTO dto = new BoardDTO();
 			dto.setB_num(b_num);
 			dto.setB_title(b_title);
 			dto.setB_contents(b_contents);
 			dto.setB_category(b_category);
-			
+			// 3. 파일 업로드 처리
 			if(!file.isEmpty()) {
 				ServletContext save = request.getSession().getServletContext();
 				String saveDir = request.getSession().getServletContext().getRealPath("/resources/board_upload/");
@@ -213,7 +216,7 @@ public class NoticeServiceImpl implements NoticeService {
 				
 				dto.setB_image(file.getOriginalFilename());
 			}
-			
+			// 4. DB update 실행 (DAO 호출)
 			noticeDAO.noticeUpdateAction(dto);
 			return b_num;
 			
@@ -233,15 +236,15 @@ public class NoticeServiceImpl implements NoticeService {
 			throws ServletException, IOException {
 		int b_num = Integer.parseInt(request.getParameter("b_num"));
 	    
-		// 작성자 확인
+		// 로그인 사용자 확인
 		String loginId = (String) request.getSession().getAttribute("sessionID");
 		if (loginId == null) {
 			loginId = (String) request.getSession().getAttribute("sessionid");
 		}
-		String authorId = noticeDAO.noticeSelectBoardAuthorId(b_num);
-		if (loginId == null || authorId == null || !loginId.equals(authorId)) {
-			throw new ServletException("권한이 없습니다.");
-		}
+			// 권한 체크: admin만 가능
+		    if (!"admin".equals(loginId)) {
+		        throw new ServletException("권한이 없습니다.");
+		    } 
 
 		 // 추천(자식) 데이터 선삭제
 	    noticeDAO.deleteRecommendsByNotice(b_num);
@@ -254,17 +257,12 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 		
 	
-	
-	
-		
-	
-	
 	// 공지/이벤트 추천 클릭
 	@Override
 	public Map<String, Object> noticeRecommendClickAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		System.out.println("NoticeServiceImpl - noticeRecommendClickAction()");
-		
+		// 1. 파라미터 추출
 		int b_num = Integer.parseInt(request.getParameter("b_num"));
 		int click = Integer.parseInt(request.getParameter("click"));
 		
@@ -275,17 +273,17 @@ public class NoticeServiceImpl implements NoticeService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("b_num", b_num);
 		map.put("u_member_id", u_member_id);
-		
+		// 2. 추천/취소 처리 (DAO 호출)
 		if(click == 1) {
 			noticeDAO.noticeRecommendAddAction(map);
 		} else {
 			noticeDAO.noticeRecommendRemoveAction(map);
 		}
-		
+		// 3. 추천수 갱신
 		int success = noticeDAO.noticeRecommendUpdateAction(b_num);
 		
 		Map<String, Object> result = new HashMap<String, Object>();
-		
+	
 		if(success == 1) {
 			int b_recommend = noticeDAO.noticeSelectB_recommend(b_num);
 			result.put("b_recommend", b_recommend);
@@ -296,66 +294,5 @@ public class NoticeServiceImpl implements NoticeService {
 		return result;
 	}
 	
-	// 공지/이벤트 목록 
-	@Override
-	public void unifiedBoardListAction(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-		System.out.println("NoticeServiceImpl - unifiedBoardListAction()");
-		
-		String pageNum = request.getParameter("pageNum");
-		String category = request.getParameter("category"); // 전체, 공지, 이벤트, 커뮤니티
-		
-		Paging paging = new Paging(pageNum);
-		int total = noticeDAO.unifiedBoardListTotal(category);
-		System.out.println("unified total : " + total);
-		
-		paging.setTotalCount(total);
-		
-		int start = paging.getStartRow();
-		int end = paging.getEndRow();
-		
-		Map<String, Object> map = new HashMap<String,Object>();
-		map.put("start", start);
-		map.put("end", end);
-		map.put("category", category);
-		
-		List<BoardDTO> list = noticeDAO.unifiedBoardListAction(map);
-		System.out.println("unified list : " + list);
-		
-		model.addAttribute("list", list);
-		model.addAttribute("paging", paging);
-		model.addAttribute("category", category);
-	}
-	
-	// 카테고리별 게시판 목록
-	@Override
-	public void categoryBoardListAction(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-		System.out.println("NoticeServiceImpl - categoryBoardListAction()");
-		
-		String pageNum = request.getParameter("pageNum");
-		String category = request.getParameter("category");
-		
-		Paging paging = new Paging(pageNum);
-		int total = noticeDAO.categoryBoardListTotal(category);
-		System.out.println("category total : " + total);
-		
-		paging.setTotalCount(total);
-		
-		int start = paging.getStartRow();
-		int end = paging.getEndRow();
-		
-		Map<String, Object> map = new HashMap<String,Object>();
-		map.put("start", start);
-		map.put("end", end);
-		map.put("category", category);
-		
-		List<BoardDTO> list = noticeDAO.categoryBoardListAction(map);
-		System.out.println("category list : " + list);
-		
-		model.addAttribute("list", list);
-		model.addAttribute("paging", paging);
-		model.addAttribute("category", category);
-	}
 	
 }

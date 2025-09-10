@@ -42,7 +42,7 @@ public class BoardServiceImpl implements BoardService {
 
 		// 전체 게시글 갯수 카운트
 		Paging paging = new Paging(pageNum);
-		int total = dao.boardListTotal();
+		int total = dao.boardListTotal(null);
 		System.out.println("total : " + total);
 
 		paging.setTotalCount(total);

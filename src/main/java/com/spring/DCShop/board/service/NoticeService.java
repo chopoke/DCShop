@@ -44,12 +44,5 @@ public interface NoticeService {
 	public Map<String, Object> noticeRecommendClickAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
 	
-	// 통합 게시판 목록 (공지/이벤트/커뮤니티)
-	public void unifiedBoardListAction(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException;
-	
-	// 카테고리별 게시판 목록
-	public void categoryBoardListAction(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException;
 	
 }
