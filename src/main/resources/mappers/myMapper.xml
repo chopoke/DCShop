@@ -53,6 +53,19 @@
 	</select>
 	
 	
+	<!-- 나의 정보 : CartList 가져오기 : 주문 리스트 -->
+ 	<select id="getMyCartList" resultMap="cartMap">
+	    <![CDATA[
+			SELECT *
+			FROM (
+			  SELECT t.*,
+			         ROW_NUMBER() OVER (ORDER BY ct_add_date DESC, ct_num DESC) AS rn
+			  FROM   cart_tbl t
+			  WHERE  u_member_id = #{u_member_id}
+			)
+		]]>
+	</select>
+	
 	<!-- CartList 가져오기 : 주문 리스트 -->
  	<select id="getCartList" resultMap="cartMap">
 	    <![CDATA[
