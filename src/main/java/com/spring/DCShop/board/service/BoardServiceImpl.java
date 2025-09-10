@@ -39,10 +39,16 @@ public class BoardServiceImpl implements BoardService {
 
 		// 화면에서 입력받은 값을 가져오기
 		String pageNum = request.getParameter("pageNum");
+		String sortOrder = request.getParameter("sortOrder");
+		String keyword = request.getParameter("keyword");
+		String category = request.getParameter("category");
 
 		// 전체 게시글 갯수 카운트
 		Paging paging = new Paging(pageNum);
-		int total = dao.boardListTotal(null);
+		Map<String, Object> countP = new HashMap<String, Object>();
+		countP.put("keyword", keyword);
+		countP.put("category", category);
+		int total = dao.boardListTotal(countP);
 		System.out.println("total : " + total);
 
 		paging.setTotalCount(total);
@@ -54,6 +60,9 @@ public class BoardServiceImpl implements BoardService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("start", start);
 		map.put("end", end);
+		map.put("sortOrder", sortOrder);
+		map.put("keyword", keyword);
+		map.put("category", category);
 
 		List<BoardDTO> list = dao.boardListAction(map);
 		System.out.println("list : " + list);
@@ -61,6 +70,9 @@ public class BoardServiceImpl implements BoardService {
 		// jsp로 처리결과 전달
 		model.addAttribute("list", list);
 		model.addAttribute("paging", paging);
+		model.addAttribute("category", category);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("sortOrder", sortOrder);
 
 	}
 

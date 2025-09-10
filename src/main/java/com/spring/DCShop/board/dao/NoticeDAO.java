@@ -54,5 +54,13 @@ public interface NoticeDAO {
 	// 작성자 닉네임 조회
 	String selectU_nicknameAction(String u_id);
 
+	// 카테고리별 게시판 목록 (구분별 조회: 공지/이벤트)
+	List<BoardDTO> categoryBoardListAction(Map<String, Object> map);
+	// 카테고리별 전체 개수
+	int categoryBoardListTotal(String category);
+
+	// 카테고리별 최신 글 N건 조회 (메인용)
+	List<BoardDTO> selectLatestByCategory(Map<String, Object> map);
+
 	
 }

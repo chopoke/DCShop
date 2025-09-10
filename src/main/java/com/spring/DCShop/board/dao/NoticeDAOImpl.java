@@ -168,6 +168,23 @@ public class NoticeDAOImpl implements NoticeDAO {
 		return u_nickname;
 	}
 
-	
+	// 카테고리별 게시판 목록 (공지/이벤트)
+	@Override
+	public List<BoardDTO> categoryBoardListAction(Map<String, Object> map) {
+		return sqlSession.selectList("com.spring.DCShop.board.dao.NoticeDAO.categoryBoardListAction", map);
+	}
+
+	// 카테고리별 전체 개수
+	@Override
+	public int categoryBoardListTotal(String category) {
+		return sqlSession.selectOne("com.spring.DCShop.board.dao.NoticeDAO.categoryBoardListTotal", category);
+	}
+
+	// 카테고리별 최신 글 N건 조회 (메인용)
+	@Override
+	public List<BoardDTO> selectLatestByCategory(Map<String, Object> map) {
+		return sqlSession.selectList("com.spring.DCShop.board.dao.NoticeDAO.selectLatestByCategory", map);
+	}
+
 
 }
