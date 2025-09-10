@@ -38,12 +38,12 @@
 				<h2 class="text-lg font-semibold">Sarah Johnson</h2>
 				<p class="text-gray-500 text-sm mb-4">sarah@example.com</p>
 				<button
-					class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
+					class="px-4 py-2 bg-stone-950 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
 
 				<!-- 네비게이션 -->
 				<nav class="w-full space-y-2 text-sm">
 					<a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Order
-						History</a> <a href="#"
+						History</a> <a href="${path}/order_detail.do"
 						class="block py-2 px-3 rounded hover:bg-gray-100">Wishlist</a> <a
 						href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Shopping
 						Cart</a> <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">1:1

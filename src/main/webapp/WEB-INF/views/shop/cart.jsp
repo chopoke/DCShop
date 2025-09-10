@@ -450,7 +450,7 @@
 							</span>
 						</div>					
 						<form name="payMent" method="post" class="w-100 w-md-auto">
-							<input type="button" onclick="checkout()" class="btn btn-primary w-100" value="결제하기" />
+							<input type="button" onclick="checkout()" class="btn w-100 custom-btn" value="결제하기" />
 						</form>
 					</div>
 				</div>

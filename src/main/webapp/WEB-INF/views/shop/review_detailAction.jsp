@@ -50,7 +50,7 @@
   </c:choose>
 </c:if>
 
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50 min-h-screen" id="re-insert">
   <%@ include file="/WEB-INF/views/setting/header.jsp" %>
   <div id="header-spacer" style="height: var(--header-height, 96px)"></div>
 
