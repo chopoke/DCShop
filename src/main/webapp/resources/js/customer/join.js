@@ -100,10 +100,10 @@ function singleCheck(e) {
 	}
 
     // [필수] - 이메일 인증 유무
-	if(document.inputform.emailVerified.value == "N") {                   
-		alert("이메일 인증을 해주세요");
-		return false;
-	}
+	//if(document.inputform.emailVerified.value == "N") {                   
+	//	alert("이메일 인증을 해주세요");
+	//	return false;
+	//}
 	
 }
 

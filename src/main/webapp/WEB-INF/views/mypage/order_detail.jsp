@@ -362,7 +362,7 @@ tailwind.config = {
 	<%@ include file="../setting/footer.jsp"%>
 	<!-- 푸터 끝 -->
 	<script type="text/javascript">
-	const dil = '주문완료';
+	const dil = '배송중';
 
 	const statusCircle1 = document.getElementById('statusCircle1');
 	const statusCircle2 = document.getElementById('statusCircle2');
