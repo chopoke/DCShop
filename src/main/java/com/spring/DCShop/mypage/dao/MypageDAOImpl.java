@@ -40,6 +40,16 @@ public class MypageDAOImpl implements MypageDAO{
 		return list;
 	}
 	
+	@Override
+	public List<CartDTO> getMyCartList(Map<String, Object> productListInfo) {
+
+		System.out.println("MypageDAOImpl => getMyCartList");
+		
+		List<CartDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.getMyCartList", productListInfo);
+		
+		return list;
+	}
+	
 	
 	@Override
 	public int pwdcheck(Map<String, Object> map) {

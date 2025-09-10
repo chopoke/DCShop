@@ -14,6 +14,8 @@ public interface MypageDAO {
 	
 	public List<CartDTO> getCartList(Map<String, Object> productListInfo);
 	
+	public List<CartDTO> getMyCartList(Map<String, Object> productListInfo);
+	
 	public int pwdcheck(Map<String, Object> map);
 	
 	public MypageDTO getUserInfo(String loginId);
