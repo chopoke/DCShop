@@ -74,7 +74,7 @@
                                     <div style="min-height: 700px; white-space: pre-line;" align="left">
                                         ${board.b_contents}
                                         <c:if test='${board.b_image != null}'>
-                                            <img src='${pageContext.request.contextPath}/resources/board_upload/${board.b_image}' style='width:350px'>
+                                            <img src='${pageContext.request.contextPath}/resources/board_upload/${board.b_image}' style='width:450px; height: auto;'>
                                         </c:if>
                                     </div>
                                     <div align="right" style="height: 20px">
