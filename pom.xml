@@ -163,6 +163,12 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.13.5</version>
 		</dependency>
+		<!-- 나의 페이지에서 결제 부분 값 넘기는 부분 때문에 추가함 : 이충현 -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.dataformat</groupId>
+		    <artifactId>jackson-dataformat-yaml</artifactId>
+		    <version>2.17.3</version>
+		</dependency>
 		<!-- Map -> JSON 형태로 바꾸기 위해서 -->
 		<!-- <dependency> <groupId>com.fasterxml.jackson.core</groupId> <artifactId>jackson-databind</artifactId> 
 			<version>2.15.2</version> 프로젝트에 맞는 최신 버전 </dependency> -->
@@ -230,13 +236,6 @@
 			<version>1.1.1</version>
 		</dependency>
 		<!-- json 관련 추가 -->
-		
-		<!-- Jackson 라이브러리 -->
-		<dependency>
-		  <groupId>com.fasterxml.jackson.core</groupId>
-		  <artifactId>jackson-databind</artifactId>
-		  <version>2.17.0</version>
-		</dependency>
 
 		<!-- 애플리케이션 리스너를 설정하는 중 오류 발생 -->
 		<dependency>

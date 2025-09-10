@@ -250,7 +250,7 @@
 					    <div class="actions-sub">
 					      <button type="button"
 					              class="btn-list"
-					              onclick="location.href='${path}/ad_product_list.pd'">상품목록</button>
+					              onclick="location.href='${path}/shop_main.do'">상품목록</button>
 					    </div>
 					  </td>
 					</tr>
@@ -358,7 +358,6 @@
 					
 				  </section>
 				</div>
-
             </div>
           </div>
         </div>

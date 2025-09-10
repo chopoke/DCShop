@@ -23,6 +23,13 @@ public class AdminDAOImpl implements AdminDAO{
 		List<UserDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.AdminDAO.adminUserList1");
 		return list;
 	}
+	
+	// 회원목록 - 펫통계
+	@Override
+	public Map<String, Object> adminUserPet() {
+		Map<String, Object> map = sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.adminUserPet");
+		return map;
+	}
 
 	// 게시판목록
 	@Override
@@ -86,6 +93,43 @@ public class AdminDAOImpl implements AdminDAO{
 		int productdeleteCnt = sqlSession.delete("com.spring.DCShop.mypage.dao.AdminDAO.adminProductDelete", ids);
 		return productdeleteCnt;
 	}
+	// 상품관리 - 자식삭제(리뷰)
+	@Override
+	public int adminProductReviewDelete(List<Integer> ids) {
+		int productreviewdeleteCnt = sqlSession.delete("com.spring.DCShop.mypage.dao.AdminDAO.adminProductReviewDelete", ids);
+		return productreviewdeleteCnt;
+	}
+	// 상품관리 - 자식삭제(qna)
+	@Override
+	public int adminProductQnaDelete(List<Integer> ids) {
+		int productqnadeleteCnt = sqlSession.delete("com.spring.DCShop.mypage.dao.AdminDAO.adminProductQnaDelete", ids);
+		return productqnadeleteCnt;
+	}
+
+	// 상품관리 - 등록
+	@Override
+	public int adminProductInsert(ShopDTO dto) {
+		int productinsertCnt = sqlSession.insert("com.spring.DCShop.mypage.dao.AdminDAO.adminProductInsert", dto);
+		return productinsertCnt;
+	}
+
+	// 상품관리 - 수정폼
+	@Override
+	public ShopDTO adminProductUpdateForm(int pdId) {
+		ShopDTO dto = sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.adminProductUpdateForm", pdId);
+		return dto;
+	}
+	
+	// 상품관리 - 수정처리
+	@Override
+	public int adminProductUpdate(ShopDTO dto) {
+		int productupdateCnt = sqlSession.update("com.spring.DCShop.mypage.dao.AdminDAO.adminProductUpdate", dto);
+		return productupdateCnt;
+	}
+
+	
+
+	
 	
 	
 

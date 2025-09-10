@@ -2,7 +2,6 @@ package com.spring.DCShop.mypage.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +34,24 @@ public class AdminServiceImpl implements AdminService{
 		System.out.println("AdminServiceImpl - adminUser()");
 		List<UserDTO> list = dao.adminUserList1();
 		model.addAttribute("list", list);
+	}
+	
+	// 회원목록 - 펫통계
+	@Override
+	public void adminUserPet(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		Map<String, Object> stats = dao.adminUserPet();
+		int dogCount = ((Number)stats.getOrDefault("dog_count",0)).intValue();
+		int catCount = ((Number)stats.getOrDefault("cat_count",0)).intValue();
+		int maleCount = ((Number)stats.getOrDefault("male_count",0)).intValue();
+		int femaleCount = ((Number)stats.getOrDefault("female_count",0)).intValue();
+		int neuteredCount = ((Number)stats.getOrDefault("neutered_count",0)).intValue();
 		
+		model.addAttribute("dogCount", dogCount);
+		model.addAttribute("catCount", catCount);
+		model.addAttribute("maleCount", maleCount);
+		model.addAttribute("femaleCount", femaleCount);
+		model.addAttribute("neuteredCount", neuteredCount);
 	}
 
 	// 게시판목록
@@ -215,15 +231,40 @@ public class AdminServiceImpl implements AdminService{
 			return;
 		}
 		
+		dao.adminProductReviewDelete(idList); //리뷰자식테이블삭제
+		dao.adminProductQnaDelete(idList);	//qna자식테이블삭제
 		int deleted = dao.adminProductDelete(idList);
 		model.addAttribute("deletedCount", deleted);
 	}
 
-	// 상품관리 - 상품등록폼
+//	// 상품관리 - 상품등록처리
+//	@Override
+//	public void adminProductInsert(HttpServletRequest request, HttpServletResponse response, Model model)
+//			throws ServletException, IOException {
+//		model.addAttribute("statusList", Arrays.asList("ON", "OFF", "WAIT"));
+//	}
+	// 상품관리 - 상품등록처리
 	@Override
 	public void adminProductInsert(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		model.addAttribute("statusList", Arrays.asList("ON", "OFF", "WAIT"));
+		
+		ShopDTO dto = new ShopDTO();
+		dto.setPd_name(request.getParameter("pd_name"));
+		dto.setPd_description(request.getParameter("pd_description"));
+		dto.setPd_price(Integer.parseInt(request.getParameter("pd_price")));
+		dto.setPd_stock(Integer.parseInt(request.getParameter("pd_stock")));
+		dto.setPd_category(Integer.parseInt(request.getParameter("pd_category")));
+		dto.setPd_brand(request.getParameter("pd_brand"));
+		dto.setPd_image_url(request.getParameter("pd_image_url"));
+		dto.setPd_shipping_fee(Integer.parseInt(request.getParameter("pd_shipping_fee")));
+		dto.setPd_discount_rate(Integer.parseInt(request.getParameter("pd_discount_rate")));
+		dto.setPd_status(request.getParameter("pd_status"));
+		dto.setPd_option(request.getParameter("pd_option"));
+		dto.setPd_pet_category(Integer.parseInt(request.getParameter("pd_pet_category")));
+		dto.setPd_subcategory(Integer.parseInt(request.getParameter("pd_subcategory")));
+		dao.adminProductInsert(dto);
+		
+		
 	}
 		
 	
@@ -245,5 +286,72 @@ public class AdminServiceImpl implements AdminService{
         return list;
     }
     // ---------------------------------
+
+    // 상품관리 - 상품수정폼
+    @Override
+	public void adminProductUpdateForm(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		int pdId = Integer.parseInt(request.getParameter("pd_id"));
+		
+		ShopDTO dto = dao.adminProductUpdateForm(pdId);
+		
+		model.addAttribute("dto", dto);
+		
+	}
+    
+    // 상품관리 - 상품수정처리
+	@Override
+	public void adminProductUpdate(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		int pdId = Integer.parseInt(request.getParameter("pd_id"));
+		if (pdId <= 0) {
+			model.addAttribute("result", "잘못된 요청입니다. (pd_id 누락)");
+			return;
+		}
+		
+		String name = request.getParameter("pd_name");
+		String brand = request.getParameter("pd_brand");
+		String desc = request.getParameter("pd_description");
+		String imageUrl = request.getParameter("pd_image_url");
+		String option = request.getParameter("pd_option");
+		int price = Integer.parseInt(request.getParameter("pd_price"));
+		int stock = Integer.parseInt(request.getParameter("pd_stock"));
+		int shippingFee = Integer.parseInt(request.getParameter("pd_shipping_fee"));
+		int discountRate = Integer.parseInt(request.getParameter("pd_discount_rate"));
+		int category = Integer.parseInt(request.getParameter("pd_category"));
+		int petCategory = Integer.parseInt(request.getParameter("pd_pet_category"));
+		int subcategory = Integer.parseInt(request.getParameter("pd_subcategory"));
+		
+		String status = request.getParameter("pd_status");
+		if (!("판매중".equals(status) || "품절".equals(status) || "재입고대기".equals(status))) {
+            status = "판매중";
+        }
+		
+		// DTO 구성
+		ShopDTO dto = new ShopDTO();
+		dto.setPd_id(pdId);
+        dto.setPd_name(name);
+        dto.setPd_description(desc);
+        dto.setPd_price(price);
+        dto.setPd_stock(stock);
+        dto.setPd_category(category);
+        dto.setPd_brand(brand);
+        dto.setPd_image_url(imageUrl);
+        dto.setPd_shipping_fee(shippingFee);
+        dto.setPd_discount_rate(discountRate);
+        dto.setPd_status(status);
+        dto.setPd_option(option);
+        dto.setPd_pet_category(petCategory);
+        dto.setPd_subcategory(subcategory);
+        
+        // db 값 수정
+        int updated = dao.adminProductUpdate(dto);
+        
+        model.addAttribute("result", updated);
+	}
+
+	
+
+	
 	
 }

@@ -11,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.ibatis.annotations.ResultMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -20,6 +19,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.spring.DCShop.mypage.dao.MypageDAO;
 import com.spring.DCShop.mypage.dto.CartDTO;
+import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.dto.MypageDTO;
 import com.spring.DCShop.mypage.dto.OrderDTO;
 
@@ -188,5 +188,121 @@ public class MypageServiceImpl implements MypageService {
 		myDao.profileupdate(map);
 		model.addAttribute("map", map);
 			
+	}
+
+
+
+	@Override
+	public void carListInfo(HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		System.out.println("MypageServiceImpl => carListInfo");
+
+		int session_u_member_id = (Integer)request.getSession().getAttribute("session_u_member_id");
+		
+		Map<String, Object> productListInfo = new HashMap<String, Object>();
+		
+		productListInfo.put("u_member_id", session_u_member_id);
+		
+		List<CartDTO> cartList = myDao.getCartList(productListInfo);
+
+		System.out.println("cart" + cartList);
+		
+		cartCountSum = 0;
+		cartList.forEach(i -> {
+			cartCountSum += i.getCtQuantity();
+		});
+
+		cartTotalPrice = 0;
+		cartList.forEach(i -> {
+			i.getProductDto().forEach(j -> {
+				cartTotalPrice += i.getCtQuantity() * j.getPdPrice();
+			});
+		});
+		
+		model.addAttribute("cart", cartList);
+		model.addAttribute("cartCountSum", cartCountSum);
+		model.addAttribute("cartTotalPrice", cartTotalPrice);
+		
+	}
+
+
+	@Override
+	public void orderListInfo(HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		System.out.println("MypageServiceImpl => orderListInfo");
+		
+		int session_u_member_id = (Integer)request.getSession().getAttribute("session_u_member_id");
+		
+		Map<String, Object> productListInfo = new HashMap<String, Object>();
+		
+		productListInfo.put("u_member_id", session_u_member_id);
+		
+		/** 주문내역 **/
+		List<OrderDTO> orderList = myDao.getOrderList(productListInfo);
+		
+		productCountSum = 0;
+		orderList.forEach(i -> {
+			productCountSum += i.getO_Count();
+		});
+
+		productTotalPrice = 0;
+		orderList.forEach(i -> {
+			i.getProductDto().forEach(j -> {
+				productTotalPrice += i.getO_Count() * j.getPdPrice();
+			});
+		});
+		
+		model.addAttribute("order", orderList);
+		model.addAttribute("productCountSum", productCountSum);
+		model.addAttribute("productTotalPrice", productTotalPrice);
+	}
+		
+	private String mapSize(Double w) {
+	    if (w == null) return null;
+	    if (w < 4)  return "소형";
+	    if (w < 20) return "중형";
+	    return "대형";
+	}
+	// 기존 펫 정보 가져오기
+	public void getPetList(HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		Integer memberId = (Integer) request.getSession().getAttribute("session_u_member_id");		// 세션에 저장된 u_member_id 가져오기
+		if (memberId == null) {
+	        model.addAttribute("petList", java.util.Collections.emptyList());
+	        return;
+	    }
+		List<MyPetDTO> petList = myDao.getPetList(memberId);
+	    model.addAttribute("petList", petList);				// model에 넣어주기
+	}
+	
+	// 반려동물 정보 수정 처리
+	public void updatePetInfo(MyPetDTO pet, HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		Integer memberId = (Integer) request.getSession().getAttribute("session_u_member_id");		// 세션에 저장된 u_member_id 가져오기
+		pet.setU_member_id(memberId);		// dto에 저장
+		
+		if (pet.getP_size() == null || pet.getP_size().isBlank()) {		// 펫 사이즈 정보가 null이 아닐때
+	        pet.setP_size(mapSize(pet.getP_weight()));					// 사이즈 계산 -> 대형/중형/소형
+	    }
+		int cnt;
+	    if (pet.getP_num() == null || pet.getP_num().isBlank()) {
+	        // INSERT (트리거가 p_num 채움)
+	    	System.out.println("서비스 insert DTO : "+pet);
+	        cnt = myDao.petInfoInsert(pet);
+	    } else {
+	        // UPDATE
+	    	System.out.println("서비스 update DTO : "+pet);
+	        cnt = myDao.petInfoUpdate(pet);
+	    }
+	}
+	
+	// 반려동물 정보 삭제
+	public int deletePetInfo(String p_num, HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		Integer memberId = (Integer) request.getSession().getAttribute("session_u_member_id");		// 세션에 저장된 u_member_id 가져오기
+		Map<String, Object> map = new HashMap<>();
+		map.put("p_num", p_num);
+		map.put("u_member_id", memberId);
+		return myDao.petInfoDelete(map);
 	}
 }
