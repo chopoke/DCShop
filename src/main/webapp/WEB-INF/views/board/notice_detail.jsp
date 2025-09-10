@@ -74,7 +74,7 @@
                                     <div style="min-height: 700px; white-space: pre-line;" align="left">
                                         ${board.b_contents}
                                         <c:if test='${board.b_image != null}'>
-                                            <img src='${pageContext.request.contextPath}/resources/board_upload/${board.b_image}' style='width:350px'>
+                                            <img src='${pageContext.request.contextPath}/resources/board_upload/${board.b_image}' style='width:450px; height: auto;'>
                                         </c:if>
                                     </div>
                                     <div align="right" style="height: 20px">
@@ -99,8 +99,8 @@
                             </tr>
                         </table>
                         <div align="right">
-                            <br>
-                            <c:if test='${sessionScope.sessionid == user.u_id}'>
+                            <br>  <br><!-- 공지/이벤트 (admin만 가능) -->
+                            <c:if test='${sessionScope.sessionid == "admin"}'>
                                 <input type="button" class="inputButton" value="수정" onclick="window.location='${path}/notice_update?b_num=${board.b_num}'">
                                 <input type="button" class="inputButton" value="삭제" onclick="deleteConfirm()">
                             </c:if>

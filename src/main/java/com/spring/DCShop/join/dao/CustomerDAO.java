@@ -18,4 +18,9 @@ public interface CustomerDAO {
 	 * @purpose NickName 중복확인 처리
 	 */
 	public int userNickNameCheck(String strNickName);
+	
+	/**
+	 * @purpose Email 중복확인 처리
+	 */
+	public int userEmailCheck(String strEmail);
 }

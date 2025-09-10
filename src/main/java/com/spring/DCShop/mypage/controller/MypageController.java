@@ -34,7 +34,6 @@ public class MypageController {
 	@Autowired
 	private MypageService myService;
 	
-	
 	@RequestMapping("mypage_main.do")
 	public String mypage_main(HttpServletRequest request, HttpServletResponse response, Model model) {
 		logger.info("=== url -> mypage_main ===");
