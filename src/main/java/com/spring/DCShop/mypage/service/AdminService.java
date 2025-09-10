@@ -37,4 +37,20 @@ public interface AdminService {
 	// 상품관리 - 상품등록폼
 	public void adminProductInsert(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
+	
+	// 리뷰관리 - 목록/검색/필터
+	public void adminReviewList(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+	
+	// 리뷰관리 - 상세
+	public void adminReviewDetail(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+	
+	// 리뷰관리 - 선택 일괄 삭제
+	public void adminReviewDelete(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+	
+	
 }
+
+

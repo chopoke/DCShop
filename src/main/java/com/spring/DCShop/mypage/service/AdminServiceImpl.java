@@ -245,5 +245,111 @@ public class AdminServiceImpl implements AdminService{
         return list;
     }
     // ---------------------------------
+
+    // 리뷰관리 - 목록/검색/필터
+	@Override
+	public void adminReviewList(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		System.out.println("AdminServiceImpl - adminReviewList()");
+
+        // 1) 파라미터
+        String category = trimOrNull(request.getParameter("category"));  // dog / cat / null
+        String rate     = trimOrNull(request.getParameter("rate"));      // "1"~"5" or null
+        String from     = trimOrNull(request.getParameter("from"));      // YYYY-MM-DD or null
+        String to       = trimOrNull(request.getParameter("to"));        // YYYY-MM-DD or null
+        String q        = trimOrNull(request.getParameter("q"));         // 검색어 or null
+
+        String pageNum  = request.getParameter("pageNum");               // 페이징 (문자)
+        Paging paging   = new Paging(pageNum);
+
+        // 2) 총 건수 조회용 파라미터
+        Map<String, Object> countParam = new HashMap<>();
+        countParam.put("category", category);
+        countParam.put("rate",rate);
+        countParam.put("from", from);
+        countParam.put("to",to);
+        countParam.put("q",q);
+
+        int totalCount = dao.adminReviewCount(countParam);
+        paging.setTotalCount(totalCount); // 내부에서 startRow/endRow 계산됨
+
+        // 3) 목록 조회용 파라미터
+        Map<String, Object> listParam = new HashMap<>();
+        listParam.put("category", category);
+        listParam.put("rate", rate);
+        listParam.put("from", from);
+        listParam.put("to", to);
+        listParam.put("q", q);
+        listParam.put("startRow", paging.getStartRow());
+        listParam.put("endRow", paging.getEndRow());
+
+        // 4) 목록 조회
+        List<Map<String, Object>> reviewList = dao.adminReviewList(listParam);
+
+        // 5) 모델 바인딩
+        model.addAttribute("reviewList", reviewList);
+        model.addAttribute("paging",     paging);
+		
+	}
+
+	// 리뷰관리 - 상세
+	@Override
+	public void adminReviewDetail(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		
+		 // 목록에서 상세로 이동 시 r_num을 파라미터로 넘긴다고 가정
+        // (현재 컨트롤러는 /admin_review_detail 로 매핑되어 있으니 ?r_num= 형태)
+        String rnumStr = request.getParameter("r_num");
+        if (rnumStr == null || rnumStr.trim().isEmpty()) {
+            model.addAttribute("error", "리뷰 번호가 없습니다.");
+            return;
+        }
+
+        int rNum;
+        try {
+            rNum = Integer.parseInt(rnumStr.trim());
+        } catch (NumberFormatException e) {
+            model.addAttribute("error", "리뷰 번호 형식이 올바르지 않습니다.");
+            return;
+        }
+
+        Map<String, Object> detail = dao.adminReviewDetail(rNum); // Map으로 받으면 JSP에서 키만 맞추면 됨
+        model.addAttribute("detail", detail);
+		
+	}
+
+	// 리뷰관리 - 선택 일괄 삭제
+	@Override
+	public void adminReviewDelete(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		 System.out.println("AdminServiceImpl - adminReviewDelete()");
+
+	        // admin_review.jsp의 hidden(name="ids") CSV 를 받는다고 가정
+	        String idsCsv = request.getParameter("ids");
+	        if (idsCsv == null || idsCsv.trim().isEmpty()) {
+	            model.addAttribute("deletedCount", 0);
+	            model.addAttribute("error", "선택된 항목이 없습니다.");
+	            return;
+	        }
+
+	        // CSV → List<Integer>
+	        List<Integer> idList = new ArrayList<>();
+	        for (String s : idsCsv.split(",")) {
+	            if (s == null) continue;
+	            String t = s.trim();
+	            if (t.isEmpty()) continue;
+	            try {
+	                idList.add(Integer.parseInt(t));
+	            } catch (NumberFormatException ignore) {}
+	        }
+	        if (idList.isEmpty()) {
+	            model.addAttribute("deletedCount", 0);
+	            model.addAttribute("error", "선택된 항목이 없습니다.");
+	            return;
+	        }
+
+	        int deleted = dao.adminReviewDelete(idList);
+	        model.addAttribute("deletedCount", deleted);
+	}
 	
 }

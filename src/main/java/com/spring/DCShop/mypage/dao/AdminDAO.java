@@ -39,4 +39,18 @@ public interface AdminDAO {
 	// 상품관리 - 삭제
 	public int adminProductDelete(List<Integer> ids);
 	
+	// 리뷰관리 - 총 개수
+	public int adminReviewCount(Map<String, Object> param);
+	
+	// 리뷰관리 - 목록 조회
+	public List<Map<String, Object>> adminReviewList(Map<String, Object> param);
+	
+	// 리뷰관리 - 상세 조회
+	public Map<String, Object> adminReviewDetail(int rNum);
+	
+	// 리뷰관리 - 선택 삭제
+	public int adminReviewDelete(List<Integer> ids);
+	
+	
+	
 }
