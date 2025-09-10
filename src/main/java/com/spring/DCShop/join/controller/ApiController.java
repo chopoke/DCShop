@@ -26,16 +26,27 @@ public class ApiController {
 	@RequestMapping(value = "/sendCode.do", produces = "application/json; charset=UTF-8")
 	public Map<String, Object> sendCode(HttpServletRequest request) 
 			throws ServletException, IOException {
+		// 결과를 보내기 위한 Map
+		Map<String, Object> res = new HashMap<String, Object>();
+		
 		logger.info("ApiController = > sendCode()");
-		service.sendValidationCode(request);
-
+		String result = service.sendValidationCode(request);
+		System.out.println("결과" + result);
+		if(result.equals("1")) {
+			System.out.println("들어옴");
+			res.put("ok", false);
+			res.put("duplicate", "duplicate");
+			
+			return res;
+		}
+		
 		Object expAttr = request.getSession().getAttribute("EMAIL_CODE_EXPIRE");
 		Long expireAt = (expAttr instanceof Long) ? (Long) expAttr : null;
 
 		long now = System.currentTimeMillis();
 		long ttlSec = (expireAt != null) ? Math.max(0, (expireAt - now) / 1000) : 0;
 
-		Map<String, Object> res = new HashMap<String, Object>();
+		
 		res.put("ok", true);
 		res.put("ttlSec", ttlSec);
 
