@@ -37,4 +37,8 @@ public interface MypageService {
 	
 	// 반려동물 정보 삭제
 	public int deletePetInfo(String p_num, HttpServletRequest request, HttpServletResponse response, Model model);
+	
+	
+	// 회원탈퇴
+	public int deleteUserInfo(HttpServletRequest request, HttpServletResponse response, Model model);
 }

@@ -38,4 +38,6 @@ public interface MypageDAO {
 	// 동물 정보 삭제
 	public int petInfoDelete(Map<String, Object> map);
 	
+	// 회원 정보 삭제
+	public int userInfoDelete(Map<String, Object> map);	
 }

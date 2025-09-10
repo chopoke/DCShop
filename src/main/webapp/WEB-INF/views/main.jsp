@@ -282,5 +282,9 @@
 	<!-- 푸터 시작 -->
 		<%@ include file="setting/footer.jsp" %>
 	<!-- 푸터 끝 -->
+<c:if test="${param.quit == '1'}">
+	<script>alert('회원 탈퇴가 완료되었습니다.');</script>
+</c:if>
+
 </body>
 </html>

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.service.MypageService;
@@ -147,20 +148,50 @@ public class MypageController {
 		return "mypage/mypage_editPet";
 	}
 	
-	
-	@PostMapping("/mypage/pets/save")
+	// 반려동물 정보 저장
+	@PostMapping("/mypage/pets/save")		// @ModelAttribute로 넘어온 요소들을 받아줌 -> 자동매핑
 	public String saveOne(@ModelAttribute MyPetDTO pet, HttpServletRequest req, HttpServletResponse res, Model model) {
 	    myService.updatePetInfo(pet, req, res, model);
 	    
 	    return "redirect:/mypage_editPet.do"; // 목록 페이지로
 	}
-
-	@PostMapping(value = "/mypage/pets/delete", produces = "application/json; charset=UTF-8")
+	
+	
+	// 반려동물 정보 삭제
+	@PostMapping(value = "/mypage/pets/delete", produces = "application/json; charset=UTF-8")		// json형식으로 받아주는 것을 강제
 	@ResponseBody
 	public Map<String, Object> delete(@RequestParam String p_num, HttpServletRequest req, HttpServletResponse res, Model model) {
 	    int cnt = myService.deletePetInfo(p_num, req, res, model);
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("ok", cnt == 1);
 	    return result;
+	}
+	
+	// 탈퇴 확인 페이지
+	@RequestMapping("mypage_quit.do")
+	public String mypage_quit(HttpServletRequest req, HttpServletResponse res, Model model) {
+		HttpSession session = req.getSession(false);
+	    if (session == null || session.getAttribute("sessionid") == null) {
+	        return "redirect:login_main.do";
+	    }
+		return "mypage/mypage_quit";
+	}
+	
+	@RequestMapping("mypage_quitAction.do")
+	public String mypage_quitAction(HttpServletRequest req, HttpServletResponse res, Model model) {
+		
+		HttpSession session = req.getSession(false);
+	    if (session == null || session.getAttribute("sessionid") == null) {
+	        return "redirect:login_main.do";
+	    }
+	    int result = myService.deleteUserInfo(req, res, model); 
+	    // 탈퇴 성공시 
+        if (result > 0) {
+            session.invalidate();
+            return "redirect:main.do?quit=1";
+        // 실패시
+        } else {
+            return "redirect:mypage_quit.do?err=1";
+        }
 	}
 }
