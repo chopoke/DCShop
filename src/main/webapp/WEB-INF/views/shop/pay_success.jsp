@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+ <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/setting/setting.jsp" %>
 <!DOCTYPE html>
@@ -34,20 +34,12 @@
 					<span class="response-label">주문번호</span> 
 					<span id="orderId" class="response-text"></span>
 				</div>
-				<!-- <div class="flex justify-between">
-					<span class="response-label">paymentKey</span> 
-					<span id="paymentKey" class="response-text"></span>
-				</div>
-				<div class="flex justify-between">
-					<span class="response-label">paymentType</span> 
-					<span id="paymentType" class="response-text"></span>
-				</div> -->
 			</div>
 
 			<div class="w-100 button-group">
 				<div class="flex" style="gap: 16px;">
 					<a class="paybtn w-100" href="#">주문내역</a> 
-					<a class="paybtn w-100" href="${path}/main.do" rel="noreferrer noopener">홈화면</a>
+					<a class="paybtn w-100" href="${path}/shop_main.do" rel="noreferrer noopener">상품목록</a>
 				</div>
 			</div>
 		</div>
@@ -97,15 +89,11 @@
 		}
 		confirm();
 
-		const paymentKeyElement = document.getElementById("paymentKey");
 		const orderIdElement = document.getElementById("orderId");
 		const amountElement = document.getElementById("amount");
-		const paymentTypeElement = document.getElementById("paymentType");
 
 		orderIdElement.textContent = orderId;
 		amountElement.textContent = amount;
-		paymentKeyElement.textContent = paymentKey;
-		paymentTypeElement.textContent = paymentType;
 	</script>
 </body>
 </html>
