@@ -219,4 +219,13 @@
             FROM product_tbl pd
             WHERE pd.pd_pet_category = 2
 	</select>
+	
+	<select id="getCateCnt"  resultType="java.util.Map">
+		SELECT 	floor(pd_category/100)*100 AS category,
+				count(*) AS cnt 
+		FROM product_tbl 
+		GROUP BY floor(pd_category/100)*100
+		ORDER BY category
+	</select>
+	
 </mapper>

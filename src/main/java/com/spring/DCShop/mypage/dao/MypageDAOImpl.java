@@ -96,4 +96,11 @@ public class MypageDAOImpl implements MypageDAO{
 		return deleteCnt;
 	}
 	
+	
+	// 회원 정보 삭제(탈퇴)
+	@Override
+	public int userInfoDelete(Map<String, Object> map) {
+		int deleteCnt = sqlSession.update("com.spring.DCShop.mypage.dao.MypageDAO.userInfoDelete", map);
+		return deleteCnt;
+	}
 }
