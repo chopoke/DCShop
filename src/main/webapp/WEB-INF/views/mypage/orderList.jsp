@@ -157,10 +157,10 @@
 							<select
 								class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent pr-8">
 								<option>전체</option>
-								<option>신용카드</option>
+								<option>카드</option>
 								<option>계좌이체</option>
-								<option>가상계좌</option>
 								<option>카카오페이</option>
+								<option>토스페이</option>
 								<option>네이버페이</option>
 							</select>
 						</div>
@@ -218,13 +218,25 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:if test="${empty order}">
+								<c:if test="${not empty order}">
 									<c:forEach var="item" items="${order}">
 										<c:set var="pd" value="${item.productDto[0]}" />
-
+										<tr>
+											<th class="px-4 py-3 text-left"><input type="checkbox"
+												class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" />
+											</th>
+											<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+												<c:out value="${item.o_Num}" />
+											</th>
+											<td class="px-6 py-4"><c:out value="${item.o_date}" /></td>
+											<td class="px-6 py-4"><c:out value="${item.u_Member_Id}" /></td>
+											<td class="px-6 py-4"><c:out value="${item.o_Payment}" /></td>
+											<td class="px-6 py-4"><c:out value="${item.o_price}" /></td>
+											<td class="px-6 py-4"><c:out value="${item.o_Status}" /></td>
+										</tr>
 									</c:forEach>
 								</c:if>
-								<c:if test="${not empty order}">
+								<c:if test="${empty order}">
 									<tr>
 										<td colspan="8" class="px-4 py-12 text-center text-gray-500">
 											조회된 주문이 없습니다.</td>

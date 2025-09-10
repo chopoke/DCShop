@@ -72,7 +72,7 @@
 
             <!-- 네비게이션 -->
             <nav class="w-full space-y-2 text-sm">
-               <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
+               <a href="${path}/orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
                <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">반려동물 정보수정</a> 
                <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
 
@@ -96,11 +96,11 @@
 							<thead
 								class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
 								<tr>
-									<th scope="col" class="px-6 py-3 rounded-s-lg">O_Num</th>
-									<th scope="col" class="px-6 py-3">ProductName</th>
-									<th scope="col" class="px-6 py-3">DeliveryState</th>
-									<th scope="col" class="px-6 py-3">Qty</th>
-									<th scope="col" class="px-6 py-3 rounded-e-lg">Price</th>
+									<th scope="col" class="px-6 py-3 rounded-s-lg">주문번호</th>
+									<th scope="col" class="px-6 py-3">제품명</th>
+									<th scope="col" class="px-6 py-3">배송상태</th>
+									<th scope="col" class="px-6 py-3">수량</th>
+									<th scope="col" class="px-6 py-3 rounded-e-lg">가격</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -113,7 +113,7 @@
 
 											<tr class="bg-white dark:bg-gray-800">
 												<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-													<c:out value="${pd.pdId}" />
+													<c:out value="${c.o_Num}" />
 												</th>
 												<td class="px-6 py-4"><c:out value="${pd.pdName}" /></td>
 												<td class="px-6 py-4"><c:out value="${c.o_Delivery_State}" /></td>
@@ -125,8 +125,8 @@
 
 									<c:otherwise>
 										<tr>
-											<td colspan="5" class="text-center py-4 text-gray-500">장바구니가
-												비어 있습니다.</td>
+											<td colspan="5" class="text-center py-4 text-gray-500">주문
+												내역이 없습니다.</td>
 										</tr>
 									</c:otherwise>
 								</c:choose>
@@ -155,11 +155,11 @@
 							<thead
 								class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
 								<tr>
-									<th scope="col" class="px-6 py-3 rounded-s-lg">PNum</th>
-									<th scope="col" class="px-6 py-3">ProductName</th>
-									<th scope="col" class="px-6 py-3">DeliveryState</th>
-									<th scope="col" class="px-6 py-3">Qty</th>
-									<th scope="col" class="px-6 py-3 rounded-e-lg">Price</th>
+									<th scope="col" class="px-6 py-3 rounded-s-lg">상품번호</th>
+									<th scope="col" class="px-6 py-3">상품명</th>
+									<th scope="col" class="px-6 py-3">판매상태</th>
+									<th scope="col" class="px-6 py-3">수량</th>
+									<th scope="col" class="px-6 py-3 rounded-e-lg">가격</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -184,8 +184,8 @@
 
 									<c:otherwise>
 										<tr>
-											<td colspan="5" class="text-center py-4 text-gray-500">주문
-												내역이 없습니다.</td>
+											<td colspan="5" class="text-center py-4 text-gray-500">장바구니가
+												비어 있습니다.</td>
 										</tr>
 									</c:otherwise>
 								</c:choose>

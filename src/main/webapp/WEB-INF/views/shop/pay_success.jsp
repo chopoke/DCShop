@@ -38,7 +38,7 @@
 
 			<div class="w-100 button-group">
 				<div class="flex" style="gap: 16px;">
-					<a class="paybtn w-100" href="#">주문내역</a> 
+					<a class="paybtn w-100" href="${path}/orderList">주문내역</a> 
 					<a class="paybtn w-100" href="${path}/shop_main.do" rel="noreferrer noopener">상품목록</a>
 				</div>
 			</div>

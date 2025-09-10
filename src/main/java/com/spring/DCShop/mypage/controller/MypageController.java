@@ -205,7 +205,7 @@ public class MypageController {
 			return "user/login/login_main";
 		}
 		
-		myService.orderListInfo(req, res, model);
+		myService.orderListById(req, res, model);
 		
 		return "mypage/orderList";
 	}

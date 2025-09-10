@@ -256,6 +256,22 @@ public class MypageServiceImpl implements MypageService {
 		model.addAttribute("productCountSum", productCountSum);
 		model.addAttribute("productTotalPrice", productTotalPrice);
 	}
+	
+	// 주문내역 페이지에서 주문리스트 가져오기
+	@Override
+	public void orderListById(HttpServletRequest request, HttpServletResponse response, Model model) {
+		System.out.println("MypageServiceImpl => orderListById");
+		
+		int session_u_member_id = (Integer)request.getSession().getAttribute("session_u_member_id");
+		
+		Map<String, Object> orderListById = new HashMap<String, Object>();
+		
+		orderListById.put("u_member_id", session_u_member_id);
+		
+		List<OrderDTO> orderList = myDao.orderListById(orderListById);
+		
+		model.addAttribute("order", orderList);
+	}
 		
 	private String mapSize(Double w) {
 	    if (w == null) return null;

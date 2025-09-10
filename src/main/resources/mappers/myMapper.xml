@@ -20,6 +20,21 @@
 		]]>
 	</select>
 	
+	<!-- 주문내역 페이지 리스트 가져오기 -->
+	<select id="orderListById" parameterType="java.util.Map" resultMap="orderMap">
+		SELECT 
+		    o_num ,
+		    o_date,
+		    u_member_id,
+		    o_payment,
+		    SUM(o_price * o_count) AS o_price,
+		    o_status
+		FROM order_tbl
+		WHERE u_member_id = #{u_member_id}
+		GROUP BY o_num, u_member_id, o_date, o_status, o_payment
+		ORDER BY o_date desc
+	</select>
+	
 	<resultMap id="orderMap" type="com.spring.DCShop.mypage.dto.OrderDTO">
 	  <id     property="o_Num"     	        column="o_num"/>
 	  <result property="pd_Id"      	    column="pd_id"/>

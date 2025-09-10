@@ -29,12 +29,15 @@ public interface MypageService {
 	public void profileUpdate(MultipartHttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
 	
-	// 주문내역 가져오기
+	// 장바구니 내역 가져오기
 	public void carListInfo(HttpServletRequest request, HttpServletResponse response, Model model);
 	
-	// 장바구니 내역 가져오기
+	// 주문내역 가져오기
 	public void orderListInfo(HttpServletRequest request, HttpServletResponse response, Model model);
 
+	// 주문내역 페이지에서 주문리스트 가져오기
+	public void orderListById(HttpServletRequest request, HttpServletResponse response, Model model); 
+		
 	// 기존 펫 정보 가져오기
 	public void getPetList(HttpServletRequest request, HttpServletResponse response, Model model);
 	
