@@ -11,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.ibatis.annotations.ResultMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -190,8 +189,74 @@ public class MypageServiceImpl implements MypageService {
 		model.addAttribute("map", map);
 			
 	}
-	
-	
+
+
+
+	@Override
+	public void carListInfo(HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		System.out.println("MypageServiceImpl => carListInfo");
+
+		int session_u_member_id = (Integer)request.getSession().getAttribute("session_u_member_id");
+		
+		Map<String, Object> productListInfo = new HashMap<String, Object>();
+		
+		productListInfo.put("u_member_id", session_u_member_id);
+		
+		List<CartDTO> cartList = myDao.getCartList(productListInfo);
+
+		System.out.println("cart" + cartList);
+		
+		cartCountSum = 0;
+		cartList.forEach(i -> {
+			cartCountSum += i.getCtQuantity();
+		});
+
+		cartTotalPrice = 0;
+		cartList.forEach(i -> {
+			i.getProductDto().forEach(j -> {
+				cartTotalPrice += i.getCtQuantity() * j.getPdPrice();
+			});
+		});
+		
+		model.addAttribute("cart", cartList);
+		model.addAttribute("cartCountSum", cartCountSum);
+		model.addAttribute("cartTotalPrice", cartTotalPrice);
+		
+	}
+
+
+	@Override
+	public void orderListInfo(HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		System.out.println("MypageServiceImpl => orderListInfo");
+		
+		int session_u_member_id = (Integer)request.getSession().getAttribute("session_u_member_id");
+		
+		Map<String, Object> productListInfo = new HashMap<String, Object>();
+		
+		productListInfo.put("u_member_id", session_u_member_id);
+		
+		/** 주문내역 **/
+		List<OrderDTO> orderList = myDao.getOrderList(productListInfo);
+		
+		productCountSum = 0;
+		orderList.forEach(i -> {
+			productCountSum += i.getO_Count();
+		});
+
+		productTotalPrice = 0;
+		orderList.forEach(i -> {
+			i.getProductDto().forEach(j -> {
+				productTotalPrice += i.getO_Count() * j.getPdPrice();
+			});
+		});
+		
+		model.addAttribute("order", orderList);
+		model.addAttribute("productCountSum", productCountSum);
+		model.addAttribute("productTotalPrice", productTotalPrice);
+	}
+		
 	private String mapSize(Double w) {
 	    if (w == null) return null;
 	    if (w < 4)  return "소형";
@@ -240,7 +305,6 @@ public class MypageServiceImpl implements MypageService {
 		map.put("u_member_id", memberId);
 		return myDao.petInfoDelete(map);
 	}
-	
 	
 	// 회원탈퇴
 	public int deleteUserInfo(HttpServletRequest request, HttpServletResponse response, Model model) {

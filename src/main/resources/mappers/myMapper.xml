@@ -79,14 +79,22 @@
  	<select id="getProduct" resultType="com.spring.DCShop.mypage.dto.ProductDTO">
 		SELECT pd_id pdId
 		     , pd_name pdName
+		     , pd_description pdDescription
 		     , pd_price pdPrice
+		     , pd_stock pdStock
+		     , pd_category category
+		     , pd_created pdCreated
+		     , pd_updated pdUpdate
 		     , pd_brand pdBrand
 		     , pd_image_url pdImageUrl
 		     , pd_shipping_fee pdShippingFee
+		     , pd_discount_Rate pdDiscountRate
 		     , pd_status pdStatus
+		     , pd_option pdOption
 		  FROM product_tbl
 		 WHERE pd_id = #{pd_id}
 	</select>
+	
 	
 	<select id="pwdcheck" parameterType="java.util.Map" resultType="int">
 		SELECT COUNT(*)

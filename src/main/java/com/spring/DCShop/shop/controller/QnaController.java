@@ -51,6 +51,5 @@ public class QnaController {
 		
 		return "shop/quest_list";
 	}
-	
 }
 

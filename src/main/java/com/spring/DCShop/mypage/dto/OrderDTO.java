@@ -5,7 +5,7 @@ import java.util.List;
 
 public class OrderDTO {
 
-	private int o_Num;
+	private Long o_Num;
 	private int pd_Id;
 	private int u_Member_Id;
 	private String o_name;
@@ -28,7 +28,7 @@ public class OrderDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public OrderDTO(int o_Num, int pd_Id, int u_Member_Id, String o_name, String o_phone, Date o_date, int o_price,
+	public OrderDTO(Long o_Num, int pd_Id, int u_Member_Id, String o_name, String o_phone, Date o_date, int o_price,
 			String o_Delivery_State, Date o_Delivery_Date, int o_Count, String o_Payment, String o_Address,
 			int o_Zip_Code, String o_Request, String o_Status, String o_payment_key, List<ProductDTO> productDto) {
 		super();
@@ -51,11 +51,11 @@ public class OrderDTO {
 		this.productDto = productDto;
 	}
 
-	public int getO_Num() {
+	public Long getO_Num() {
 		return o_Num;
 	}
 
-	public void setO_Num(int o_Num) {
+	public void setO_Num(Long o_Num) {
 		this.o_Num = o_Num;
 	}
 

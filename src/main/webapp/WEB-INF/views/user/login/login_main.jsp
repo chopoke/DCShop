@@ -100,7 +100,7 @@
 											<div align="right">
 												<input class="inputbutton" type="submit" value="로그인">
 												<input class="inputbutton" type="reset" value="초기화">
-												<input class="inputbutton" type="button" value="회원가입" onclick="window.location='${path}/join'">
+												<input class="inputbutton" type="button" value="회원가입" onclick="window.location='${path}/termsAgreement.do'">
 											</div>
 										</td>
 									</tr>
@@ -110,7 +110,11 @@
 					</div>
 				</div>
 				<!-- 상단 중앙2 끝 -->
-				
+				<c:if test="${param.error == '1'}">
+				    <script>
+				        alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+				    </script>
+				</c:if>
 			</div>
 		<br><br><br><br>
 		<br><br><br><br>

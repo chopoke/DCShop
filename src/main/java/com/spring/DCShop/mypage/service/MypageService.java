@@ -29,6 +29,12 @@ public interface MypageService {
 	public void profileUpdate(MultipartHttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
 	
+	// 주문내역 가져오기
+	public void carListInfo(HttpServletRequest request, HttpServletResponse response, Model model);
+	
+	// 장바구니 내역 가져오기
+	public void orderListInfo(HttpServletRequest request, HttpServletResponse response, Model model);
+
 	// 기존 펫 정보 가져오기
 	public void getPetList(HttpServletRequest request, HttpServletResponse response, Model model);
 	
@@ -37,7 +43,6 @@ public interface MypageService {
 	
 	// 반려동물 정보 삭제
 	public int deletePetInfo(String p_num, HttpServletRequest request, HttpServletResponse response, Model model);
-	
 	
 	// 회원탈퇴
 	public int deleteUserInfo(HttpServletRequest request, HttpServletResponse response, Model model);

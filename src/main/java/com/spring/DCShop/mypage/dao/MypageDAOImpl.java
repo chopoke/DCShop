@@ -26,8 +26,6 @@ public class MypageDAOImpl implements MypageDAO{
 		
 		List<OrderDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.getOrderList", productListInfo);
 		
-		System.out.println("5:11" + list);
-		
 		return list;
 		
 	}

@@ -88,6 +88,7 @@
 		     , pd_name pd_name
 		     , pd_price pd_price
 		     , pd_brand pd_brand
+		     , pd_stock pd_stock
 		     , pd_image_url pd_image_url
 		     , pd_shipping_fee pd_shipping_fee
 		     , pd_status pd_status
@@ -120,11 +121,21 @@
 		   AND PD_ID = #{pdId}
 	</update>
 	
-	<!-- 장바구니에 상품 삭제 -->
+	<!-- 장바구니에 상품(단건) 삭제 -->
 	<delete id="deleteProductFromCart" parameterType="java.util.Map">
 	    DELETE FROM cart_tbl
 		 WHERE U_MEMBER_ID = #{uMemberId}
 		   AND PD_ID = #{pdId}
+	</delete>
+	
+	<!-- 장바구니에 상품(여러건) 삭제 -->
+	<delete id="deleteProductsFromCart" parameterType="java.util.Map">
+	  DELETE FROM cart_tbl c
+	  WHERE c.u_member_id = #{uMemberId}
+	    AND (c.ct_num, c.pd_id) IN
+	    <foreach collection="items" item="it" open="(" separator="," close=")">
+	      (#{it.ctId}, #{it.pdId})
+	    </foreach>
 	</delete>
 	
 	<!-- 상품 갯수 삭제 -->

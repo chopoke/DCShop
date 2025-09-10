@@ -270,4 +270,5 @@
 	<delete id="deleteCommentsByBoard" parameterType="int">
 		DELETE FROM comment_tbl WHERE b_num = #{value}
 	</delete>
-  </mapper>
+	
+</mapper>

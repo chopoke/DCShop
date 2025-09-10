@@ -84,7 +84,7 @@
 								<tr>
 									<th style="width: 150px"> 글내용 </th>
 									<td style="width: 150px; text-align:center">
-										<textarea rows="5" cols="133" name="b_contents" id="b_contents"> </textarea>
+										<textarea rows="10" cols="133" name="b_contents" id="b_contents"> </textarea>
 									</td>
 								</tr>
 								<tr>

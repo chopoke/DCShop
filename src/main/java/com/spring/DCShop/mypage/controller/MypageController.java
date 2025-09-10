@@ -39,6 +39,12 @@ public class MypageController {
 	public String mypage_main(HttpServletRequest request, HttpServletResponse response, Model model) {
 		logger.info("=== url -> mypage_main ===");
 		
+		String sessionid = (String)request.getSession().getAttribute("sessionid");
+		
+		if(sessionid == null) {
+			return "user/login/login_main";
+		}
+		
 		// 주문 상품 리스트와 장바구니 리스트 가져와서 뿌려주기
 		myService.getCartAndOrderList(request, response, model);
 		
@@ -155,16 +161,65 @@ public class MypageController {
 	    
 	    return "redirect:/mypage_editPet.do"; // 목록 페이지로
 	}
+
+	// 장바구니 페이지 이동
+	@RequestMapping("cartList")
+	public String cartList(HttpServletRequest req, HttpServletResponse res, Model model)
+			throws ServletException, IOException{
+		logger.info("=== url -> cartList ===");
+		
+		String sessionid = (String)req.getSession().getAttribute("sessionid");
+		
+		if(sessionid == null) {
+			return "user/login/login_main";
+		}
+		
+		myService.carListInfo(req, res, model);
+		
+		return "mypage/cartList";
+	}
 	
+	// 장바구니 페이지 이동
+	@RequestMapping("recommendProduct")
+	public String recommendProduct(HttpServletRequest req, HttpServletResponse res, Model model)
+			throws ServletException, IOException{
+		logger.info("=== url -> recommendProduct ===");
+		
+//		String sessionid = (String)req.getSession().getAttribute("sessionid");
+//		
+//		if(sessionid == null) {
+//			return "user/login/login_main";
+//		}
+
+		return "mypage/recommanedProduct";
+	}
 	
+	// 주문내역 페이지 이동
+	@RequestMapping("orderList")
+	public String orderList(HttpServletRequest req, HttpServletResponse res, Model model)
+			throws ServletException, IOException{
+		logger.info("=== url -> orderList ===");
+		
+		String sessionid = (String)req.getSession().getAttribute("sessionid");
+		
+		if(sessionid == null) {
+			return "user/login/login_main";
+		}
+		
+		myService.orderListInfo(req, res, model);
+		
+		return "mypage/orderList";
+	}
+
 	// 반려동물 정보 삭제
-	@PostMapping(value = "/mypage/pets/delete", produces = "application/json; charset=UTF-8")		// json형식으로 받아주는 것을 강제
+	@PostMapping(value = "/mypage/pets/delete", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public Map<String, Object> delete(@RequestParam String p_num, HttpServletRequest req, HttpServletResponse res, Model model) {
 	    int cnt = myService.deletePetInfo(p_num, req, res, model);
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("ok", cnt == 1);
 	    return result;
+
 	}
 	
 	// 탈퇴 확인 페이지
