@@ -73,7 +73,7 @@ public class CartServiceImpl implements CartService {
 		CartItemRequest caritem = new CartItemRequest();
 		caritem.setPdId((long) pdId);
 		caritem.setPdName(pDto.getPd_name());
-		caritem.setPdPrice(pDto.getPd_price()*qty);
+		caritem.setPdPrice(pDto.getPd_price());
 		caritem.setQty(qty);
 		caritem.setPdImg(pDto.getPd_image_url());
 		caritem.setPdDiscountRate(pDto.getPd_discount_rate());
@@ -85,21 +85,21 @@ public class CartServiceImpl implements CartService {
 		// 주문 금액이 10만원 이상이면 무료배송
 		// 총 금액 계산
 		if(caritem.getPdDiscountRate() > 0) {
-			discountPrice = (caritem.getPdPrice() * (100 - caritem.getPdDiscountRate())) / 100;
+			discountPrice = ((caritem.getPdPrice() * caritem.getQty()) * (100 - caritem.getPdDiscountRate())) / 100;
 			if(discountPrice >= 100000) {
 				pdShippingFee = 0;
 			} else {
 				pdShippingFee = pDto.getPd_shipping_fee();
 			}
 			totalClient = (long) (discountPrice + pdShippingFee);
-			totalDiscount = caritem.getPdPrice() - discountPrice;
+			totalDiscount = (caritem.getPdPrice() * caritem.getQty()) - discountPrice;
 		} else {
-			if(caritem.getPdPrice() > 100000) {
+			if((caritem.getPdPrice() * caritem.getQty()) > 100000) {
 				pdShippingFee = 0;
 			} else {
 				pdShippingFee = pDto.getPd_shipping_fee();
 			}
-			totalClient = (long) (caritem.getPdPrice() + pdShippingFee);
+			totalClient = (long) ((caritem.getPdPrice() * caritem.getQty()) + pdShippingFee);
 			totalDiscount = 0;
 		}
 		

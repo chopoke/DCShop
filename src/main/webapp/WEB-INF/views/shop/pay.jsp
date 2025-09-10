@@ -14,9 +14,8 @@
 
 <c:set var="totalPrice" value="0" />
 <c:forEach var="item" items="${sessionScope.goPay.items}">
-    <c:set var="totalPrice" value="${totalPrice + item.pdPrice}" />
+    <c:set var="totalPrice" value="${totalPrice + (item.pdPrice * item.qty)}" />
 </c:forEach>
-
 
 <!doctype html>
 <html lang="ko">
@@ -33,79 +32,6 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
 	
-	
-<style type="text/css">
-.hero-section1 {
-	width: 100%;
-	background: white;
-	padding: .5rem 0;
-	padding-top: 5rem;
-}
-
-#payment-button1 {
-	background-color: black;
-}
-
-:where([class^="ri-"])::before {
-	content: "\f3c2";
-}
-
-input[type="checkbox"] {
-	appearance: none;
-	width: 20px;
-	height: 20px;
-	border: 2px solid #ddd;
-	border-radius: 4px;
-	margin-right: 8px;
-	position: relative;
-	cursor: pointer;
-}
-
-input[type="checkbox"]:checked {
-	background-color: #0066FF;
-	border-color: #0066FF;
-}
-
-input[type="checkbox"]:checked::after {
-	content: "";
-	position: absolute;
-	left: 6px;
-	top: 2px;
-	width: 5px;
-	height: 10px;
-	border: solid white;
-	border-width: 0 2px 2px 0;
-	transform: rotate(45deg);
-}
-
-:where([class^="ri-"])::before { content: "\f3c2"; }
-input[type="checkbox"] {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #ddd;
-    border-radius: 4px;
-    margin-right: 8px;
-    position: relative;
-    cursor: pointer;
-}
-input[type="checkbox"]:checked {
-    background-color: #0066FF;
-    border-color: #0066FF;
-}
-input[type="checkbox"]:checked::after {
-    content: "";
-    position: absolute;
-    left: 6px;
-    top: 2px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-}
-
-</style>
 <script>
       tailwind.config = {
         theme: {
@@ -136,7 +62,6 @@ input[type="checkbox"]:checked::after {
 <link rel="stylesheet" href="${path}/resources/css/header.css">
 <link rel="stylesheet" href="${path}/resources/css/main.css">
 <link rel="stylesheet" href="${path}/resources/css/shop_main.css">
-<%-- <link rel="stylesheet" href="${path}/resources/css/shop/pay.css"> --%>
 
 <body>
 
@@ -174,15 +99,15 @@ input[type="checkbox"]:checked::after {
 						<c:choose>
 					      <c:when test="${item.pdDiscountRate > 0}">
 					        <span class="price-now money">
-					          <fmt:formatNumber value="${(item.pdPrice * (100 - item.pdDiscountRate))/100}" type="number" maxFractionDigits="0"/>원 
+					          <fmt:formatNumber value="${((item.pdPrice * item.qty) * (100 - item.pdDiscountRate))/100}" type="number" maxFractionDigits="0"/>원 
 					        </span> &nbsp;
 					        <s class="text-sm text-gray-500 mb-1">
-					          <fmt:formatNumber value="${item.pdPrice}" type="number" maxFractionDigits="0"/>원
+					          <fmt:formatNumber value="${item.pdPrice * item.qty}" type="number" maxFractionDigits="0"/>원
 					        </s>
 					      </c:when>
 					      <c:otherwise>
 					        <span class="price-now money">
-					          <fmt:formatNumber value="${item.pdPrice}" type="number" maxFractionDigits="0"/>원
+					          <fmt:formatNumber value="${item.pdPrice * item.qty}" type="number" maxFractionDigits="0"/>원
 					        </span>
 					      </c:otherwise>
 					    </c:choose>
@@ -233,7 +158,7 @@ input[type="checkbox"]:checked::after {
 			<div class="space-y-4">
 				<div>
 					<label class="text-sm text-gray-500 block mb-1">받는 사람</label> 
-					<input type="text" value="${user.u_name}" class="w-full p-3 border rounded-lg" id="u_name" />
+					<input type="text" value="${user.u_name}" class="w-full p-3 border rounded-lg" id="u_name" name="u_name" />
 				</div>
 				<div>
 					<label class="text-sm text-gray-500 block mb-1">우편번호</label> 
@@ -397,19 +322,28 @@ input[type="checkbox"]:checked::after {
       		
       		orderList : orderListResult
           };
-
       	
-			await widgets.requestPayment({
-				orderId: orderId,		// 영문 대소문자, 숫자, 특수문자 -, _, =로 이루어진 6자 이상 64자 이하의 문자열
-				orderName: "${orderName}",		// 구매 상품. 예) 생수 외 1건 같은 형식. 최대 길이 100자
-				successUrl: window.location.origin + "${path}/pay_success?orderInfo=" + encodeURIComponent(JSON.stringify(orderInfo)),
-				failUrl: window.location.origin + "${path}/pay_fail",
-				customerEmail: "${sessionScope.session_u_email}",		// 구매자 이매일. 최대 길이 100자
-				customerName: document.getElementById("u_name").value,					// 구매자명. 최대 길이 100자
-				customerMobilePhone: o_phone,			// 구매자 휴대폰 번호. 가상계좌, 퀵계좌이체 휴대폰 자동 완성에 사용됨. -없이 숫자로만 구성된 8~15자의 문자열
-			});
+      	// 결제 정보 세션에 저장하기 위해서 ajax 이용
+      	await fetch("${path}/saveOrderInfo", {
+      		method: "POST",
+      		headers: {
+      			"Content-Type": "application/json",
+      		},
+      		body : JSON.stringify(orderInfo),
+      	});
+      	
+		await widgets.requestPayment({
+			orderId: orderId,		// 영문 대소문자, 숫자, 특수문자 -, _, =로 이루어진 6자 이상 64자 이하의 문자열
+			orderName: "${orderName}",		// 구매 상품. 예) 생수 외 1건 같은 형식. 최대 길이 100자
+			successUrl: window.location.origin + "${path}/pay_success",
+			failUrl: window.location.origin + "${path}/pay_fail",
+			customerEmail: "${sessionScope.session_u_email}",		// 구매자 이매일. 최대 길이 100자
+			customerName: document.getElementById("u_name").value,					// 구매자명. 최대 길이 100자
+			customerMobilePhone: o_phone,			// 구매자 휴대폰 번호. 가상계좌, 퀵계좌이체 휴대폰 자동 완성에 사용됨. -없이 숫자로만 구성된 8~15자의 문자열
+		});
       });
     }
+    
     </script>
 </body>
 </html>
