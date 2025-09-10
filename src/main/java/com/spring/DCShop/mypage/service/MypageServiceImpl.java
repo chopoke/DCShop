@@ -172,9 +172,7 @@ public class MypageServiceImpl implements MypageService {
 	    }
 		
 		// input경로 정의
-		String saveDir = request.getSession()
-                .getServletContext()
-                .getRealPath("/resources/image/profile/");
+		String saveDir = request.getSession().getServletContext().getRealPath("/resources/image/profile/");
 		File dir = new File(saveDir);
 		if (!dir.exists()) dir.mkdirs();
 		
