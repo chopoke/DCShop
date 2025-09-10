@@ -100,7 +100,7 @@
 											<div align="right">
 												<input class="inputbutton" type="submit" value="로그인">
 												<input class="inputbutton" type="reset" value="초기화">
-												<input class="inputbutton" type="button" value="회원가입" onclick="window.location='${path}/join'">
+												<input class="inputbutton" type="button" value="회원가입" onclick="window.location='${path}/termsAgreement.do'">
 											</div>
 										</td>
 									</tr>

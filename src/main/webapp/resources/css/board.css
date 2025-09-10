@@ -472,3 +472,58 @@ textarea {
 .board-tab.active:hover {
   background: #f5ae64;
 }
+
+
+/* .comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comment-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px;
+  background: #fff;
+  background: rgba(255, 255, 255, 0.5); 흰색 + 투명도 30%
+}
+
+.comment-row .writer {
+  width: 120px;
+  font-weight: bold;
+  color: gray;
+}
+
+.comment-row .content {
+  flex: 1;
+  padding: 0 16px;
+  color: gray;
+}
+
+.comment-row .date {
+  width: 120px;
+  font-size: 12px;
+  color: gray;
+}
+
+.comment-row .actions {
+  display: flex;
+  gap: 8px;
+}
+.comment-row .btnCommentEdit {
+	background-color: #875e50;
+	height: 20px;
+	width: 40px;
+	font-size: 10px;
+    padding: 0px 0px;
+}
+.comment-row .btnCommentDelete {
+	background-color: #875e50;
+	height: 20px;
+	width: 40px;
+	font-size: 10px;
+    padding: 0px 0px;
+} */

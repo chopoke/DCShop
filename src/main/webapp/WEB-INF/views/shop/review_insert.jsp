@@ -52,7 +52,7 @@
     textarea { resize: vertical; }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50 min-h-screen" id="re-insert">
   <%@ include file="/WEB-INF/views/setting/header.jsp" %>
   <!-- 헤더 겹침 방지: 헤더 높이만큼 여백 -->
   <div id="header-spacer" style="height: var(--header-height, 96px)"></div>
