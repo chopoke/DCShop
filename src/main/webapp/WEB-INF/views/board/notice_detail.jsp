@@ -99,8 +99,8 @@
                             </tr>
                         </table>
                         <div align="right">
-                            <br>
-                            <c:if test='${sessionScope.sessionid == user.u_id}'>
+                            <br>  <br><!-- 공지/이벤트 (admin만 가능) -->
+                            <c:if test='${sessionScope.sessionid == "admin"}'>
                                 <input type="button" class="inputButton" value="수정" onclick="window.location='${path}/notice_update?b_num=${board.b_num}'">
                                 <input type="button" class="inputButton" value="삭제" onclick="deleteConfirm()">
                             </c:if>

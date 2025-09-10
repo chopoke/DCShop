@@ -21,8 +21,6 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private LoginDAO dao;
-	@Autowired
-	private BoardDAO boardDao;
 	
 	@Override
 	public void loginaction(HttpServletRequest request, HttpServletResponse response, Model model)

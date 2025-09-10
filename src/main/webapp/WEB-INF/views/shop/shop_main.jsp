@@ -64,7 +64,7 @@
 							data-readdy="true" class="text-gray-700 hover:text-primary no-underline transition-colors">강아지</a> 
 							<a href="${path}/shop_main.do?petType=2" 
 							class="text-gray-700 hover:text-primary no-underline transition-colors ">고양이</a> 
-							<a href="${path}/shop_main.do?event=1" 
+							<a href="#" 
 							class="text-gray-700 hover:text-primary no-underline transition-colors ">이벤트</a> 
 						<a href="#"
 							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/cartListShow.do'"><img alt="" src="resources/img_main/장바구니강.png" width="35px"></a>
@@ -257,14 +257,13 @@
 		    const priceText = document.getElementById("active-price-text");		// 배지내 텍스트
 		    const clearPrice = document.getElementById("clear-price");			// x버튼
 		    
-		    // 최댓값 설정
 		    const PRICE_MAX_CAP = 150000;
 		  	
 		 	// 슬라이더 값 실제 값으로 변환
 		  	function sliderToPrice(v) {			
 		  		return Math.round((v / 100) * PRICE_MAX_CAP / 1000) * 1000;
 		  	}
-		 	// 숫자 -> ₩ 포맷
+		 	// 숫자 → ₩ 포맷
 		    function won(n){ return n.toLocaleString('ko-KR'); }
 		 	
 		 	// 배지 표시
@@ -283,7 +282,7 @@
 		    let t = null;
 		    function debounce(fn, delay=250){
 		      clearTimeout(t);
-		      t = setTimeout(fn, delay);		
+		      t = setTimeout(fn, delay);
 		    }
 		    function currentKeyword(){
 		        return $("#searchKeyword").val() || $("#currentSearchKeyword").val() || "";
@@ -341,7 +340,7 @@
 
 		      // X 버튼: 가격 필터 해제
 		      clearPrice.addEventListener("click", function(){
-		      	// 기본값으로 리셋
+		        // 기본값으로 리셋
 		        	priceRange.value = 100; // 150000원 위치
 		        	minPriceDisplay.textContent = won(0);
 		        	maxPriceDisplay.textContent = won(PRICE_MAX_CAP);
@@ -385,21 +384,11 @@
 	<!-- Main Content -->
 	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 		<!-- Header -->
-		<c:if test="${param.event == '1'}">
-		  <div class="mx-auto max-w-7xl px-4 mt-6 mb-5">
-		    <!-- 배너 영역을 화면 높이의 1/3로 확보, 이미지 비율 그대로(크롭 X) -->
-		    <div class="min-h-[33vh] rounded-sm overflow-hidden
-		                flex items-center justify-center bg-amber-100">
-		      <img
-		        src="<c:url value='/resources/shop/event/eventBannerImg.png'/>"
-		        alt="장난감·용품 최대 20% 할인"
-		        class="max-h-[33vh] w-auto object-contain" />
-		    </div>
-		  </div>
-		</c:if>
 		<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
 			<div>
+
 				<h1 class="text-2xl md:text-3xl font-bold text-gray-900">Dog Cat Shop</h1>
+
 				<p class="text-gray-600 mt-1">${total} results</p>
 			</div>
 			<!-- 세부 카테고리 -->
@@ -464,6 +453,7 @@
 		
 		
 		<!-- Product Grid -->
+
 		<div id="product-grid">
 			<%@ include file="productList.jsp" %>
 		</div>
@@ -475,7 +465,6 @@
 					let sortOrder = $(this).val();
 					let searchKeyword = $("#searchKeyword").val();
 					let subcategory = $("#subcategory").val();
-					const EVENT = new URLSearchParams(location.search).get('event') === '1' ? '1' : '0';
 					
 					$.ajax({
 						url:"${path}/productList.do",
@@ -485,8 +474,7 @@
 							category: "${category}",
 							searchKeyword: searchKeyword,
 							sortOrder: sortOrder,
-							subcategory : subcategory,
-							event: EVENT
+							subcategory : subcategory
 						},
 						success: function(html){
 							$("#product-grid").html(html);
@@ -507,7 +495,6 @@
 			    const searchKeyword = $("#searchKeyword").val() || ""; 		// 동일
 			    const subcategory = $(this).data("subcategory");
 			    const petType = $(this).data("pet-type");
-			    const EVENT = new URLSearchParams(location.search).get('event') === '1' ? '1' : '0';
 			    
 			    $("#subcategory").val(subcategory); 	// 클릭시 값 업뎃해서 hidden적용
 			    
@@ -518,8 +505,7 @@
 			          petType: petType,
 			          subcategory: subcategory,
 			          sortOrder: sortOrder,
-			          searchKeyword: searchKeyword,
-			          event:EVENT
+			          searchKeyword: searchKeyword
 			        },
 			        success: function(res){
 			        	$("#product-grid").html(res);
@@ -546,18 +532,18 @@
 				<ul class="flex items-center justify-center gap-2">
 					<!-- 이전 버튼 처리 -->
 					<c:if test="${paging.startPage > 10}">
-						<li> <a href="${path}/shop_main.do?pageNum=${paging.prev}&sortOrder=${sortOrder}&searchKeyword=${keyword}&petType=${petType}<c:if test='${param.event==1}'>&event=1</c:if>" class="page-btn"
+						<li> <a href="${path}/shop_main.do?pageNum=${paging.prev}&sortOrder=${sortOrder}&searchKeyword=${keyword}&petType=${petType}" class="page-btn"
 						aria-label="Previous">이전</a></li>
 					</c:if>
 					
 					<!-- 페이지 번호 처리 -->
 					<c:forEach var="num" begin="${paging.startPage}" end="${paging.endPage}">
-						<li><a href="${path}/shop_main.do?pageNum=${num}&sortOrder=${sortOrder}&searchKeyword=${keyword}&petType=${petType}" class="page-btn <c:if test='${num == paging.currentPage}'> active</c:if><c:if test='${param.event==1}'>&event=1</c:if>">${num}</a></li>
+						<li><a href="${path}/shop_main.do?pageNum=${num}&sortOrder=${sortOrder}&searchKeyword=${keyword}&petType=${petType}" class="page-btn <c:if test='${num == paging.currentPage}'> active</c:if>">${num}</a></li>
 					</c:forEach>
 					
 					<c:if test="${paging.endPage < paging.pageCount}">
 						<li>
-							<a href="${path}/shop_main.do?pageNum=${paging.next}&sortOrder=${sortOrder}&searchKeyword=${keyword}&petType=${petType}<c:if test='${param.event==1}'>&event=1</c:if>" class="page-btn"
+							<a href="${path}/shop_main.do?pageNum=${paging.next}&sortOrder=${sortOrder}&searchKeyword=${keyword}&petType=${petType}" class="page-btn"
 							aria-label="Previous"> 다음 </a>
 						</li>
 					</c:if>

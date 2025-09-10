@@ -373,72 +373,72 @@
 					</c:if>
 				</div>
 
-				<!-- Order Summary -->
-				<aside class="col-lg-4">
-					<div class="card">
-						<div class="card-body">
-							<div class="d-flex align-items-center gap-3 mb-3">
-								<div class="avatar">
-									<i class="bi bi-person"></i>
-								</div>
-								<div>
-									<h3 class="h6 mb-1 fw-semibold">
-										<c:out value="${memberName}" />
-									</h3>
-									<small class="text-body-secondary"> <c:out
-											value="${memberEmail}" />
-									</small>
-								</div>
-							</div>
-
-							<hr class="my-3" />
-							<div class="d-flex justify-content-between small mb-3">
-								<span class="text-body-secondary">총 주문 수</span> <span
-									class="fw-medium"><c:out value="${itemsCount}" /></span>
-							</div>
-
-							<h4 class="h6 fw-semibold mb-3">주문 요약</h4>
-
-							<div class="d-flex justify-content-between small mb-2">
-								<span class="text-body-secondary">상품 합계</span> <span
-									id="summarySubtotal" class="fw-medium"> <fmt:formatNumber
-										value="${dissubtotal}" type="currency" currencySymbol="₩"
-										minFractionDigits="0" maxFractionDigits="0" />
-								</span>
-							</div>
-							<fmt:parseNumber var="dissubtotalInt" value="${dissubtotal}"
-								integerOnly="true" />
-							<div class="d-flex justify-content-between small mb-2">
-								<span class="text-body-secondary">배송비</span> <span
-									id="summaryShipping" class="fw-medium"> <c:choose>
-										<c:when test="${shippingFee == 0}">무료</c:when>
-										<c:when test="${dissubtotalInt >= 100000}">무료</c:when>
-										<c:otherwise>
-											<fmt:formatNumber value="${shippingFeeSum}" type="currency"
-												currencySymbol="₩" minFractionDigits="0"
-												maxFractionDigits="0" />
-										</c:otherwise>
-									</c:choose>
-								</span>
-							</div>
-							<div
-								class="d-flex justify-content-between align-items-center mb-3">
-								<span class="fw-semibold">총 결제금액</span> <span id="summaryTotal"
-									class="fs-5 fw-bold text-primary"> <fmt:formatNumber
-										value="${dissubtotalSum}" type="currency" currencySymbol="₩"
-										minFractionDigits="0" maxFractionDigits="0" />
-								</span>
-							</div>
-							<form name="payMent" method="post" class="w-100 w-md-auto">
-								<input type="button" onclick="checkout()"
-									class="btn btn-primary w-100" value="결제하기" />
-							</form>
-						</div>
-					</div>
-				</aside>
-			</div>
-		</main>
-	</div>
+	            <!-- Order Summary -->
+	            <aside class="col-lg-4">
+	               <div class="card">
+	                  <div class="card-body">
+	                     <div class="d-flex align-items-center gap-3 mb-3">
+	                        <div class="avatar">
+	                           <i class="bi bi-person"></i>
+	                        </div>
+	                        <div>
+	                           <h3 class="h6 mb-1 fw-semibold">
+	                              <c:out value="${memberName}" />
+	                           </h3>
+	                           <small class="text-body-secondary"> <c:out
+	                                 value="${memberEmail}" />
+	                           </small>
+	                        </div>
+	                     </div>
+	
+	                     <hr class="my-3" />
+	                     <div class="d-flex justify-content-between small mb-3">
+	                        <span class="text-body-secondary">총 주문 수</span> <span
+	                           class="fw-medium"><c:out value="${itemsCount}" /></span>
+	                     </div>
+	
+	                     <h4 class="h6 fw-semibold mb-3">주문 요약</h4>
+	
+	                     <div class="d-flex justify-content-between small mb-2">
+	                        <span class="text-body-secondary">상품 합계</span> <span
+	                           id="summarySubtotal" class="fw-medium"> <fmt:formatNumber
+	                              value="${dissubtotal}" type="currency" currencySymbol="₩"
+	                              minFractionDigits="0" maxFractionDigits="0" />
+	                        </span>
+	                     </div>
+	                     <fmt:parseNumber var="dissubtotalInt" value="${dissubtotal}"
+	                        integerOnly="true" />
+	                     <div class="d-flex justify-content-between small mb-2">
+	                        <span class="text-body-secondary">배송비</span> <span
+	                           id="summaryShipping" class="fw-medium"> <c:choose>
+	                              <c:when test="${shippingFee == 0}">무료</c:when>
+	                              <c:when test="${dissubtotalInt >= 100000}">무료</c:when>
+	                              <c:otherwise>
+	                                 <fmt:formatNumber value="${shippingFeeSum}" type="currency"
+	                                    currencySymbol="₩" minFractionDigits="0"
+	                                    maxFractionDigits="0" />
+	                              </c:otherwise>
+	                           </c:choose>
+	                        </span>
+	                     </div>
+	                     <div
+	                        class="d-flex justify-content-between align-items-center mb-3">
+	                        <span class="fw-semibold">총 결제금액</span> <span id="summaryTotal"
+	                           class="fs-5 fw-bold text-primary"> <fmt:formatNumber
+	                              value="${dissubtotalSum}" type="currency" currencySymbol="₩"
+	                              minFractionDigits="0" maxFractionDigits="0" />
+	                        </span>
+	                     </div>
+	                     <form name="payMent" method="post" class="w-100 w-md-auto">
+	                        <input type="button" onclick="checkout()"
+	                           class="btn btn-primary w-100" value="결제하기" />
+	                     </form>
+	                  </div>
+	               </div>
+	            </aside>
+	         </div>
+	      </main>
+	   </div>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="${path}/resources/js/cart.js"></script>

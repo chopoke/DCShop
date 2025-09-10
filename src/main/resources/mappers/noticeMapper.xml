@@ -275,6 +275,20 @@
 		jdbcType=VARCHAR}
 	</select>
 
+	<!-- 카테고리별 최신 글 N건 조회 (메인용) -->
+	<select id="selectLatestByCategory" parameterType="java.util.Map" resultMap="noticeMap">
+		SELECT * FROM (
+			SELECT b.*
+				 , u.u_nickname
+				 , (SELECT COUNT(*) FROM comment_tbl c WHERE b.b_num = c.b_num) AS b_comments
+			FROM user_tbl u, board_tbl b
+			WHERE u.u_member_id = b.u_member_id
+			AND b.b_category = #{category}
+			ORDER BY b.b_num DESC
+		)
+		WHERE ROWNUM &lt;= #{limit}
+	</select>
+
 	<!-- 회원 번호 조회 -->
 	<select id="selectU_member_id" parameterType="String"
 		resultType="int">

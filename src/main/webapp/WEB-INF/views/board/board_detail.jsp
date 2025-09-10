@@ -314,7 +314,7 @@
 							<div align="right">
 								<br>
 								<!-- 작성자 본인일 때만 수정/삭제 버튼 노출 -->
-								<c:if test="${sessionScope.sessionid == user.u_id}">
+								<c:if test="${sessionScope.sessionid == user.u_id or sessionScope.sessionid eq 'admin'}">
 									<input type="button" class="inputButton" value="수정" 
 									   onclick="goUpdate('${board.b_num}')">
 									<input type="button" class="inputButton" value="삭제" 
