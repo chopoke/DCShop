@@ -71,19 +71,20 @@
 
             <!-- 네비게이션 -->
             <nav class="w-full space-y-2 text-sm">
-               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
-                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">위시리스트</a> 
-                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
-                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">1:1 문의</a> 
-                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
-                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
-                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+               <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
+               <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">반려동물 정보수정</a> 
+               <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
+
+               <a href="./recommendProduct" class="block py-2 px-3 rounded hover:bg-gray-100">1:1 문의</a> 
+               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
+               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
+               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
             </nav>
 			</aside>
 
 			<!-- 메인 콘텐츠 -->
 			<main class="flex-1 p-8 bg-gray-50">
-				<h1 class="text-2xl font-bold mb-6">님의 마이페이지입니다.</h1>
+				<h1 class="text-2xl font-bold mb-6">${sessionScope.session_u_nickname}님의 마이페이지입니다.</h1>
 
 				<!-- 주문 내역 -->
 				<section class="mb-8">
@@ -202,7 +203,11 @@
 				</section>
 				
 				<!-- 랜덤 : 상품 추천 -->
+				
+				<section class="hero-section1"></section>
 				<section>
+					<h2 class="text-lg font-semibold mb-3">상품 추천</h2>
+					<%@ include file="../mypage/recommanedProduct.jsp"%>
 				</section>
 			</main>
 		</div>

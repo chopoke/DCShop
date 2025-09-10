@@ -87,7 +87,7 @@ public class CartDAOImpl implements CartDAO {
 	}
 
 	/**
-	 * @purpose 0개인 생품 삭제
+	 * @purpose 상품(단 건) 삭제
 	 */
 	@Override
 	public int deleteProductFromCart(Map<String, Object> deleteInfo) {
@@ -99,7 +99,19 @@ public class CartDAOImpl implements CartDAO {
 	}
 	
 	/**
-	 * @purpose 0개인 생품 삭제
+	 * @purpose 상품(여러 건) 삭제
+	 */
+	@Override
+	public int deleteProductsFromCart(Map<String, Object> deleteInfo) {
+		System.out.println("CartDAOImpl => deleteProductsFromCart[여러건]");
+		
+		int deleteResult = sqlSession.delete("com.spring.DCShop.shop.dao.CartDAO.deleteProductsFromCart", deleteInfo);
+		
+		return deleteResult;
+	}
+	
+	/**
+	 * @purpose 상품 input 변경
 	 */
 	@Override
 	public int changeProductFromCart(Map<String, Object> changeInfo) {

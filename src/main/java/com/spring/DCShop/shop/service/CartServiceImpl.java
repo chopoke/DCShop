@@ -18,6 +18,8 @@ import com.spring.DCShop.shop.dao.ProductDAO;
 import com.spring.DCShop.shop.dto.CartDTO;
 import com.spring.DCShop.shop.dto.CartItemRequest;
 import com.spring.DCShop.shop.dto.CheckoutRequest;
+import com.spring.DCShop.shop.dto.DeleteReq;
+import com.spring.DCShop.shop.dto.ItemReq;
 import com.spring.DCShop.shop.dto.UserDTO;
 
 
@@ -188,6 +190,11 @@ public class CartServiceImpl implements CartService {
 		
 	}
 
+	/*
+	 * 
+	 * @Purpose 단건 삭제하기
+	 * 
+	 */
 	@Override
 	public int deleteProductFromCart(HttpServletRequest request, Map<String, Object> map) {
 		System.out.println("CartServiceImpl => deleteProductFromCart");
@@ -206,6 +213,8 @@ public class CartServiceImpl implements CartService {
 		int deleteResult = cartdao.deleteProductFromCart(deleteInfo);
 		return deleteResult;
 	}
+	
+	
 	
 	@Override
 	public int changeProductFromCart(HttpServletRequest request, Map<String, Object> map) {
@@ -227,6 +236,33 @@ public class CartServiceImpl implements CartService {
 		
 		int changeResult = cartdao.changeProductFromCart(changeInfo);
 		return changeResult;
+	}
+
+	@Override
+	public int deleteProductsFromCart(HttpServletRequest request, DeleteReq req) {
+		System.out.println("CartServiceImpl => deleteProductsFromCart");
+		
+		// 세션 아이디 가져오기
+		int uMemberId = (Integer) request.getSession().getAttribute("session_u_member_id");
+
+		// 상품 아이디 가져오기
+		
+		List<ItemReq> itemReqs = req.getItems();
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("uMemberId", uMemberId);
+		
+		List<Map<String, Object>> items = new ArrayList<>();
+		for (ItemReq cb : itemReqs) {
+		    Map<String, Object> m = new HashMap<>();
+		    m.put("pdId", cb.getPdId());   // ⚠️ 여기서 getCtId() 쓰면 안 됩니다!
+		    m.put("ctId", cb.getCtId());
+		    items.add(m);
+		}
+		params.put("items", items);
+		
+		int deleteResult = cartdao.deleteProductsFromCart(params);
+		return deleteResult;
 	}
 
 }

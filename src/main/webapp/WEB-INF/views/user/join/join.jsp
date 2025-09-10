@@ -23,7 +23,6 @@
 		<%@ include file="../../setting/header.jsp"%>
 		<!-- Header 끝 -->
 
-
 		<section class="hero-section1"></section>
 
 		<!-- 컨텐츠 시작 -->

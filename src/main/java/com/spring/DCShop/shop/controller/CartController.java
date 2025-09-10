@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.DCShop.shop.dto.CartItemRequest;
 import com.spring.DCShop.shop.dto.CheckoutRequest;
+import com.spring.DCShop.shop.dto.DeleteReq;
 import com.spring.DCShop.shop.service.CartService;
 
 
@@ -70,6 +71,11 @@ public class CartController {
 		return "redirect:/cartgo.do";
 	}
 	
+	/**
+	 * 
+	 * @purpose 장바구니로 이동
+	 * 
+	*/
 	@RequestMapping("/cartgo.do")
 	public String cartgo(HttpServletRequest request, HttpServletResponse response, Model model) {
 		logger.info("=== url -> cartgo ===");
@@ -85,6 +91,11 @@ public class CartController {
 		return "shop/cart";
 	}
 	
+	/**
+	 * 
+	 * @purpose 갯수 증가
+	 * 
+	*/
 	@RequestMapping("/incQty.do")
 	@ResponseBody
 	public Map<String, Object> incQty(@RequestBody Map<String, Object> map, HttpServletRequest request) {
@@ -100,6 +111,11 @@ public class CartController {
 		return resultMap;
 	}
 	
+	/**
+	 * 
+	 * @purpose 갯수 감소
+	 * 
+	*/
 	@RequestMapping("/dicQty.do")
 	@ResponseBody
 	public Map<String, Object> dicQty(@RequestBody Map<String, Object> map, HttpServletRequest request) {
@@ -114,6 +130,11 @@ public class CartController {
 		return resultMap;
 	}
 	
+	/**
+	 * 
+	 * @purpose 상품(단건) 삭제
+	 * 
+	*/
 	@RequestMapping("/decQty.do")
 	@ResponseBody
 	public Map<String, Object> decQty(@RequestBody Map<String, Object> map, HttpServletRequest request) {
@@ -128,6 +149,30 @@ public class CartController {
 		return resultMap;
 	}
 	
+	/**
+	 * 
+	 * @purpose 상품(여러건) 삭제
+	 * 
+	*/
+	@RequestMapping("/decsQty.do")
+	@ResponseBody
+	public Map<String, Object> decsQty(@RequestBody DeleteReq req, HttpServletRequest request) {
+		logger.info("=== url -> decsQty ===");
+		
+		int qty = cartservice.deleteProductsFromCart(request, req);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		resultMap.put("result", "ok");
+		resultMap.put("qty", qty);
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 
+	 * @purpose 상품[input box]에서 갯수 수정시 변경
+	 * 
+	*/
 	@RequestMapping(value="/onCQty.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> onCQty(@RequestBody Map<String, Object> map, HttpServletRequest request) {

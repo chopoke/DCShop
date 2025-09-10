@@ -22,11 +22,11 @@
 	<!-- 갯수 가져오기 -->
 	<c:set var="qty" value="${empty c.ctQuantity ? 1 : c.ctQuantity}" />
 	<!-- 상품 ID 가져오기 -->
-	<c:set var="hasPd" value="${not empty c.productDto and fn:length(c.productDto) gt 0}" />
+	<%-- <c:set var="hasPd" value="${not empty c.productDto and fn:length(c.productDto) gt 0}" /> --%>
 	<!-- 상품 가격 -->
-	<c:set var="pdPrice" value="${hasPd ? c.productDto[0].pd_price : 0}" />
+	<c:set var="pdPrice" value="${c.productDto[0].pd_price}" />
 	<!-- 상품 배송비 -->
-	<c:set var="pdShip" value="${hasPd ? c.productDto[0].pd_shipping_fee : 0}" />
+	<c:set var="pdShip" value="${c.productDto[0].pd_shipping_fee}" />
 	<!-- 상품 할인 비율 -->
 	<c:set var="rate" value="${c.productDto[0].pd_discount_rate}" />
 	<!-- 상품 할인된 가격 가져오기 -->
@@ -55,25 +55,20 @@
 	<c:when test="${shippingFee == 0}">
 		<c:set var="shippingFee" value="0" />
 	</c:when>
-	<c:when test="${subtotal >= 100000}">
-		<c:set var="total" value="${subtotal}" />
+	<c:when test="${dissubtotal >= 100000}">
+		<c:set var="shippingFee" value="0" />
 	</c:when>
 	<c:otherwise>
 		<c:set var="shippingFee" value="${shippingFeeSum}" />
 	</c:otherwise>
 </c:choose>
 
-
-
+<!-- 배송비 총 합계  -->
 <c:set var="dissubtotalSum" value="${dissubtotal + shippingFee}" />
 
-
-
 <%-- 유저의 이름과 이메일을 가져옵니다. --%>
-<c:set var="memberName"
-	value="${user.uName}" />
-<c:set var="memberEmail"
-	value="${user.uEmail}" />
+<c:set var="memberName" value="${user.uName}" />
+<c:set var="memberEmail" value="${user.uEmail}" />
 
 <!-- 설정 값 넣기 끝 -->
 <!DOCTYPE html>
@@ -95,13 +90,6 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 	rel="stylesheet">
 <link rel="stylesheet" href="${path}/resources/css/cart.css">
-
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-	rel="stylesheet">
 <link rel="stylesheet" href="${path}/resources/css/cart.css">
 <link rel="stylesheet" href="${path}/resources/css/shop/cart.css">
 <body
@@ -111,6 +99,10 @@
 	<!-- 헤더 끝 -->
 
 	<section class="hero-section1"></section>
+
+
+
+
 
 	<script>
 	// 수량 증가
@@ -216,8 +208,7 @@
 	}
     // 장바구니에 상품 추가
     function checkout() {
-  	  // 어떤 버튼이 눌렸는지 몰라도, 클릭된 버튼은 activeElement 입니다.
-  	  const btn  = document.activeElement;
+  	  
   	  const form = document.querySelector('form[name="payMent"]');
   	  // 총액
   	  const totalText   = (document.getElementById("summaryTotal")?.textContent || "").trim();
@@ -227,7 +218,7 @@
   	  const summaryShipping = (document.getElementById("summaryShipping")?.textContent || "").trim();
   	  const pdShippingFee = Number(summaryShipping.replace(/[^\d]/g, '') || 0);
   	  
-  	  // 아이템 수집
+  	  // 보낼 요소들 수집
   	  const items = [];
   	  document.querySelectorAll('#cartItems .cart-item').forEach(card => {
   	    const pdId    = Number(card.dataset.id);
@@ -270,6 +261,8 @@
 						class="btn btn-light rounded-circle p-2"> <i
 						class="bi bi-arrow-left"></i>
 					</a>
+
+
 					<h1 class="h5 mb-0 fw-semibold">
 						장바구니 <small class="text-body-secondary fw-normal"
 							id="itemsCountText"> (<c:out value="${itemsCount}" />개)
@@ -288,35 +281,23 @@
 							<c:forEach var="c" items="${cart}">
 								<c:set var="rate" value="${c.productDto[0].pd_discount_rate}" />
 								<c:set var="hasDiscount" value="${rate gt 0 and rate lt 100}" />
-								<c:set var="discPriceInt"
-									value="${ (c.productDto[0].pd_price * (100 - rate)) div 100 }" />
-								<c:set var="qty"
-									value="${empty c.ctQuantity ? 1 : c.ctQuantity}" />
-								<c:set var="hasPd"
-									value="${not empty c.productDto and fn:length(c.productDto) gt 0}" />
-								<c:set var="pd" value="${hasPd ? c.productDto[0] : null}" />
-								<c:set var="price" value="${hasPd ? pd.pd_price : 0}" />
+								<c:set var="discPriceInt" value="${ (c.productDto[0].pd_price * (100 - rate)) div 100 }" />
+								<c:set var="qty" value="${c.ctQuantity}" />
+								<%-- <c:set var="hasPd" value="${not empty c.productDto and fn:length(c.productDto) gt 0}" /> --%>
+								<c:set var="pd" value="${c.productDto[0]}" />
+								<c:set var="price" value="${pd.pd_price}" />
 
 								<div class="card cart-item" data-id="${c.pdId}">
 									<div
 										class="card-body d-flex flex-wrap gap-3 align-items-center">
-										<c:choose>
-											<c:when test="${hasPd and not empty pd.pd_image_url}">
-												<img src="<c:url value='${pd.pd_image_url}'/>"
-													alt="${pd.pd_name}" class="cart-item-thumb flex-shrink-0" />
-											</c:when>
-											<c:otherwise>
-												<div
-													class="cart-item-thumb bg-body d-flex align-items-center justify-content-center">
-													<i class="bi bi-image text-secondary"></i>
-												</div>
-											</c:otherwise>
-										</c:choose>
-										<input type="hidden" class="pd_resource_url" src="${c.productDto[0].pd_image_url}" /> 
-										<input type="hidden" class="pd_discount_rate" value="${rate}" />
+										<img src="<c:url value='${pd.pd_image_url}'/>"
+											alt="${pd.pd_name}" class="cart-item-thumb flex-shrink-0" />
+										<input type="hidden" class="pd_resource_url"
+											src="${c.productDto[0].pd_image_url}" /> <input
+											type="hidden" class="pd_discount_rate" value="${rate}" />
 										<div class="me-auto">
 											<div class="fw-semibold">
-												<c:out value="${hasPd ? pd.pd_name : '알 수 없는 상품'}" />
+												<c:out value="${pd.pd_name}" />
 											</div>
 											<div class="text-primary fw-bold price" data-price="${price}">
 												<c:choose>
@@ -425,11 +406,11 @@
 										minFractionDigits="0" maxFractionDigits="0" />
 								</span>
 							</div>
-							<fmt:parseNumber var="dissubtotalInt" value="${dissubtotal}" integerOnly="true" />
+							<fmt:parseNumber var="dissubtotalInt" value="${dissubtotal}"
+								integerOnly="true" />
 							<div class="d-flex justify-content-between small mb-2">
-								<span class="text-body-secondary">배송비</span> 
-								<span id="summaryShipping" class="fw-medium"> 
-									<c:choose>
+								<span class="text-body-secondary">배송비</span> <span
+									id="summaryShipping" class="fw-medium"> <c:choose>
 										<c:when test="${shippingFee == 0}">무료</c:when>
 										<c:when test="${dissubtotalInt >= 100000}">무료</c:when>
 										<c:otherwise>
@@ -455,7 +436,7 @@
 						</div>
 					</div>
 				</aside>
-				<div>
+			</div>
 		</main>
 	</div>
 	<script

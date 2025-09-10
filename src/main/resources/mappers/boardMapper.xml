@@ -61,21 +61,17 @@
 						  		</otherwise>
 						  	</choose>
 						  </if>
-						  <if test="sortOrder != null and sortOrder != ''">
-						  	ORDER BY
 						  	<choose>
 						  		<when test="sortOrder == 'viewCnt'">
-						  			b.b_views DESC, b.b_num DESC
+						  			ORDER BY b.b_views DESC, b.b_num DESC
 						  		</when>
 						  		<when test="sortOrder == 'commCnt'">
-						  			b_comments DESC, b.b_num DESC
+						  			ORDER BY b_comments DESC, b.b_num DESC
 						  		</when>
 						  		<otherwise>
-						  			b.b_num DESC
+						  			ORDER BY b.b_num DESC
 						  		</otherwise>
 						  	</choose>
-						  </if>
-						
 						) A 
 				) 
 		 WHERE rn BETWEEN #{start} AND #{end}
@@ -280,4 +276,5 @@
 	<delete id="deleteCommentsByBoard" parameterType="int">
 		DELETE FROM comment_tbl WHERE b_num = #{value}
 	</delete>
-  </mapper>
+	
+</mapper>

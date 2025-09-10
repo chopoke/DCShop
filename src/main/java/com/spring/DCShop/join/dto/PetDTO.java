@@ -90,7 +90,7 @@ public class PetDTO {
 		this.pet_kg = pet_kg;
 	}
 
-	public Integer getU_memeber_id() {
+	public Integer getU_member_id() {
 		return u_member_id;
 	}
 
