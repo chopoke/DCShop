@@ -298,12 +298,12 @@
 					  	<if test="from != null and from != ''">
 					  	<![CDATA[
 				  			AND q.q_regDate >= #{from}
-				  			]]>
+			  			]]>
 	    				</if>
 	    				<if test="to != null and to != ''">
 	    				<![CDATA[
 	    					AND q.q_regDate <= #{to}
-	    					]]>
+    					]]>
 	    				</if>
 	    				<if test="q_answer != null and q_answer != ''">
 	    					AND q.q_answer = #{q_answer}

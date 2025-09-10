@@ -47,7 +47,7 @@
 						class="block py-2 px-3 rounded hover:bg-gray-100">Wishlist</a> <a
 						href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Shopping
 						Cart</a> <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">1:1
-						Contact</a> <a href="#"
+						Contact</a> <a href="./mypage_qna.do"
 						class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> <a
 						href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Product
 						Review</a> <a href="#"

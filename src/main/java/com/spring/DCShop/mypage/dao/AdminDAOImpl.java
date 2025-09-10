@@ -94,7 +94,7 @@ public class AdminDAOImpl implements AdminDAO{
 		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.adminQnaCnt", map);
 	}
 	
-	// 문의관리 - 리스트 
+	// 문의관리 - qna 리스트 
 	@Override
 	public List<QuestDTO> adminQnaList(Map<String, Object> map){
 		return sqlSession.selectList("com.spring.DCShop.mypage.dao.AdminDAO.adminQnaList", map);

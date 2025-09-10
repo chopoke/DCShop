@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.DCShop.mypage.dto.CartDTO;
 import com.spring.DCShop.mypage.dto.OrderDTO;
+import com.spring.DCShop.shop.dto.QuestDTO;
 
 @Repository
 public class MypageDAOImpl implements MypageDAO{
@@ -37,6 +38,18 @@ public class MypageDAOImpl implements MypageDAO{
 		List<CartDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.getCartList", productListInfo);
 		
 		return list;
+	}
+	
+	// 문의관리 - qna 리스트 갯수
+	@Override
+	public int myQnaCnt(Map<String, Object> map){
+		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.MypageDAO.myQnaCnt", map);
+	}
+	
+	// 문의관리 - qna 리스트 
+	@Override
+	public List<QuestDTO> myQnaList(Map<String, Object> map){
+		return sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.myQnaList", map);
 	}
 	
 }

@@ -1,5 +1,8 @@
 package com.spring.DCShop.mypage.controller;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.spring.DCShop.mypage.service.AdminService;
+import com.spring.DCShop.mypage.service.AdminServiceImpl;
 import com.spring.DCShop.mypage.service.MypageService;
 
 
@@ -21,7 +26,6 @@ public class MypageController {
 	@Autowired
 	private MypageService myService;
 	
-	
 	@RequestMapping("mypage_main.do")
 	public String mypage_main(HttpServletRequest request, HttpServletResponse response, Model model) {
 		logger.info("=== url -> mypage_main ===");
@@ -32,4 +36,13 @@ public class MypageController {
 		return "/mypage/mypage_main";
 	}
 
+	@RequestMapping("mypage_qna.do")
+	public String admin_qna(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_qna ===");
+		
+		myService.myQnaList(request, response, model);
+		
+		return "mypage/mypage_qna";
+	}
 }
