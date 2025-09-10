@@ -53,7 +53,7 @@
     });
   </script>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50 min-h-screen" id="re-insert">
   <%@ include file="/WEB-INF/views/setting/header.jsp" %>
   <div id="header-spacer" style="height: var(--header-height, 96px)"></div>
 
@@ -65,9 +65,9 @@
         <div class="w-10 h-10 flex items-center justify-center bg-white rounded-lg">
           <i class="ri-star-smile-line text-xl text-primary"></i>
         </div>
-        <div>
-          <h1 class="text-2xl font-bold text-gray-900">리뷰 목록</h1>
-          <p class="text-gray-600">
+        <div class="flex items-center">
+          <span class="text-2xl font-bold text-gray-900 leading-none">리뷰 목록</span>
+          <p class="text-gray-600 ml-2">
             <c:out value="${pname}"/>
           </p>
         </div>

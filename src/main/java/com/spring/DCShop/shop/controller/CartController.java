@@ -81,10 +81,10 @@ public class CartController {
 		logger.info("=== url -> cartgo ===");
 		
 		String sessionid = (String)request.getSession().getAttribute("sessionid");
-		
-		if(sessionid == null) {
-			return "user/login/login_main";
-		}
+	      
+	    if(sessionid == null) {
+	       return "user/login/login_main";
+	    }
 		
 		cartservice.getProductList(request, response, model);
 		

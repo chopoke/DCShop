@@ -33,6 +33,7 @@
 			<!-- 사이드바 -->
 			<aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
 				<!-- 프로필 -->
+
             <form id="avatarForm" action="${path}/mypage_imgUpload.do" method="post" enctype="multipart/form-data">
 			  	<input type="hidden" name="u_id" value="${sessionScope.sessionid}">
 			  	<input type="file" id="u_image" name="u_image" accept="image/*" style="display:none;">
