@@ -19,8 +19,22 @@
 	    WHERE ROWNUM <= 5
 	    ]]>
 	</select>
+	
+	<!-- 회원관리 - 펫통계 -->
+	<select id="adminUserPet" resultType="hashmap">
+		<![CDATA[
+		SELECT
+		    NVL(SUM(CASE WHEN p_type   = '강아지' THEN 1 ELSE 0 END), 0) AS "dog_count",
+		    NVL(SUM(CASE WHEN p_type   = '고양이' THEN 1 ELSE 0 END), 0) AS "cat_count",
+		    NVL(SUM(CASE WHEN p_gender = 'M'     THEN 1 ELSE 0 END), 0) AS "male_count",
+		    NVL(SUM(CASE WHEN p_gender = 'F'     THEN 1 ELSE 0 END), 0) AS "female_count",
+		    NVL(SUM(CASE WHEN p_neutered = 'Y'   THEN 1 ELSE 0 END), 0) AS "neutered_count"
+		FROM pet_tbl
+	    ]]>
+	</select>
+	
 	<!-- Board 목록 매핑: BoardDTO + 작성자(UserDTO) 리스트 -->
-	  <resultMap id="BoardListMap" type="com.spring.DCShop.board.dto.BoardDTO">
+	<resultMap id="BoardListMap" type="com.spring.DCShop.board.dto.BoardDTO">
 	    <id     property="b_num"        column="b_num"/>
 	    <result property="u_member_id"  column="u_member_id"/>
 	    <result property="b_title"      column="b_title"/>
@@ -39,7 +53,7 @@
 	      <result property="u_nickname"  column="u_nickname"/>
 	      <!-- 필요시 u_id, u_email 등 추가 가능 -->
 	    </collection>
-	  </resultMap>
+	</resultMap>
 	
 	  <!-- 게시판 목록(검색+페이징) -->
 	  <select id="adminBoardList" parameterType="map" resultMap="BoardListMap">
@@ -228,13 +242,16 @@
 	  <!-- 상품관리 - 선택 일괄 상태변경 (ON/OFF/WAIT → 한글 값으로 매핑) -->
 	  <update id="adminProductStatus" parameterType="map">
 	    UPDATE product_tbl
-	       SET pd_status =
-	       <choose>
-	         <when test="to == 'ON'">  '판매중' </when>
-	         <when test="to == 'OFF'"> '품절' </when>
-	         <when test="to == 'WAIT'"> '재입고대기' </when>
-	         <otherwise> '품절' </otherwise>
-	       </choose>
+	       SET pd_status = CASE
+				           WHEN #{to} = 'ON'  THEN '판매중'
+				           WHEN #{to} = 'OFF' THEN '품절'
+				           WHEN #{to} = 'WAIT' THEN '재입고대기'
+				           ELSE '품절'
+				           END,
+		       pd_stock = CASE 
+		       			  WHEN #{to} IN ('OFF','WAIT') THEN 0 
+		       			  ELSE pd_stock 
+		       			  END
 	     WHERE pd_id IN
 	     <foreach collection="ids" item="id" open="(" separator="," close=")">
 	       #{id}
@@ -249,6 +266,72 @@
 	       #{id}
 	     </foreach>
 	  </delete>
+	  <!-- 상품관리 - 자식삭제(리뷰) -->
+	  <delete id="adminProductReviewDelete" parameterType="list">
+	  	DELETE FROM review_tbl
+	  	WHERE pd_id IN
+	  	<foreach collection="list" item="id" open="(" separator="," close=")">
+	       #{id}
+	    </foreach>
+	  </delete>
+	  <!-- 상품관리 - 자식삭제(문의) -->
+	  <delete id="adminProductQnaDelete" parameterType="list">
+	  	DELETE FROM qna_tbl
+	  	WHERE pd_id IN
+	  	<foreach collection="list" item="id" open="(" separator="," close=")">
+	       #{id}
+	    </foreach>
+	  </delete>
 	  
+	  <!-- 상품관리 - 등록 -->
+	  <insert id="adminProductInsert" parameterType="com.spring.DCShop.shop.dto.ShopDTO">
+	  <selectKey keyProperty="pd_id" resultType="int" order="BEFORE">
+	    SELECT product_seq.NEXTVAL FROM dual
+	  </selectKey>
+	  	INSERT INTO product_tbl(
+	  	  pd_id, pd_name, pd_description, pd_price, pd_stock, 
+	      pd_category, pd_brand, pd_image_url, pd_shipping_fee, 
+	      pd_discount_rate, pd_status, pd_option, 
+	      pd_pet_category, pd_subcategory, pd_created, pd_updated
+	  	)VALUES (
+	      #{pd_id}, #{pd_name}, #{pd_description}, #{pd_price}, #{pd_stock}, 
+	      #{pd_category}, #{pd_brand}, #{pd_image_url}, #{pd_shipping_fee}, 
+	      #{pd_discount_rate}, #{pd_status}, #{pd_option}, 
+	      #{pd_pet_category}, #{pd_subcategory}, SYSDATE, SYSDATE
+  		)
+	  </insert>
+	  
+	  <!-- 상품수정 - 수정폼 -->
+	  <select id="adminProductUpdateForm" parameterType="int" resultType="com.spring.DCShop.shop.dto.ShopDTO">
+	  	SELECT
+	      pd_id, pd_name, pd_brand, pd_description, pd_price, pd_stock,
+	      pd_shipping_fee, pd_discount_rate, pd_status, pd_option,
+	      pd_category, pd_subcategory, pd_pet_category, pd_image_url
+	    FROM product_tbl
+	    WHERE pd_id = #{pdId}
+	  </select>
+	  
+	  <!-- 상품관리 - 수정처리 -->
+	  <update id="adminProductUpdate" parameterType="com.spring.DCShop.shop.dto.ShopDTO">
+	  	UPDATE product_tbl
+	       SET pd_name          = #{pd_name},
+	           pd_description   = #{pd_description},
+	           pd_price         = #{pd_price},
+	           pd_stock         = CASE
+	                              WHEN #{pd_status} IN ('품절','재입고대기') THEN 0
+	                              ELSE #{pd_stock}
+	                              END,
+	           pd_category      = #{pd_category},
+	           pd_brand         = #{pd_brand},
+	           pd_image_url     = #{pd_image_url},
+	           pd_shipping_fee  = #{pd_shipping_fee},
+	           pd_discount_rate = #{pd_discount_rate},
+	           pd_status        = #{pd_status},
+	           pd_option        = #{pd_option},
+	           pd_pet_category  = #{pd_pet_category},
+	           pd_subcategory   = #{pd_subcategory},
+	           pd_updated       = SYSDATE
+	     WHERE pd_id = #{pd_id}
+	  </update>
 	  
 </mapper>

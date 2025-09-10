@@ -60,6 +60,9 @@
 							group by pd_id) R
 			     	ON pd.pd_id = R.pd_id
 			     	<where>
+			     		<if test="event != null and (event == '1' or event == 1)">
+						  AND pd.pd_discount_rate <![CDATA[ > ]]> 0
+						</if>
 					    <if test="keyword != null and keyword != ''">
 							(pd.pd_name like '%'||#{keyword} || '%'
 							OR pd.pd_brand like '%' || #{keyword} || '%')
@@ -126,6 +129,9 @@
 		SELECT count(*) AS cnt 
 		FROM product_tbl
 		<where>
+			<if test="event != null and (event == '1' or event == 1)">
+			  AND pd_discount_rate <![CDATA[ > ]]> 0
+			</if>
 			<if test="keyword != null and keyword != ''">
 				(pd_name like '%' || #{keyword} || '%'
 				or pd_brand like '%' || #{keyword} || '%')

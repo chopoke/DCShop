@@ -1,14 +1,27 @@
 /**
- * 
+ * 회원가입 관련 이벤트
  */
- 
+
+
+// /DCShop 경로 시작(setting.jsp에 설정 : pageContext.request.contextPath)
+// window라는게, 가장 최상위 객체라고 하네요.
 var CTX = window.CTX
+
+// 아이디 입력 후 중복체크 확인 까지 했지만, 다시 아이디를 입력시 다시 중복체크 해야함...
+$('#u_id').on('change', function(e) {
+	document.inputform.hiddenUserid.value = "0";
+});
+
+// 아이디 입력 후 중복체크 확인 까지 했지만, 다시 아이디를 입력시 다시 중복체크 해야함...
+$('#u_nickname').on('change', function(e) {
+	document.inputform.hiddenUserNickName.value = "0";
+});
 
 // 아이디 중복확인 버튼 클릭시
 // 1. 아이디 중복확인 페이지 open
 function confirmId() {
 	const userId = document.getElementById('u_id');
-	if (!userId) {
+	if (userId.value == "") {
 		alert("아이디를 입력하세요.");
 		document.inputform.u_id.focus();
 		return false;
@@ -20,7 +33,7 @@ function confirmId() {
 
 function confirmNickName() {
 	const userNickName = document.getElementById('u_nickname');
-	if (!userNickName) {
+	if (userNickName.value == "") {
 		alert("닉네임을 입력하세요.");
 		document.inputform.u_id.focus();
 		return false;
@@ -30,6 +43,7 @@ function confirmNickName() {
 	window.open(url, "confirm", "menubar=no, width=500, height=400");
 }
 
+// 아이디 중복체크 했는지?
 function setUserId(userid) {
 
 	opener.document.inputform.u_id.value = userid;
@@ -38,6 +52,7 @@ function setUserId(userid) {
 
 }
 
+// 닉네임 중복체크 했는지?
 function setUserNickName(userNickName) {
 
 	opener.document.inputform.u_nickname.value = userNickName;
@@ -45,7 +60,6 @@ function setUserNickName(userNickName) {
 	self.close();
 
 }
-
 
 // 회원가입, 수정시의 이메일
 function selectEmailChk(selectElem) {
@@ -62,85 +76,86 @@ function selectEmailChk(selectElem) {
 }
 
 // 2. join.jsp - onSubmit시 - 회원가입페이지 필수 체크
-
-
-function copyFormData(srcForm, dstForm){
-    const fd = new FormData(srcForm);
-    for (const [k, v] of fd.entries()) {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = k;
-      input.value = v;
-      dstForm.appendChild(input);
-    }
-}
-
-
 // onSubmit(제출)
 function singleCheck(e) {
-	/* 2-1. 중복확인 버튼 안 눌렀을때 0으로 설정
-		<input type="hidden" name="hiddenUserid" value="0">
-		hiddenUserid : 중복확인 버튼 안눌렀을때 체크(0: 클릭안함, 1:클릭함)
-	*/
 
-	/* 2-2. 중복확인 버튼 클릭하지 않는 경우 "중복확인 해주세요.!!" 메시지 띄운다.*/
+    // 아이디 중복체크
 	if (document.inputform.hiddenUserid.value == "0") {
-		alert("중복확인 해주세요.!!");
+		alert("아이디 중복확인 해주세요.!!");
 		document.inputform.u_id.focus();
 		return false;
 	}
+	
+	// 닉네임 중복체크
+	if (document.inputform.hiddenUserNickName.value == "0") {
+		alert("닉네임 중복확인 해주세요.!!");
+		document.inputform.u_nickname.focus();
+		return false;
+	}
 
-	// 비밀번호 불일치 => 과제
+	// [필수] - 비밀번호 불일치 => 과제
 	if (document.inputform.u_password.value != document.inputform.re_password.value) {
 		alert("비밀번호가 불이치합니다.");
 		return false;
 	}
 
-	//if(document.inputform.emailVerified.value == "N") {                   
-		//alert("이메일 인증을 해주세요");
-		//return false;
-	//}
+    // [필수] - 이메일 인증 유무
+	if(document.inputform.emailVerified.value == "N") {                   
+		alert("이메일 인증을 해주세요");
+		return false;
+	}
 	
 }
 
-
-// 팝업에서 선택을 넘겨줄 때 호출될 콜백
-  function onJoinChoice(nextPath){           // nextPath: 'joinAction.do' | 'insertPet.do'
-    const f = document.forms['inputform'];
-    if(!f){ alert('폼을 찾을 수 없습니다.'); return; }
-    f.method = 'post';
-    f.action = CTX + '/' + nextPath;        // CTX는 setting.jsp 등에서 컨텍스트 루트
-    f.submit();                              // onsubmit 재호출 안됨 → 무한루프 없음
-  }
-
-  // postMessage 폴백(선택 사항): 혹시 opener 직접호출이 막힌 경우 대비
-  window.addEventListener('message', function(ev){
-    if (ev.origin !== window.location.origin) return;       // 동일 오리진만 허용(보안)
-    if (ev.data && ev.data.type === 'JOIN_FLOW_DECIDE') {
-      onJoinChoice(ev.data.target);                          // target에 'joinAction.do' 등
-    }
-  });
-
 // 주소 API
+// 참고한 URL : https://business.juso.go.kr/addrlink/openApi/searchApi.do
 $(function() {
   // 실시간 검색
   $('#u_address').on('keyup', function(e) {
     var keyword = $(this).val().trim();
-    if (keyword.length < 2) {
+     if (keyword.length < 5) {
       $('#addrResult').hide();
       return;
     }
+
     $.ajax({
       url: "https://business.juso.go.kr/addrlink/addrLinkApiJsonp.do",
       type: "GET",
       data: {
+      	// 해당 API 서벙 요구하는 정보
         keyword: keyword,
         confmKey: "devU01TX0FVVEgyMDI1MDczMDEyMzQyNDExNjAwMzc=", // 본인 인증키
-        resultType: "json"
+        resultType: "json" // 검색결과형식 설정 : 서버로부터 응답받을 데이터의 형식 {statusCode : "200", data: "", messsage : ""}
+        /*
+        	JSONP 기본원리
+			- 한 웹페이지에서 도메인이 다른 웹페이지로 데이터를 요청할 때 사용하는 자바스크립트 개발 방법론
+			- 웹 브라우저는 도메인이 다른 웹 페이지로는 Ajax 등의 방법으로 접근하지 못하게 제한 : 동일출처원칙(Same-origin policy)
+			- JSONP는 바로 이러한 경우에 동일출처원칙을 회피하는 일종의 편법
+			- type 값은 무조건 GET으로 고정해야함
+        */
       },
-      dataType: "jsonp",
+      dataType: "jsonp", // 실제 데이터를 어떤식으로 받도 싶은건지?
       success: function(data) {
-        var html = '';
+      	// 통신이 성공하면, 여기로 옴... success는 트리거를 여기서 함...
+      	
+      	// 승인되지 않은 KET인 경우
+      	if(data.results.common.errorCode == "E0001") {
+      		$('#addrResult').html(
+                '<div class="text-danger p-2">인증키 오류(E0001): ' +
+                (data.results.common.errorMessage || '인증키를 확인하세요') + '</div>'
+            ).show();
+            return false;
+      	}
+      	
+      	var html = '';
+      	/*
+	      	<div class="addr-item" 
+	      		data-road="서울특별시 강남구 양재천로 199 (도곡동)" 
+	      		data-zip="06300" style="padding:5px;cursor:pointer;">
+	      		서울특별시 강남구 양재천로 199 (도곡동) <span style="color:#888">
+	      		[06300]</span>
+	      	</div>
+      	*/
         if(data.results && data.results.juso && data.results.juso.length > 0) {
           data.results.juso.forEach(function(addr) {
             html += '<div class="addr-item" '
@@ -152,142 +167,29 @@ $(function() {
           });
           $('#addrResult').html(html).show();
         } else {
+          // 조회시 값이 존재하지 않을 경우
           $('#addrResult').html('<div style="padding:5px;">검색 결과 없음</div>').show();
         }
-      }
+      },
+      error : function(xhr, ajaxSettings, thrownError) {
+      		// 자체의 통신에 에러가 생길 경우, error에서 예외 처리를 할 수 있습니다.
+	        alert(thrownError + ":" + xhr.status);
+	  }
     });
   });
 
-  // 결과 클릭 시: 주소와 우편번호 분리 입력
+  // 결과 클릭 시: 주소와 우편번호 분리 입력 => 목적 각 u_address에는 도로명 주소 / u_zip_code에 우편번호 넣기
   $(document).on('click', '.addr-item', function() {
+  	//
     var roadAddr = $(this).data('road');
     var zipNo = $(this).data('zip');
+    
+    //
     $('#u_address').val(roadAddr);
     $('#u_zip_code').val(zipNo);
+    
+    // 주소 검색 부분 숨기기
     $('#addrResult').hide();
   });
 
-  // 외부 클릭시 검색 결과 닫기
-  $(document).mouseup(function(e) {
-    var layer = $('#addrResult');
-    if (!layer.is(e.target) && layer.has(e.target).length === 0) {
-      layer.hide();
-    }
-  });
-
-  // "주소검색" 버튼 클릭 시도 동일하게 처리
-  $('#addrSearchBtn').on('click', function() {
-    $('#u_address').trigger('keyup');
-    $('#u_address').focus();
-  });
 });
-
-// =========================
-// 반려동물 다중등록 UI 
-// =========================
-(function () {
-  var notice  = document.getElementById('multiPetNotice');
-  var chips   = document.getElementById('petChips');
-  var addBtn  = document.getElementById('addAnotherBtn');
-  var skipBtn = document.getElementById('skipBtn');
-
-  // insert.jsp가 아니면 스킵
-  if (!chips || !addBtn) { return; }
-
-  function chipCount() {
-    return chips ? chips.getElementsByClassName('chip').length : 0;
-  }
-
-  function updateNotice() {
-    if (!notice) return;
-    notice.style.display = chipCount() > 0 ? 'block' : 'none';
-  }
-
-  function addChip(label, payload) {
-    var div = document.createElement('div');
-    div.className = 'chip';
-    var name = (payload && payload.name) ? payload.name : '';
-    var type = (payload && payload.type) ? payload.type : '';
-    var kg   = (payload && payload.kg)   ? payload.kg   : '';
-    var size = (payload && payload.size) ? payload.size : '';
-
-    div.innerHTML =
-      '<span class="chip-label">' + (label || '') + '</span>' +
-      '<button type="button" class="chip-del" aria-label="삭제">×</button>' +
-      '<input type="hidden" name="pet_name[]" value="' + name + '">' +
-      '<input type="hidden" name="pet_type[]" value="' + type + '">' +
-      '<input type="hidden" name="pet_kg[]" value="' + kg + '">' +
-      '<input type="hidden" name="pet_size[]" value="' + size + '">';
-
-    chips.appendChild(div);
-
-    var del = div.getElementsByClassName('chip-del')[0];
-    if (del) {
-      del.addEventListener('click', function () {
-        if (div.parentNode) div.parentNode.removeChild(div);
-        updateNotice();
-      });
-    }
-    updateNotice();
-  }
-
-  // “+ 추가 등록” → 현재 입력값을 칩으로 묶어 아래에 추가
-  addBtn.addEventListener('click', function () {
-    var nameEl = document.getElementById('pet_name');
-    var name   = nameEl ? nameEl.value : '';
-
-    var type = '';
-    try {
-      var typeEl = document.querySelector('input[name="pet_type"]:checked');
-      if (typeEl) type = typeEl.value;
-    } catch (e) { /* querySelector 미지원 브라우저 대비 */ }
-
-    var kgEl   = document.getElementById('pet_kg');
-    var kg     = kgEl ? kgEl.value : '';
-
-    var sizeEl = document.getElementById('pet_size');
-    var size   = sizeEl ? sizeEl.value : '';
-
-    if (!name) {
-      alert('반려동물 이름을 입력해 주세요.');
-      if (nameEl) nameEl.focus();
-      return;
-    }
-
-    addChip(name + (type ? ' (' + type + ')' : ''), { name: name, type: type, kg: kg, size: size });
-
-    // 필요 시 입력 초기화
-    // if (nameEl) nameEl.value = '';
-  });
-
-  // “건너뛰기” → 반려동물 없이 진행 플래그 추가 후 제출
-  if (skipBtn) {
-    skipBtn.addEventListener('click', function () {
-      if (chipCount() > 0) {
-        if (!confirm('이미 추가된 반려동물이 있습니다. 반려동물 없이 가입을 진행할까요?')) return;
-      }
-
-      // closest 폴리필
-      var form = null;
-      if (skipBtn.closest) {
-        form = skipBtn.closest('form');
-      } else {
-        var p = skipBtn.parentNode;
-        while (p && p.nodeName !== 'FORM') p = p.parentNode;
-        form = p;
-      }
-
-      if (form) {
-        var skip = document.createElement('input');
-        skip.type = 'hidden';
-        skip.name = 'skipPets';
-        skip.value = 'Y';
-        form.appendChild(skip);
-        form.submit();
-      }
-    });
-  }
-
-  // 초기 상태 반영
-  updateNotice();
-})();

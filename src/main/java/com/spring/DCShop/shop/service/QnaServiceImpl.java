@@ -1,7 +1,9 @@
 package com.spring.DCShop.shop.service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,9 +17,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.DCShop.board.page.Paging;
 import com.spring.DCShop.shop.dao.QuestDAO;
 import com.spring.DCShop.shop.dto.QuestDTO;
-import com.spring.DCShop.shop.page.Paging;
 
 
 @Service
@@ -64,16 +66,35 @@ public class QnaServiceImpl implements QnaService{
 			throws ServletException, IOException {
 		System.out.println("QnaServiceImpl - commentAddaction()");
 		
+		
 		//화면에서 입력받은 값을 객체에 담기
+		String pageNum = request.getParameter("pageNum");
 		int pd_id = Integer.parseInt(request.getParameter("pd_id"));
+		
+		Paging paging = new Paging(pageNum);
+		int total = dao.questCnt(pd_id);
+		
+		paging.setTotalCount(total);
+		
+		//문의글 목록 불러오기
+		int start = paging.getStartRow();
+		int end = paging.getEndRow();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		System.out.println(pd_id);
-		//5단계. 문의 작성처리 후 컨트롤러에서 list로 이동
-		List<QuestDTO> list = dao.questList(pd_id);
+		
+		map.put("start", start);
+		map.put("end", end);
+		map.put("pd_id", pd_id);
+		
+		List<QuestDTO> list = dao.questList(map);
 		
 		System.out.println(list);
 		
 		//6단계. jsp로 처리결과 전달
 		model.addAttribute("list", list);
+		model.addAttribute("paging", paging);
 	}
 
 	@Override

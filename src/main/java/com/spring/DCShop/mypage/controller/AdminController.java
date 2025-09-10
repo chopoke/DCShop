@@ -92,10 +92,32 @@ public class AdminController {
 	public String admin_product_insert(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
 		logger.info("=== url -> admin_product_insert ===");
-		service.adminProductInsert(request, response, model);
-		return "admin/admin_productInsert";
+		return "admin/admin_product_insert";
 	}
-	
+	// 상품관리 - 상품등록처리
+	@RequestMapping("admin_product_insertAction")
+	public String admin_product_insertAction(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_product_insertAction ===");
+		service.adminProductInsert(request, response, model);
+		return "redirect:/admin_product";
+	}
+	// 상품관리 - 상품수정폼
+	@RequestMapping("admin_product_update")
+	public String admin_product_update(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_product_update ===");
+		service.adminProductUpdateForm(request, response, model);
+		return "admin/admin_product_update";
+	}
+	// 상품관리 - 상품수정처리
+	@RequestMapping("admin_product_updateAction")
+	public String admin_product_updateAction(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_product_insertAction ===");
+		service.adminProductUpdate(request, response, model);
+		return "redirect:/admin_product";
+	}
 	
 	@RequestMapping("admin_qna")
 	public String admin_qna() {
@@ -118,6 +140,7 @@ public class AdminController {
 		logger.info("=== url -> admin_user ===");
 		
 		service.adminUser(request, response, model);
+		service.adminUserPet(request, response, model);
 		return "admin/admin_user";
 	}
 }

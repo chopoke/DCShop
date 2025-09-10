@@ -12,7 +12,7 @@ public interface BoardDAO {
 	public List<BoardDTO> boardListAction(Map<String, Object> map);
 	
 	// 게시글 전체 개수
-	public int boardListTotal();
+	public int boardListTotal(Map<String, Object> countP);
 	
 	// 게시판 상세페이지
 	public BoardDTO boardDetailAction(int b_num);

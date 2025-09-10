@@ -1,26 +1,21 @@
 @charset "UTF-8";
 
 /* join.css */
-#container { /* join.jsp에 전반에다가 스타일 적용 */
-	width: 100%;
-	margin: 0 auto;
-}
 
+/* join.jsp에 전반에다가 스타일 적용 */
 #contents {
 	max-width: 900px;
 	width: 100%;
 	margin: 0 auto;
 }
 
+/* 상단 회원가입창 밑에 밑줄 */
 #section1, #section2 {
 	padding: 10px 20px 20px 0;
 }
 
-#s2_inner {
-	width: 100%;
-}
-
-.join {
+/* 회원가입 Form에서 관련 열과 행을 디자인 줌 */
+.joinForm {
 	display: flex; /* 한줄(수평)로 배치 */
 	justify-content: center; /* 가운데 배치 */
 	align-items: center; /* 수평 - 가운데 정렬 */
@@ -29,7 +24,9 @@
 	height: auto;
 }
 
-.join th {
+/* 회원가입 폼 시작 */
+/* 회원가입 폼 왼쪽 */
+.joinForm th {
 	font-size: 15px;
 	font-weight: bold;
 	width: 190px;
@@ -43,7 +40,8 @@
 	border-radius: 4px;
 }
 
-.join td {
+/* 회원가입 폼 오른쪽 */
+.joinForm td {
 	padding: 10px 0px 10px 10px;
 	border-bottom: 1px solid gray;
 }
@@ -63,16 +61,7 @@
 	padding: 5px 10px 5px 10px;
 }
 
-/* 이메일 인증 */
-.card {
-	max-width: 520px;
-	padding: 16px;
-	border: 1px solid #e5e7eb;
-	border-radius: 16px;
-	box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
-	background: #fff
-}
-
+/* 이메일 인증 시작 */
 .row {
 	display: flex;
 	gap: 8px;
@@ -143,4 +132,46 @@
 
 .hidden {
 	display: none !important
+}
+
+.stepper {
+	margin: 0 0 .75rem 0
+}
+
+.stepper .segments {
+	display: flex;
+	gap: 6px
+}
+
+.stepper .seg {
+	flex: 1;
+	height: 4px;
+	background: #e9ecef;
+	border-radius: 999px
+}
+/* 현재 단계만 검은색 */
+.stepper.is-1 .seg:nth-child(1) {
+	background: #000
+}
+
+.stepper.is-2 .seg:nth-child(2) {
+	background: #000
+}
+
+.stepper.is-3 .seg:nth-child(3) {
+	background: #000
+}
+
+.stepper .count {
+	margin-top: 6px;
+	font-size: 12px;
+	color: #6b7280;
+	text-align: right
+}
+
+.hero-section1 {
+	width: 100%;
+	background: white;
+	padding: .5rem 0;
+	padding-top: 5rem;
 }
