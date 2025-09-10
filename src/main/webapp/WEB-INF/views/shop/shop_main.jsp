@@ -529,7 +529,7 @@
 			            params.set("subcategory", subcategory);
 			            params.set("sortOrder", sortOrder);
 			            if (searchKeyword) params.set("searchKeyword", searchKeyword); else params.delete("searchKeyword");
-			            history.pushState(null, "", location.pathname + "?" + qs2.toString());	
+			            history.pushState(null, "", location.pathname + "?" + params.toString());	
 			        },
 			        error: function () {
 			            $("#product-grid").html("오류");
