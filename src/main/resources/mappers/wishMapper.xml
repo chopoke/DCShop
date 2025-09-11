@@ -4,6 +4,70 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.spring.DCShop.shop.dao.WishDAO">
-
-
+	
+	<resultMap id="WishWithProductMap" type="com.spring.DCShop.shop.dto.WishDTO">
+	    <id     property="w_num"        column="w_num"/>
+	    <result property="u_member_id"  column="u_member_id"/>
+	    <result property="pd_id"        column="pd_id"/>
+	    <association property="product" javaType="com.spring.DCShop.shop.dto.ProductDTO">
+		    <id     property="pd_id"            column="p_pd_id"/>
+		    <result property="pd_name"          column="p_pd_name"/>
+		    <result property="pd_price"         column="p_pd_price"/>
+		    <result property="pd_image_url"     column="p_pd_image_url"/>
+		    <result property="pd_discount_rate" column="p_pd_discount_rate"/>
+		    <result property="pd_stock"         column="p_pd_stock"/>
+	    </association>
+    </resultMap>
+	
+	<!-- 목록  -->
+	<select id="getWishList" parameterType="int" resultMap="WishWithProductMap">
+		SELECT 
+			w.w_num,
+			w.u_member_id,
+			w.pd_id,
+			p.pd_id            AS p_pd_id,
+		    p.pd_name          AS p_pd_name,
+		    p.pd_price         AS p_pd_price,
+		    p.pd_image_url     AS p_pd_image_url,
+		    p.pd_discount_rate AS p_pd_discount_rate,
+		    p.pd_stock         AS p_pd_stock
+		 FROM wish_tbl w
+		 JOIN product_tbl p
+		   ON p.pd_id = w.pd_id
+		WHERE w.u_member_id = #{value}
+		ORDER BY w.w_num DESC
+	</select>
+	
+	<!-- 상품 찜 여부 -->
+	<select id="isWish" parameterType="java.util.Map" resultType="int">
+		SELECT
+			count(*) as cnt
+		FROM wish_tbl
+		WHERE pd_id = #{pd_id}
+		 AND  u_member_id = #{u_member_id}
+	</select>
+	
+	<!-- 상품 찜 갯수 -->
+	<select id="pdWishCount" parameterType="int" resultType="int">
+		SELECT
+				count(*) as cnt
+		  FROM wish_tbl
+		 WHERE pd_id = #{value}
+		  
+	</select>
+	
+	<!-- 찜 추가 -->
+	<insert id="addWish" parameterType="java.util.Map">
+		INSERT INTO wish_tbl (w_num, u_member_id, pd_id)
+		 VALUES(WISH_TBL_SEQ.NEXTVAL, #{u_member_id, jdbcType=NUMERIC}, #{pd_id, jdbcType=NUMERIC})
+	</insert>
+	
+	<!-- 찜 삭제 -->
+	<delete id="removeWish" parameterType="java.util.Map">
+		DELETE FROM wish_tbl
+		 WHERE u_member_id = #{u_member_id}
+		   AND pd_id = #{pd_id}
+	</delete>
+	
+	
 </mapper>

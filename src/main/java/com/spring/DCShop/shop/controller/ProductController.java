@@ -14,12 +14,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.spring.DCShop.shop.service.ProductServiceImpl;
+import com.spring.DCShop.shop.service.WishServiceImpl;
 
 @Controller
 public class ProductController {
 	
 	@Autowired
 	private ProductServiceImpl service;
+	
+	@Autowired
+	private WishServiceImpl wishser;
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	
@@ -30,6 +34,9 @@ public class ProductController {
 		logger.info("<<< url ==> ad_shop_detailAction >>>");
 		
 		service.productDetailAction(request, response, model);
+		wishser.serPdWishCount(request, response, model);
+		wishser.serIsWish(request, response, model);
+		
 		return "shop/shop_detailAction";
 	}
 }
