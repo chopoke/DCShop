@@ -45,10 +45,6 @@ public interface AdminService {
 	// 상품관리 - 상품등록처리
 	public void adminProductInsert(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
-	
-	// 문의관리 - 문의 리스트
-	public void adminQnaList(HttpServletRequest request, HttpServletResponse response, Model model)
- 			throws ServletException, IOException;
 
 	// 상품관리 - 상품수정폼
 	public void adminProductUpdateForm(HttpServletRequest request, HttpServletResponse response, Model model)
@@ -57,6 +53,10 @@ public interface AdminService {
 	// 상품관리 - 상품수정처리
 	public void adminProductUpdate(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
+	
+	// 문의관리 - 문의 리스트
+	public void adminQnaList(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException;
 	
 	// 주문관리 - 목록
 	public void adminOrderList(HttpServletRequest request, HttpServletResponse response, Model model)
@@ -73,4 +73,20 @@ public interface AdminService {
 	// 주문관리 - 배송상태변경
 	public void adminOrderDelivery(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
+	
+	// 리뷰관리 - 목록/검색/필터
+	public void adminReviewList(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+	
+	// 리뷰관리 - 상세
+	public void adminReviewDetail(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+	
+	// 리뷰관리 - 선택 일괄 삭제
+	public void adminReviewDelete(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+	
+		
 }
+
+

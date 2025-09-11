@@ -64,10 +64,9 @@ public class EmailValidationServiceImpl implements EmailValidationService, Initi
 	private String writeTimeout;
 	@Value("${mail.debug}")
 	private String debug;
+
 	@Value("${email.code.ttl.millis}")
 	private long codeTtlMillis;
-
-
 	/**
 	 * 
 	 * @purpose 초기값설정 

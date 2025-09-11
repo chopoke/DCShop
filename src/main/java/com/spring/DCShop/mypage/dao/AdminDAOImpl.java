@@ -122,6 +122,35 @@ public class AdminDAOImpl implements AdminDAO{
 		int productdeleteCnt = sqlSession.delete("com.spring.DCShop.mypage.dao.AdminDAO.adminProductDelete", ids);
 		return productdeleteCnt;
 	}
+
+	// 리뷰관리 - 총 개수
+	@Override
+	public int adminReviewCount(Map<String, Object> param) {
+		int reviewCnt = sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.adminReviewCount", param);
+		return reviewCnt;
+	}
+
+	// 리뷰관리 - 목록 조회
+	@Override
+	public List<Map<String, Object>> adminReviewList(Map<String, Object> param) {
+		List<Map<String, Object>> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.AdminDAO.adminReviewList", param);
+		return list;
+	}
+
+	// 리뷰관리 - 상세 조회
+	@Override
+	public Map<String, Object> adminReviewDetail(int rNum) {
+		Map<String, Object> detail = sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.adminReviewDetail", rNum);
+		return detail;
+	}
+
+	// 리뷰관리 - 선택 삭제
+	@Override
+	public int adminReviewDelete(List<Integer> ids) {
+		int deleteCnt = sqlSession.delete("com.spring.DCShop.mypage.dao.AdminDAO.adminReviewDelete", ids);
+		return deleteCnt;
+	}
+	
 	// 상품관리 - 자식삭제(리뷰)
 	@Override
 	public int adminProductReviewDelete(List<Integer> ids) {
@@ -197,14 +226,6 @@ public class AdminDAOImpl implements AdminDAO{
 		param.put("newStatus", newStatus);
 		return sqlSession.update("com.spring.DCShop.mypage.dao.AdminDAO.adminOrderDelivery", param);
 	}
-	
-	
-
-	
-
-	
-
-	
 	
 	// 문의관리 - qna 리스트 갯수
 	@Override

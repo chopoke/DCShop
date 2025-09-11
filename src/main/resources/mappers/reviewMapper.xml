@@ -140,5 +140,53 @@
 	  )
 	  WHERE ROWNUM &lt;= 5
 	</select>
+	
+	<!-- 구매여부 확인 -->
+	<select id="hasPurchased" parameterType="map" resultType="int">
+	  SELECT COUNT(*)
+	  FROM order_tbl
+	  WHERE u_member_id = #{uId}
+	    AND pd_id = #{pdId}
+	</select>
+	
+	<!-- 이미 해당 상품 리뷰를 썼는지 확인(중복리뷰 방지) -->
+	<select id="alreadyReviewed" parameterType="map" resultType="int">
+	  SELECT COUNT(*)
+	  FROM review_tbl
+	  WHERE u_member_id = #{uId}
+	    AND pd_id = #{pdId}
+	</select>
+	
+	<!-- 내가 쓴 리뷰 개수 -->
+  <select id="myReviewCount" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+    FROM review_tbl r
+    WHERE r.u_member_id = #{uMemberId}
+  </select>
+
+  <!-- 내가 쓴 리뷰 목록 (상품 정보 JOIN, 최신순) -->
+  <select id="myReviewList" parameterType="map" resultType="map">
+    SELECT * FROM (
+      SELECT 
+        ROWNUM AS rn, x.*
+      FROM (
+        SELECT
+          r.r_num,
+          r.pd_id,
+          r.r_score,
+          r.r_content,
+          r.r_img,
+          r.r_regDate,
+          p.pd_name,
+          p.pd_image_url
+        FROM review_tbl r
+        JOIN product_tbl p ON p.pd_id = r.pd_id
+        WHERE r.u_member_id = #{uMemberId}
+        ORDER BY r.r_regDate DESC, r.r_num DESC
+      ) x
+      WHERE ROWNUM &lt;= #{end}
+    )
+    WHERE rn &gt;= #{start}
+  </select>
   
 </mapper>

@@ -80,13 +80,13 @@ public class AdminController {
 	}
 	
 	// 주문관리 - 배송상태변경
-		@RequestMapping("admin_order_delivery")
-		public String admin_order_delivery(HttpServletRequest request, HttpServletResponse response, Model model) 
-				throws ServletException, IOException {
-			logger.info("=== url -> admin_order_delivery ===");
-			service.adminOrderDelivery(request, response, model);
-			return "redirect:/admin_order_detail";
-		}
+	@RequestMapping("admin_order_delivery")
+	public String admin_order_delivery(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_order_delivery ===");
+		service.adminOrderDelivery(request, response, model);
+		return "redirect:/admin_order_detail";
+	}
 	
 	
 	// 상품관리 - 목록/검색/필터
@@ -159,11 +159,34 @@ public class AdminController {
 		return "admin/admin_qna";
 	}
 	
+	// 리뷰관리 - 목록/검색/필터
 	@RequestMapping("admin_review")
-	public String admin_review() {
+	public String admin_review(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
 		logger.info("=== url -> admin_review ===");
 		
+		service.adminReviewList(request, response, model);
 		return "admin/admin_review";
+	}
+	
+	// 리뷰관리 - 상세
+	@RequestMapping("admin_review_detail")
+	public String admin_review_detail(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_review_detail ===");
+		
+		service.adminReviewDetail(request, response, model);
+		return "admin/admin_review_detail";
+	}
+		
+	// 리뷰관리 - 선택 일괄 삭제
+	@RequestMapping("admin_review_delete")
+	public String admin_review_delete(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_review_delete ===");
+		
+		service.adminReviewDelete(request, response, model);
+		return "redirect:/admin_review";
 	}
 	
 	// 회원목록

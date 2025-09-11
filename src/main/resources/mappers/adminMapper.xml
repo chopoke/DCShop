@@ -505,6 +505,138 @@
 	     WHERE o_num = #{oNum}
 	  </update>
 	  
+	  <!-- 리뷰 총 개수 -->
+	  <select id="adminReviewCount" parameterType="map" resultType="int">
+	    <![CDATA[
+	    SELECT COUNT(*)
+	      FROM review_tbl r
+	      JOIN product_tbl p ON p.pd_id = r.pd_id
+	      JOIN user_tbl    u ON u.u_member_id = r.u_member_id
+	     WHERE 1=1
+	    ]]>
+	    <!-- 카테고리: JSP는 'dog'/'cat' → DB는 1/2 이므로 여기서 매핑 -->
+	    <if test="category != null and category != ''">
+	      AND p.pd_pet_category =
+	      <choose>
+	        <when test="category == 'dog'">1</when>
+	        <when test="category == 'cat'">2</when>
+	        <otherwise>p.pd_pet_category</otherwise>
+	      </choose>
+	    </if>
+	
+	    <!-- 평점 -->
+	    <if test="rate != null and rate != ''">
+	      <![CDATA[ AND r.r_score = TO_NUMBER(#{rate}) ]]>
+	    </if>
+	
+	    <!-- 기간 -->
+	    <if test="from != null and from != ''">
+	      <![CDATA[ AND r.r_regDate >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
+	    </if>
+	    <if test="to != null and to != ''">
+	      <![CDATA[ AND r.r_regDate <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
+	    </if>
+	
+	    <!-- 검색어: 상품명/닉네임/내용 -->
+		<if test="q != null and q != ''">
+		  <![CDATA[
+		  AND (
+		        LOWER(p.pd_name)    LIKE '%'||LOWER(#{q})||'%'
+		     OR LOWER(u.u_nickname) LIKE '%'||LOWER(#{q})||'%'
+		     OR LOWER(r.r_content)  LIKE '%'||LOWER(#{q})||'%'
+		  )
+		  ]]>
+		</if>
+
+	  </select>
+	
+	  <!-- 리뷰 목록 (페이징) -->
+		<select id="adminReviewList" parameterType="map" resultType="map">
+		  <![CDATA[
+		  SELECT *
+		    FROM (
+		          SELECT t.*, ROWNUM rn
+		            FROM (
+		                  SELECT
+		                    r.r_num 	  AS "r_num", 
+		                    r.pd_id 	  AS "pd_id", 
+		                    r.r_content   AS "r_content",
+		                    r.r_score     AS "r_rate",   
+		                    r.r_regDate   AS "r_regdate",  
+		                    u.u_member_id AS "u_id",       
+		                    u.u_nickname  AS "u_nickname",
+		                    p.pd_name     AS "pd_name"
+		                  FROM review_tbl r
+		                  JOIN product_tbl p ON p.pd_id = r.pd_id
+		                  JOIN user_tbl    u ON u.u_member_id = r.u_member_id
+		                  WHERE 1=1
+		  ]]>
+		                  <if test="category != null and category != ''">
+		                    AND p.pd_pet_category =
+		                    <choose>
+		                      <when test="category == 'dog'">1</when>
+		                      <when test="category == 'cat'">2</when>
+		                      <otherwise>p.pd_pet_category</otherwise>
+		                    </choose>
+		                  </if>
+		                  <if test="rate != null and rate != ''">
+		                    <![CDATA[ AND r.r_score = TO_NUMBER(#{rate}) ]]>
+		                  </if>
+		                  <if test="from != null and from != ''">
+		                    <![CDATA[ AND r.r_regDate >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
+		                  </if>
+		                  <if test="to != null and to != ''">
+		                    <![CDATA[ AND r.r_regDate <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
+		                  </if>
+		                  <if test="q != null and q != ''">
+		                    <![CDATA[
+		                    AND (
+		                          LOWER(p.pd_name)    LIKE '%'||LOWER(#{q})||'%'
+		                       OR LOWER(u.u_nickname) LIKE '%'||LOWER(#{q})||'%'
+		                       OR LOWER(r.r_content)  LIKE '%'||LOWER(#{q})||'%'
+		                    )
+		                    ]]>
+		                  </if>
+		  <![CDATA[
+		                  ORDER BY r.r_num DESC
+		                ) t
+		         )
+		   WHERE rn BETWEEN #{startRow} AND #{endRow}
+		  ]]>
+		</select>
+		
+		<!-- 리뷰 상세 -->
+		<select id="adminReviewDetail" parameterType="int" resultType="map">
+		  <![CDATA[
+		  SELECT
+		    r.r_num       AS "r_num",
+		    r.pd_id		  AS "pd_id",
+		    r.r_content	  AS "r_content",
+		    r.r_score     AS "r_rate",
+		    r.r_regDate   AS "r_regdate",
+		    r.r_img		  AS "r_img",
+		    u.u_member_id AS "u_id",
+		    u.u_nickname  AS "u_nickname",
+		    p.pd_name     AS "pd_name"
+		  FROM review_tbl r
+		  JOIN product_tbl p ON p.pd_id = r.pd_id
+		  JOIN user_tbl    u ON u.u_member_id = r.u_member_id
+		  WHERE r.r_num = #{rNum}
+		  ]]>
+		</select>
+
+	
+	  <!-- 4) 리뷰 선택 삭제 -->
+	  <delete id="adminReviewDelete" parameterType="list">
+	    <![CDATA[
+	    DELETE FROM review_tbl
+	     WHERE r_num IN
+	    ]]>
+	    <foreach collection="list" item="id" open="(" separator="," close=")">
+	      #{id}
+	    </foreach>
+	  </delete>
+	  
 	  
 	  <select id="adminQnaCnt" parameterType="java.util.Map" resultType="int">
 	  	SELECT count(*)

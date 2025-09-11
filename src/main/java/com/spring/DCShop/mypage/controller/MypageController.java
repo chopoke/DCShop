@@ -23,8 +23,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.service.MypageService;
-
-
+import com.spring.DCShop.shop.service.ReviewService;
 
 @Controller
 public class MypageController {
@@ -32,6 +31,9 @@ public class MypageController {
 	
 	@Autowired
 	private MypageService myService;
+	
+	@Autowired
+	private ReviewService reviewService;
 	
 	@RequestMapping("mypage_main.do")
 	public String mypage_main(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -256,4 +258,14 @@ public class MypageController {
             return "redirect:mypage_quit.do?err=1";
         }
 	}
+
+	
+	// 내가 쓴 리뷰 리스트
+    @RequestMapping("/mypage/my_reviews.do")
+    public String myReviews(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws Exception {
+        reviewService.myReviewList(request, response, model);
+        
+        return "mypage/my_reviews";
+    }
 }
