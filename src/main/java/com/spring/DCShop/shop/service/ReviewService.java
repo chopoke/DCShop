@@ -44,4 +44,8 @@ public interface ReviewService {
 	// 리뷰 작성 처리
 	public String reviewInsertAction(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
+	
+	// 내가 쓴 리뷰 리스트
+	public String myReviewList(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
 }

@@ -148,7 +148,7 @@
 									</c:choose>
 								</div>
 								<div class="flex items-center">
-									<div class="flex items-center text-yellow-400 mr-2"
+									<div class="flex items-center text-blue-400 mr-2"
 										aria-label="별점 ${dto.review_score}점">
 										<c:forEach begin="1" end="${dto.review_score}">
 											<i class="ri-star-fill text-sm"></i>
@@ -158,7 +158,7 @@
 										</c:forEach>
 									</div>
 									<span class="text-sm text-gray-600">${dto.review_count}</span>
-								</div>
+								</div> 
 								<div class="mt-auto flex justify-end">  
 							    <span 
 							    class="inline-flex items-center h-10 px-4 rounded-lg bg-blue-600 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 active:scale-[.99] transition"
