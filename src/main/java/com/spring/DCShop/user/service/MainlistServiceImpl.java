@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.spring.DCShop.shop.dao.ShopDAOImpl;
+import com.spring.DCShop.board.dao.NoticeDAO;
+import com.spring.DCShop.board.dto.BoardDTO;
 import com.spring.DCShop.shop.dto.ShopDTO;
 import com.spring.DCShop.shop.page.Paging;
 
@@ -20,6 +22,9 @@ public class MainlistServiceImpl implements MainlistService{
 
 	@Autowired
 	private ShopDAOImpl dao;
+
+	@Autowired
+	private NoticeDAO noticeDAO;
 	
 	@Override
 	public void getlist(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -76,6 +81,20 @@ public class MainlistServiceImpl implements MainlistService{
 
 		model.addAttribute("list_d", list_d);
 		model.addAttribute("list_c", list_c);
+
+		// 최신 공지/이벤트 5건씩 조회하여 메인에 제공
+		Map<String, Object> latestNoticeParam = new HashMap<String, Object>();
+		latestNoticeParam.put("category", "공지");
+		latestNoticeParam.put("limit", 5);
+		List<BoardDTO> latestNotices = noticeDAO.selectLatestByCategory(latestNoticeParam);
+
+		Map<String, Object> latestEventParam = new HashMap<String, Object>();
+		latestEventParam.put("category", "이벤트");
+		latestEventParam.put("limit", 5);
+		List<BoardDTO> latestEvents = noticeDAO.selectLatestByCategory(latestEventParam);
+
+		model.addAttribute("latestNotices", latestNotices);
+		model.addAttribute("latestEvents", latestEvents);
 	}
 
 }

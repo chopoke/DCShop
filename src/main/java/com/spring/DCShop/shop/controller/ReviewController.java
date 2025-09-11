@@ -14,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.spring.DCShop.shop.dto.ProductDTO;
+import com.spring.DCShop.shop.service.ProductService;
 import com.spring.DCShop.shop.service.ReviewServiceImpl;
 
 @Controller
@@ -110,13 +112,12 @@ public class ReviewController {
 	// [리뷰 작성화면]
 	@RequestMapping("/review_insert.bc")
 	public String review_insert(HttpServletRequest request, HttpServletResponse response, Model model)
-		throws ServletException, IOException{
-		logger.info("<<< url => review_insert.bc >>>");
-		
-		// 상세페이지에서 넘어온 pd_id를 모델에 넣어서 폼으로 전달
-	    model.addAttribute("pd_id", request.getParameter("pd_id"));
-		return "shop/review_insert";
+	        throws ServletException, IOException {
+	    logger.info("<<< url => review_insert.bc >>>");
+
+	    return service.reviewInsertForm(request, response, model);
 	}
+
 	
 	// [리뷰 작성처리]
 	@RequestMapping("/review_insertAction.bc")
@@ -124,6 +125,7 @@ public class ReviewController {
 		throws ServletException, IOException{
 		logger.info("<<< url => review_insertAction.bc >>>");
 		
+
 		return service.reviewInsertAction(request, response, model);
 		
 	}

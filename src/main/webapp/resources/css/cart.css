@@ -29,6 +29,12 @@
 	z-index: 1030
 }
 
+.custom-btn {
+    background-color: #9ec6ff !important;
+    border-color: #9ec6ff !important;
+    color: #fff !important;
+}
+
 /* 장바구니 목록 스크롤 컨테이너 */
 .cart-list-scroll {
   /* 화면 높이에서 헤더/여백/고정 푸터 높이를 뺀 가용 높이 */

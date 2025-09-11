@@ -14,6 +14,10 @@ public interface AdminService {
 	public void adminUser(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
 	
+	// 회원관리 - 펫통계
+	public void adminUserPet(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+	
 	// 게시판관리 - 게시판목록
 	public void adminBoardList(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
@@ -34,7 +38,16 @@ public interface AdminService {
 	public void adminProductDelete(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
 		
-	// 상품관리 - 상품등록폼
+	// 상품관리 - 상품등록처리
 	public void adminProductInsert(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
+	
+	// 상품관리 - 상품수정폼
+	public void adminProductUpdateForm(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException;
+		
+	// 상품관리 - 상품수정처리
+	public void adminProductUpdate(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException;
+		
 }

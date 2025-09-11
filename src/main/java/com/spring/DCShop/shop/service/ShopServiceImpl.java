@@ -27,10 +27,11 @@ public class ShopServiceImpl implements ShopService{
 		// 페이지 처리를 위해 화면에서 입력받은 pageNum 가져오기
 		String pageNum = request.getParameter("pageNum");
 		String sortOrder = request.getParameter("sortOrder");		// 정렬타입
-		String keyword = request.getParameter("searchKeyword");
-		String petType = request.getParameter("petType"); 
+		String keyword = request.getParameter("searchKeyword");		// 검색어
+		String petType = request.getParameter("petType"); 			// 동물타입
 		String category = request.getParameter("category");			// 메인카테고리
 		String subcategory = request.getParameter("subcategory");	// 서브카테고리
+		String event = request.getParameter("event");
 		// 가격
 		String priceMin = request.getParameter("priceMin");
 		String priceMax = request.getParameter("priceMax");
@@ -49,6 +50,9 @@ public class ShopServiceImpl implements ShopService{
 		countP.put("subcategory", subcategory);
 		countP.put("priceMin", priceMin);
 		countP.put("priceMax", priceMax);
+		if ("1".equals(event)) {
+			countP.put("event", "1");
+		}
 		// 전체 상품 수 조회 (+키워드에 맞게)
 		int total = dao.productCnt(countP);
 		
@@ -66,6 +70,9 @@ public class ShopServiceImpl implements ShopService{
 		map.put("subcategory", subcategory);
 		map.put("priceMin", priceMin);
 		map.put("priceMax", priceMax);
+		if ("1".equals(event)) {
+			map.put("event", "1");
+		}
 		
 		// (상품)리스트 출력 함수 호출
 		List<ShopDTO> list = dao.productListAction(map);
@@ -128,6 +135,24 @@ public class ShopServiceImpl implements ShopService{
 		model.addAttribute("total", total);
 		model.addAttribute("category", category);
 		model.addAttribute("subcategory", subcategory);
+	}
+
+	
+	// 카테고리 갯수 가져오기
+	@Override
+	public void getCategoryCnt(HttpServletRequest request, HttpServletResponse response, Model model) {
+		// 카테고리 리스트 받아오기 (ex -- 1100 : 3)
+	    List<Map<String, Object>> list = dao.getCateCnt();
+	    
+	    Map<String, Integer> out = new HashMap<>();
+	    // 반복해서 맵에 담아주깅~
+	    for (Map<String, Object> r : list) {
+	    	// 카데고리랑 갯수 출력용 out Map에 담아주기
+	    	out.put(r.get("CATEGORY").toString(), ((Number) r.get("CNT")).intValue());
+	    }
+
+	    // model에 넣어서 jsp에 전달
+	    model.addAttribute("categoryCounts", out); 
 	}
 
 }

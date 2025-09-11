@@ -44,4 +44,13 @@ public class ShopDAOImpl implements ShopDAO{
 		List<ShopDTO> list_c = sqlSession.selectList("com.spring.DCShop.shop.dao.ShopDAO.productListAction2");
 		return list_c;
 	}
+	
+	// 카테고리 갯수
+	@Override
+	public List<Map<String, Object>> getCateCnt() {
+		List<Map<String, Object>> list = sqlSession.selectList("com.spring.DCShop.shop.dao.ShopDAO.getCateCnt");
+		System.out.println("카테고리갯수리스트"+list);
+		return list;
+	}
+	
 }

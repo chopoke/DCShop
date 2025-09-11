@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <script>
-	// Controller가 모델에 올려준 값 사용
+	// Controller가 모델에 올려준 값(plugin key) 사용. // session에서 현재 사용자의 정보를 가져옴.
 	window.__CHANNELIO_PLUGIN_KEY__ = '<c:out value="${CHANNELIO_PLUGIN_KEY}" />';
 	window.__SESSION__ = {
 		memberId : '<c:out value="${sessionScope.session_u_member_id}" />',
@@ -46,7 +46,7 @@
 	})();
 </script>
 
-<!-- Auto boot (언어 ko 고정) -->
+<!-- Auto boot (화면이 불려올 때 실행. 언어 ko 고정) -->
 <script>
 (function () {
   var S = window.__SESSION__ || {};
@@ -55,7 +55,7 @@
     if (!key) { console.error('[ChannelIO] pluginKey missing'); return; }
     window.ChannelIO('boot', {
       pluginKey: key,
-      language: 'ko',   // 한국어로 고정,
+      language: 'ko',   // 한국어로 고정
       memberId: S.memberId || undefined,
       profile: {
         name: S.name || undefined,

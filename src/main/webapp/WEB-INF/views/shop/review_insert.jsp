@@ -1,184 +1,182 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/setting/setting.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>리뷰 작성</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>리뷰 작성</title>
 
-<!-- css -->
-<link rel="stylesheet" href="${path}/resources/css/product/reviewList.css">
-
-<!-- js -->
-<script src="https://kit.fontawesome.com/7e22bb38b7.js" crossorigin="anonymous"></script>
-<script src="${path}/resources/js/common/main.js" defer></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-<%-- pd_id: param 우선, 없으면 requestScope --%>
-<c:set var="pdId" value="${not empty param.pd_id ? param.pd_id : requestScope.pd_id}" />
-<%-- 로그인 아이디: 프로젝트에서 실제 쓰는 세션 키로 통일하세요 (예: sessionid 또는 loginMemberId) --%>
-<c:set var="memberId" value="${not empty sessionScope.loginMemberId ? sessionScope.loginMemberId : sessionScope.sessionID}" />
-
-<script>
-$(function(){
-  $('#btnSave').on('click', function(e){
-    e.preventDefault();
-
-    const pdId = $('#pd_id').val();
-    if(!pdId){
-      alert('상품 정보가 없습니다. (pd_id)');
-      return false;
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: "#2563eb", secondary: "#3b82f6" },
+          borderRadius: { button: "8px" }
+        }
+      }
     }
-    const score = $('#r_score').val();
-    if(!score){
-      alert('평점을 선택해주세요.');
-      $('#r_score').focus();
-      return false;
-    }
-    const content = $('#r_content').val().trim();
-    if(!content){
-      alert('리뷰 내용을 입력해주세요.');
-      $('#r_content').focus();
-      return false;
-    }
+  </script>
 
-    $('#insertForm')[0].submit(); // action은 폼에 이미 지정
-  });
+  <!-- 아이콘 / 공통 JS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet"/>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-  $('#btnReset').on('click', function(){
-    $('#insertForm')[0].reset();
-  });
-});
-</script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          primary: "#ff6b35",
-          secondary: "#ffa726",
-        },
-        borderRadius: {
-          none: "0px",
-          sm: "4px",
-          DEFAULT: "8px",
-          md: "12px",
-          lg: "16px",
-          xl: "20px",
-          "2xl": "24px",
-          "3xl": "32px",
-          full: "9999px",
-          button: "8px",
-        },
-      },
-    },
-  };
-</script>
-<script src="https://cdn.tailwindcss.com/3.4.16"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
-  rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
-  rel="stylesheet" />
-<style>
-:where([class^="ri-"])::before {
-  content: "\f3c2";
-}
-</style>
+  <!-- (선택) 프로젝트 CSS -->
+  <link rel="stylesheet" href="${path}/resources/css/product/reviewList.css"/>
+
+  <!-- 서버로부터 값 준비 -->
+  <c:set var="pdId" value="${not empty param.pd_id ? param.pd_id : requestScope.pd_id}" />
+  <c:set var="memberId" value="${not empty sessionScope.loginMemberId ? sessionScope.loginMemberId : sessionScope.sessionID}" />
+  <c:set var="pdName" value="${not empty param.pd_name ? param.pd_name : requestScope.pd_name}" />
+  <c:set var="imgSrcRaw" value="${not empty param.pd_image_url ? param.pd_image_url : requestScope.pd_image_url}" />
+
+  <!-- 최종 이미지 경로(필요시 사용). 이미지가 계속 문제면 표시만 숨길 수도 있음 -->
+  <c:set var="img" value="/resources/img/no-image.png"/>
+  <c:if test="${not empty imgSrcRaw}">
+    <c:choose>
+      <c:when test="${fn:startsWith(imgSrcRaw,'http://') or fn:startsWith(imgSrcRaw,'https://') or fn:startsWith(imgSrcRaw,'/resources/')}">
+        <c:set var="img" value="${imgSrcRaw}"/>
+      </c:when>
+      <c:otherwise>
+        <c:set var="img" value="/resources/img_product/${imgSrcRaw}"/>
+      </c:otherwise>
+    </c:choose>
+  </c:if>
+
+  <style>
+    textarea { resize: vertical; }
+  </style>
 </head>
-
-<body class="page-shop">
-<div class="wrap">
+<body class="bg-gray-50 min-h-screen" id="re-insert">
   <%@ include file="/WEB-INF/views/setting/header.jsp" %>
+  <!-- 헤더 겹침 방지: 헤더 높이만큼 여백 -->
+  <div id="header-spacer" style="height: var(--header-height, 96px)"></div>
 
-	<section class="hero-section1">
-	</section>
-
-  <div id="container">
-    <div id="contents">
-      <div><h1 class="page-title">리뷰 작성</h1></div>
-
-      <div id="section2">
-        <div id="right">
-          <div class="bg-white rounded-lg shadow-sm border p-6 max-w-3xl mx-auto">
-  <form id="insertForm" class="space-y-6"
-        method="post" enctype="multipart/form-data"
-        action="<c:url value='/review_insertAction.bc?pd_id=${pdId}'/>"> 
-
-    <input type="hidden" name="pd_id" id="pd_id" value="${pdId}"/>
-    <input type="hidden" name="u_member_id" id="u_member_id" value="${memberId}"/>
-
-    <!-- 상품 이미지 + 상품명 -->
-    <div class="flex items-center space-x-6">
-      <img src="${pd_image_url}" alt="${pd_name}"
-           class="w-24 h-24 object-cover rounded-lg border" />
-      <div>
-        <h2 class="text-xl font-semibold text-gray-900">${pd_name}</h2>
-        <p class="text-sm text-gray-500">상품명: ${pd_name}</p>
-      </div>
-    </div>
-
-    <!-- 작성자 + 평점 -->
-    <div class="grid grid-cols-2 gap-6">
-      <!-- 작성자 -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700">작성자</label>
-        <p class="mt-1 text-gray-900">${sessionScope.session_u_nickname}</p>
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- 상단 카드 -->
+    <div class="bg-white rounded-lg shadow-sm border p-8 mb-8">
+      <div class="flex items-center space-x-4 mb-6">
+        <div class="w-12 h-12 flex items-center justify-center bg-white rounded-lg">
+          <i class="ri-star-smile-line text-2xl text-primary"></i>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">리뷰 작성</h1>
+          <p class="text-gray-600"><c:out value="${pdName}"/></p>
+        </div>
       </div>
 
-      <!-- 평점 -->
-      <div>
-        <label for="r_score" class="block text-sm font-medium text-gray-700">평점</label>
-        <select id="r_score" name="r_score"
-                class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:ring-primary focus:border-primary">
-          <option value="">-- 평점 선택 --</option>
-          <option value="5">★★★★★ (5)</option>
-          <option value="4">★★★★☆ (4)</option>
-          <option value="3">★★★☆☆ (3)</option>
-          <option value="2">★★☆☆☆ (2)</option>
-          <option value="1">★☆☆☆☆ (1)</option>
-        </select>
-      </div>
-    </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- 상품 메타 -->
+        <div class="space-y-3">
+          <div class="flex justify-between py-2 border-b border-gray-100">
+            <span class="text-gray-600">상품번호</span>
+            <span class="font-medium"><c:out value="${pdId}"/></span>
+          </div>
+          <div class="flex justify-between py-2 border-b border-gray-100">
+            <span class="text-gray-600">작성자</span>
+            <span class="font-medium"><c:out value="${sessionScope.session_u_nickname}"/></span>
+          </div>
+          <div class="flex justify-between py-2 border-b border-gray-100">
+            <span class="text-gray-600">상품명</span>
+            <span class="font-medium truncate max-w-[260px]"><c:out value="${pdName}"/></span>
+          </div>
+        </div>
 
-    <!-- 리뷰 내용 -->
-    <div>
-      <label for="r_content" class="block text-sm font-medium text-gray-700">리뷰 내용</label>
-      <textarea id="r_content" name="r_content" rows="6"
-        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:ring-primary focus:border-primary"
-        placeholder="상품 사용 후기를 입력해주세요."></textarea>
-    </div>
-
-    <!-- 리뷰 이미지 업로드 -->
-    <div>
-      <label for="r_imgFile" class="block text-sm font-medium text-gray-700">이미지</label>
-      <input type="file" id="r_imgFile" name="r_imgFile" accept="image/*"
-        class="mt-1 block w-full text-sm text-gray-600 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary"/>
-    </div>
-
-    <!-- 버튼 영역 -->
-    <div class="flex justify-end space-x-3">
-      <button type="button" id="btnSave"
-        class="bg-primary text-white px-4 py-2 rounded-button hover:bg-orange-600 transition-colors">
-        작성
-      </button>
-      <button type="button" id="btnReset"
-        class="border border-gray-300 px-4 py-2 rounded-button hover:bg-gray-50">
-        초기화
-      </button>
-    </div>
-  </form>
-</div>
+        <!-- 상품 이미지 (이미지 이슈 있으면 이 블록 자체를 주석 처리해도 됨) -->
+        <div class="w-full max-w-[560px] aspect-[4/3] bg-gray-100 rounded-lg border overflow-hidden mx-auto">
+          <img src="<c:url value='${img}'/>" alt="상품이미지" class="w-full h-full object-contain">
         </div>
       </div>
     </div>
-  </div>
 
-  <%@ include file="/WEB-INF/views/setting/footer.jsp" %>
-</div>
+    <!-- 작성 폼 -->
+    <div class="bg-white rounded-lg shadow-sm border p-8">
+      <h3 class="text-lg font-bold text-gray-900 mb-6">리뷰 작성</h3>
+
+      <form id="insertForm" name="insertForm" method="post" enctype="multipart/form-data"
+            action="<c:url value='/review_insertAction.bc?pd_id=${pdId}'/>">
+
+        <input type="hidden" name="pd_id" id="pd_id" value="${pdId}">
+        <input type="hidden" name="u_member_id" id="u_member_id" value="${memberId}">
+
+        <table class="w-full border-collapse">
+          <tbody>
+            <tr>
+              <th class="bg-gray-100 px-4 py-3 text-left font-medium text-gray-700 w-32 border border-gray-200">평점</th>
+              <td class="px-4 py-3 border border-gray-200" colspan="2">
+                <select name="r_score" id="r_score"
+                        class="w-48 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                  <option value="">-- 평점 선택 --</option>
+                  <option value="5">★★★★★ (5)</option>
+                  <option value="4">★★★★☆ (4)</option>
+                  <option value="3">★★★☆☆ (3)</option>
+                  <option value="2">★★☆☆☆ (2)</option>
+                  <option value="1">★☆☆☆☆ (1)</option>
+                </select>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="bg-gray-100 px-4 py-3 text-left font-medium text-gray-700 w-32 border border-gray-200 align-top">리뷰 내용</th>
+              <td class="px-4 py-3 border border-gray-200" colspan="2">
+                <textarea rows="6" name="r_content" id="r_content"
+                          placeholder="상품 사용 후기를 입력해주세요."
+                          class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="bg-gray-100 px-4 py-3 text-left font-medium text-gray-700 w-32 border border-gray-200">이미지</th>
+              <td class="px-4 py-3 border border-gray-200">
+                <input type="file" name="r_imgFile" id="r_imgFile" accept="image/*"
+                       class="block w-full text-sm text-gray-700
+                              file:mr-4 file:py-2 file:px-4
+                              file:rounded-button file:border-0
+                              file:text-sm file:font-medium
+                              file:bg-primary file:text-white
+                              hover:file:bg-blue-600">
+              </td>
+              <td class="px-4 py-3 border border-gray-200 text-center align-middle w-40">
+                <button type="button" id="btnSave"
+                        class="bg-primary text-white px-6 py-2 rounded-button font-medium hover:bg-blue-600 transition-colors">
+                  작성
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="flex justify-end mt-4">
+          <button type="button" id="btnReset"
+                  class="px-4 py-2 border border-gray-300 rounded-button font-medium hover:bg-gray-50 transition-colors">
+            초기화
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    $(function(){
+      $('#btnSave').on('click', function(e){
+        e.preventDefault();
+        const pdId = $('#pd_id').val();
+        if(!pdId){ alert('상품 정보가 없습니다. (pd_id)'); return; }
+        const score = $('#r_score').val();
+        if(!score){ alert('평점을 선택해주세요.'); $('#r_score').focus(); return; }
+        const content = $('#r_content').val().trim();
+        if(!content){ alert('리뷰 내용을 입력해주세요.'); $('#r_content').focus(); return; }
+        $('#insertForm')[0].submit();
+      });
+      $('#btnReset').on('click', function(){
+        $('#insertForm')[0].reset();
+      });
+    });
+  </script>
 </body>
 </html>

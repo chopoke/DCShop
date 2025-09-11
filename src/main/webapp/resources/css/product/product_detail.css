@@ -58,8 +58,9 @@
   display:inline-flex; align-items:center; justify-content:center;
   min-width:96px; height:38px; padding:0 14px;
   font-size:14px; font-weight:600; color:#374151;
-  background:#fff; border:1px solid #D1D5DB; border-radius:0;
+  background:#fff; border:1px solid #D1D5DB; border-radius: 12px;
   cursor:pointer; transition:background .15s, border-color .15s;
+  
 }
 .btn-list:hover{ background:#F9FAFB; border-color:#9CA3AF;}
 
