@@ -24,9 +24,10 @@ public class AdminController {
 	
 	//관리자 마이페이지
 	@RequestMapping("admin_main")
-	public String admin_main() {
+	public String admin_main(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
 		logger.info("=== url -> admin_main ===");
-		
+		service.adminMain(request, response, model);
 		return "admin/admin_main";
 	}
 	
@@ -51,12 +52,31 @@ public class AdminController {
 	    return "redirect:/admin_board";
 	}
 	
-	
+	// 주문관리 - 주문목록
 	@RequestMapping("admin_order")
-	public String admin_order() {
+	public String admin_order(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
 		logger.info("=== url -> admin_order ===");
-		
+		service.adminOrderList(request, response, model);
 		return "admin/admin_order";
+	}
+	
+	// 주문관리 - 주문상세
+	@RequestMapping("admin_order_detail")
+	public String admin_order_detail(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_order_detail ===");
+		service.adminOrderDetail(request, response, model);
+		return "admin/admin_order_detail";
+	}
+	
+	// 주문관리 - 일괄상태변경
+	@RequestMapping("admin_order_status")
+	public String admin_order_status(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_order_status ===");
+		service.adminOrderStatus(request, response, model);
+		return "redirect:/admin_order";
 	}
 	
 	

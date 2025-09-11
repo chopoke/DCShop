@@ -1,6 +1,8 @@
 package com.spring.DCShop.mypage.service;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +29,26 @@ public class AdminServiceImpl implements AdminService{
 	@Autowired
 	private AdminDAO dao;
 
+	// 관리자메인
+	@Override
+	public void adminMain(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		System.out.println("AdminServiceImpl - adminMain()");
+		int boardCount = dao.countBoard();
+		int orderCount = dao.countOrder();
+		int productCount = dao.countProduct();
+		int qnaCount = dao.countQna();
+		int reviewCount = dao.countReview();
+		int userCount = dao.countUser();
+		
+		model.addAttribute("boardCount", boardCount);
+		model.addAttribute("orderCount", orderCount);
+		model.addAttribute("productCount", productCount);
+		model.addAttribute("qnaCount", qnaCount);
+		model.addAttribute("reviewCount", reviewCount);
+		model.addAttribute("userCount", userCount);
+	}
+	
 	// 회원목록-최신가입자5건
 	@Override
 	public void adminUser(HttpServletRequest request, HttpServletResponse response, Model model)
@@ -349,6 +371,156 @@ public class AdminServiceImpl implements AdminService{
         
         model.addAttribute("result", updated);
 	}
+
+	// 주문관리 - 목록
+	@Override
+	public void adminOrderList(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		String from = request.getParameter("from");
+		String to = request.getParameter("to");
+		String oStatus = request.getParameter("o_status");
+		String oPayment = request.getParameter("o_payment");
+		String field = request.getParameter("field");
+		String keyword = request.getParameter("keyword");
+		
+		String pageNum = request.getParameter("pageNum");
+		
+		// 숫자 검색(o_num, pd_id) 대비: 숫자일 때만 equal 조건을 적용
+	    Long keywordNum = null;
+	    if (("o_num".equals(field) || "pd_id".equals(field)) && keyword != null && keyword.matches("\\d+")) {
+	        keywordNum = Long.valueOf(keyword);
+	    }
+		
+		Map<String, Object> sc = new HashMap<>();
+		sc.put("from", from);
+		sc.put("to", to);
+		sc.put("oStatus", oStatus);
+		sc.put("oPayment", oPayment);
+		sc.put("keywordText", keyword); // LIKE 등에 사용
+	    sc.put("keywordNum", keywordNum); // 숫자 equal에만 사용
+		
+		Paging paging = new Paging(pageNum);
+		int totalCount = dao.adminCountOrder(sc);
+		paging.setTotalCount(totalCount);
+		
+		sc.put("startRow", paging.getStartRow());
+		sc.put("endRow", paging.getEndRow());
+		List<Map<String, Object>> list = dao.findOrder(sc);
+		
+		model.addAttribute("list", list);
+		
+		Map<String, Object> pagingMap = new HashMap<>();
+		pagingMap.put("pageNum",    paging.getPageNum());
+        pagingMap.put("pageSize",   paging.getPageSize());
+        pagingMap.put("totalCount", paging.getCount());
+        pagingMap.put("startPage",  paging.getStartPage());
+        pagingMap.put("endPage",    paging.getEndPage());
+        pagingMap.put("prev",       paging.getPrev());
+        pagingMap.put("next",       paging.getNext());
+        model.addAttribute("paging", pagingMap);
+		
+        // 페이지 링크 보존 쿼리
+        model.addAttribute("pageQuery", buildPageQuery(from, to, oStatus, oPayment, field, keyword));
+	}
+	
+	private String enc(String s) {
+        if (s == null) return "";
+        return URLEncoder.encode(s, StandardCharsets.UTF_8);
+    }
+
+    private String buildPageQuery(String from, String to, String oStatus, String oPayment, String field, String keyword) {
+        List<String> parts = new ArrayList<>();
+        if (from     != null && !from.isEmpty())     parts.add("from="     + enc(from));
+        if (to       != null && !to.isEmpty())       parts.add("to="       + enc(to));
+        if (oStatus  != null && !oStatus.isEmpty())  parts.add("o_status=" + enc(oStatus));
+        if (oPayment != null && !oPayment.isEmpty()) parts.add("o_payment="+ enc(oPayment));
+        if (field    != null && !field.isEmpty())    parts.add("field="    + enc(field));
+        if (keyword  != null && !keyword.isEmpty())  parts.add("keyword="  + enc(keyword));
+        return String.join("&", parts);
+    }
+
+    // -----------------------------------------------------------------------
+	
+
+	// 주문관리 - 상세
+	@Override
+	public void adminOrderDetail(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		String oNumStr = request.getParameter("o_num");
+		String pdIdStr = request.getParameter("pd_id");
+		if(oNumStr == null || pdIdStr == null) {
+			model.addAttribute("dto", null);
+			return;
+		}
+		long oNum = Long.parseLong(oNumStr);
+		long pdId = Long.parseLong(pdIdStr);
+		
+		Map<String, Object> dto = dao.findOrderDetail(oNum, pdId);
+		model.addAttribute("dto", dto);
+	}
+
+	// 주문관리 - 상태변경
+	@Override
+	public void adminOrderStatus(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		String toStatus = request.getParameter("to");
+		String orderKey = request.getParameter("order_keys");
+		
+
+		 // trim + 빈 값 체크 (isEmpty() 사용 안 함)
+	    if (toStatus != null)  toStatus  = toStatus.trim();
+	    if (orderKey != null) orderKey = orderKey.trim();
+	    if (toStatus == null || toStatus.length() == 0
+	     || orderKey == null || orderKey.length() == 0) {
+	        return;
+	    }
+
+	    // "o_num:pd_id,o_num:pd_id,..." -> List<Map{oNum,pdId}>
+	    List<Map<String, Object>> keys = new ArrayList<>();
+
+	    int i = 0;
+	    int n = orderKey.length();
+	    while (i < n) {
+	        // 콤마까지 토큰 자르기
+	        int j = orderKey.indexOf(',', i);
+	        String token = (j == -1) ? orderKey.substring(i) : orderKey.substring(i, j);
+
+	        // trim (간단히)
+	        token = token.trim();
+	        if (token.length() > 0) {
+	            // 콜론 위치 찾기
+	            int c = token.indexOf(':');
+	            if (c > 0 && c < token.length() - 1) {
+	                String left  = token.substring(0, c).trim();
+	                String right = token.substring(c + 1).trim();
+	                try {
+	                    long oNum = Long.parseLong(left);
+	                    long pdId = Long.parseLong(right);
+	                    Map<String, Object> m = new HashMap<>();
+	                    m.put("oNum", oNum);
+	                    m.put("pdId", pdId);
+	                    keys.add(m);
+	                } catch (NumberFormatException ignore) {
+	                    // 숫자 아님 → 스킵
+	                }
+	            }
+	        }
+
+	        if (j == -1) break; // 마지막 토큰 처리 끝
+	        i = j + 1;          // 다음 토큰 시작
+	    }
+
+	    if (keys.size() > 0) {
+	        Map<String, Object> param = new HashMap<>();
+	        param.put("toStatus", toStatus);
+	        param.put("keys", keys);
+	        dao.adminOrderStatus(param);
+	    }
+        
+	}
+	
+
+	
 
 	
 

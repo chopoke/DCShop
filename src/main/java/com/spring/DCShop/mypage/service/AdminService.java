@@ -10,6 +10,10 @@ import org.springframework.ui.Model;
 
 public interface AdminService {
 	
+	// 관리자메인
+	public void adminMain(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+	
 	// 회원관리 - 회원목록-가입자5건조회
 	public void adminUser(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
@@ -44,10 +48,21 @@ public interface AdminService {
 	
 	// 상품관리 - 상품수정폼
 	public void adminProductUpdateForm(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException;
+		throws ServletException, IOException;
 		
 	// 상품관리 - 상품수정처리
 	public void adminProductUpdate(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException;
-		
+		throws ServletException, IOException;
+	
+	// 주문관리 - 목록
+	public void adminOrderList(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+	
+	// 주문관리 - 상세
+	public void adminOrderDetail(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+	
+	// 주문관리 - 상태변경
+	public void adminOrderStatus(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
 }

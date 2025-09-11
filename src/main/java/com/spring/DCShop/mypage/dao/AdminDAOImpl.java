@@ -1,5 +1,6 @@
 package com.spring.DCShop.mypage.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,33 @@ public class AdminDAOImpl implements AdminDAO{
 	@Autowired
 	private SqlSession sqlSession;
 
+	// 관리자메인 - 건수
+	@Override
+	public int countBoard() {
+		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.countBoard");
+	}
+	@Override
+	public int countOrder() {
+		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.countOrder");
+	}
+	@Override
+	public int countProduct() {
+		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.countProduct");
+	}
+	@Override
+	public int countQna() {
+		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.countQna");
+	}
+	@Override
+	public int countReview() {
+		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.countReview");
+	}
+	@Override
+	public int countUser() {
+		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.countUser");
+	}
+	// ------------------------------------------------------
+	
 	// 회원목록-최신가입자5건조회
 	@Override
 	public List<UserDTO> adminUserList1() {
@@ -126,6 +154,38 @@ public class AdminDAOImpl implements AdminDAO{
 		int productupdateCnt = sqlSession.update("com.spring.DCShop.mypage.dao.AdminDAO.adminProductUpdate", dto);
 		return productupdateCnt;
 	}
+	
+	// 주문관리 - 목록
+	@Override
+	public List<Map<String, Object>> findOrder(Map<String, Object> sc) {
+		return sqlSession.selectList("com.spring.DCShop.mypage.dao.AdminDAO.findOrder", sc);
+	}
+	
+	// 주문관리 - 건수
+	@Override
+	public int adminCountOrder(Map<String, Object> sc) {
+		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.adminCountOrder", sc);
+	}
+	
+	// 주문관리 - 상세
+	@Override
+	public Map<String, Object> findOrderDetail(long oNum, long pdId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("oNum", oNum);
+		map.put("pdId", pdId);
+		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.findOrderDetail", map);
+	}
+	
+	// 주문관리 - 상태변경
+	@Override
+	public int adminOrderStatus(Map<String, Object> param) {
+		int statusCnt = sqlSession.update("com.spring.DCShop.mypage.dao.AdminDAO.adminOrderStatus", param);
+		return statusCnt;
+	}
+	
+	
+
+	
 
 	
 

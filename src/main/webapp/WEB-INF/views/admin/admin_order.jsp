@@ -17,6 +17,26 @@
       padding: .5rem 0;
       padding-top: 5rem;
     }
+    /* 셀 가로 스크롤 + 테이블 고정 레이아웃 */
+    .fixed-table {
+      width: 1000px;
+      table-layout: fixed;
+      border-collapse: collapse;
+      white-space: nowrap;
+    }
+    .fixed-table td, .fixed-table th {
+      border: 1px solid #eee;
+      padding: 8px;
+      vertical-align: middle;
+    }
+    .cell-scroll {
+      max-width: 100%;
+      white-space: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    .cell-scroll::-webkit-scrollbar { height: 6px; }
   </style>
 </head>
 <body class="bg-gray-100">
@@ -32,15 +52,13 @@
     <!-- 메인 래퍼 -->
     <div class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
 
-      <!-- 사이드바 -->
+      <!-- 사이드바 (수정 금지) -->
       <aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
-        <!-- 프로필 -->
         <img src="resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
         <h2 class="text-lg font-semibold">${session_u_nickname}</h2>
         <p class="text-gray-500 text-sm mb-4">${session_u_email}</p>
         <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
 
-        <!-- 네비게이션 (수정 금지) -->
         <nav class="w-full space-y-2 text-sm">
           <a href="${path}/admin_board"   class="block py-2 px-3 rounded hover:bg-gray-100">게시판관리</a>
           <a href="${path}/admin_order"   class="block py-2 px-3 rounded bg-gray-900 text-white">주문관리</a>
@@ -52,13 +70,12 @@
         </nav>
       </aside>
 
-      <!-- 메인 콘텐츠 -->
-      <main class="flex-1 p-8 bg-gray-50">
+      <!-- 메인 콘텐츠 (★ min-w-0 유지) -->
+      <main class="flex-1 min-w-0 p-8 bg-gray-50">
         <h1 class="text-2xl font-bold mb-6">주문관리</h1>
 
-        <!-- 검색/필터 바 (3줄) -->
+        <!-- 검색/필터 바 -->
         <form id="searchForm" action="${path}/admin_order" method="get" class="bg-white border rounded-xl p-4 mb-6">
-          
           <!-- 1번째 줄: 주문기간 -->
           <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mb-4">
             <div class="md:col-span-6">
@@ -73,44 +90,38 @@
 
           <!-- 2번째 줄: 주문상태 + 결제수단 -->
           <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mb-4">
-            <!-- 주문상태 -->
             <div class="md:col-span-6">
               <label class="block text-sm text-gray-600 mb-1">주문상태</label>
-              <select name="status" class="w-full border rounded-lg h-10 px-3">
+              <select name="o_status" class="w-full border rounded-lg h-10 px-3">
                 <option value="">전체</option>
-                <option value="PAID"      <c:if test="${param.status=='PAID'}">selected</c:if>>결제완료</option>
-                <option value="READY"     <c:if test="${param.status=='READY'}">selected</c:if>>상품준비중</option>
-                <option value="SHIPPED"   <c:if test="${param.status=='SHIPPED'}">selected</c:if>>배송중</option>
-                <option value="DELIVERED" <c:if test="${param.status=='DELIVERED'}">selected</c:if>>배송완료</option>
-                <option value="CANCEL"    <c:if test="${param.status=='CANCEL'}">selected</c:if>>취소</option>
-                <option value="REFUND"    <c:if test="${param.status=='REFUND'}">selected</c:if>>환불</option>
+                <option value="주문완료"  <c:if test="${param.o_status=='주문완료'}">selected</c:if>>주문완료</option>
+                <option value="환불"      <c:if test="${param.o_status=='환불'}">selected</c:if>>환불</option>
+                <option value="반품진행"  <c:if test="${param.o_status=='반품진행'}">selected</c:if>>반품진행</option>
+                <option value="교환진행"  <c:if test="${param.o_status=='교환진행'}">selected</c:if>>교환진행</option>
               </select>
             </div>
 
-            <!-- 결제수단 -->
             <div class="md:col-span-6">
               <label class="block text-sm text-gray-600 mb-1">결제수단</label>
-              <select name="pay_method" class="w-full border rounded-lg h-10 px-3">
+              <select name="o_payment" class="w-full border rounded-lg h-10 px-3">
                 <option value="">전체</option>
-                <option value="CARD"     <c:if test="${param.pay_method=='CARD'}">selected</c:if>>카드</option>
-                <option value="VIRTUAL"  <c:if test="${param.pay_method=='VIRTUAL'}">selected</c:if>>가상계좌</option>
-                <option value="TRANSFER" <c:if test="${param.pay_method=='TRANSFER'}">selected</c:if>>계좌이체</option>
-                <option value="KAKAOPAY" <c:if test="${param.pay_method=='KAKAOPAY'}">selected</c:if>>카카오페이</option>
-                <option value="NAVERPAY" <c:if test="${param.pay_method=='NAVERPAY'}">selected</c:if>>네이버페이</option>
+                <option value="카드"       <c:if test="${param.o_payment=='카드'}">selected</c:if>>카드</option>
+                <option value="네이버페이" <c:if test="${param.o_payment=='네이버페이'}">selected</c:if>>네이버페이</option>
+                <option value="카카오페이" <c:if test="${param.o_payment=='카카오페이'}">selected</c:if>>카카오페이</option>
               </select>
             </div>
           </div>
 
-          <!-- 3번째 줄: 검색 + 버튼 -->
+          <!-- 3번째 줄: 검색필드 + 검색어 -->
           <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
             <div class="md:col-span-9 flex gap-2">
               <select name="field" class="w-36 border rounded-lg h-10 px-3">
-                <option value="order_no" <c:if test="${param.field=='order_no'}">selected</c:if>>주문번호</option>
-                <option value="buyer"    <c:if test="${param.field=='buyer'}">selected</c:if>>주문자</option>
-                <option value="item"     <c:if test="${param.field=='item'}">selected</c:if>>상품명</option>
+                <option value="o_num"  <c:if test="${param.field=='o_num'}">selected</c:if>>주문번호(o_num)</option>
+                <option value="o_name" <c:if test="${param.field=='o_name'}">selected</c:if>>주문자명(o_name)</option>
+                <option value="pd_id"  <c:if test="${param.field=='pd_id'}">selected</c:if>>상품ID(pd_id)</option>
               </select>
               <input type="text" name="keyword" value="${fn:escapeXml(param.keyword)}"
-                     class="flex-1 border rounded-lg h-10 px-3" placeholder="검색어 입력">
+                     class="flex-1 border rounded-lg h-10 px-3" placeholder="값 입력">
             </div>
 
             <div class="md:col-span-3 flex gap-2">
@@ -119,125 +130,108 @@
           </div>
         </form>
 
-        <!-- 상단 액션 바 (엑셀버튼 제거됨) -->
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
+        <!-- 상단 정보 바 -->
+        <div class="flex items-center justify-between gap-3 mb-3">
           <div class="text-sm text-gray-500">
             총 <span class="font-semibold text-gray-700">${paging.totalCount}</span>건
           </div>
-          <div class="flex gap-2">
-            <!-- 일괄 상태 변경 -->
-            <form id="bulkStatusForm" action="${path}/admin_order/bulkStatus" method="post" class="flex gap-2">
-              <select name="to" class="border rounded-lg h-10 px-3">
-                <option value="">상태 일괄변경</option>
-                <option value="READY">상품준비중</option>
-                <option value="SHIPPED">배송중</option>
-                <option value="DELIVERED">배송완료</option>
-                <option value="CANCEL">취소</option>
-                <option value="REFUND">환불</option>
-              </select>
-              <input type="hidden" name="order_nos" id="bulkOrderNos">
-              <button type="button" id="bulkApplyBtn" class="px-4 h-10 rounded-lg border hover:bg-gray-50">적용</button>
-            </form>
-          </div>
+          <div></div>
         </div>
 
         <!-- 주문 목록 -->
         <div class="bg-white border rounded-xl overflow-hidden">
           <div class="overflow-x-auto">
-            <table class="min-w-full table-fixed">
+            <table class="fixed-table">
               <colgroup>
-                <col style="width:48px;">
-                <col style="width:160px;">
-                <col style="width:140px;">
-                <col style="width:160px;">
-                <col style="width:120px;">
-                <col style="width:120px;">
-                <col style="width:140px;">
-                <col style="width:120px;">
+                <col style="width:100px;">  <!-- 배송상태 -->
+                <col style="width:100px;">  <!-- 주문상태 -->
+                <col style="width:200px;">  <!-- 주문번호(링크) -->
+                <col style="width:140px;">  <!-- 주문일시 -->
+                <col style="width:160px;">  <!-- 주문자(회원번호) -->
+                <col style="width:120px;">  <!-- 결제수단 -->
+                <col style="width:120px;">  <!-- 결제금액 -->
               </colgroup>
               <thead class="bg-gray-50 text-sm text-gray-600">
                 <tr>
-                  <th class="py-3 px-3 text-left">
-                    <input type="checkbox" id="checkAll" class="w-4 h-4">
-                  </th>
+                  <th class="py-3 px-3 text-left">배송상태</th>
+                  <th class="py-3 px-3 text-left">주문상태</th>
                   <th class="py-3 px-3 text-left">주문번호</th>
                   <th class="py-3 px-3 text-left">주문일시</th>
-                  <th class="py-3 px-3 text-left">주문자(ID)</th>
+                  <th class="py-3 px-3 text-left">주문자(회원번호)</th>
                   <th class="py-3 px-3 text-left">결제수단</th>
                   <th class="py-3 px-3 text-right">결제금액</th>
-                  <th class="py-3 px-3 text-left">주문상태</th>
-                  <th class="py-3 px-3 text-center">관리</th>
                 </tr>
               </thead>
               <tbody class="text-sm divide-y">
                 <c:if test="${empty list}">
                   <tr>
-                    <td colspan="8" class="py-10 text-center text-gray-500">조회된 주문이 없습니다.</td>
+                    <td colspan="7" class="py-10 text-center text-gray-500">조회된 주문이 없습니다.</td>
                   </tr>
                 </c:if>
 
                 <c:forEach var="o" items="${list}">
                   <tr class="hover:bg-gray-50">
+                    <!-- 배송상태 -->
                     <td class="py-3 px-3 align-middle">
-                      <input type="checkbox" name="rowCheck" value="${o.order_no}" class="w-4 h-4">
-                    </td>
-
-                    <!-- 주문번호 -->
-                    <td class="py-3 px-3 align-middle whitespace-nowrap">
-                      <a href="${path}/admin_order/detail?order_no=${o.order_no}"
-                         class="text-blue-600 hover:underline font-medium truncate inline-block max-w-[150px]">
-                        ${o.order_no}
-                      </a>
-                    </td>
-
-                    <!-- 주문일시 -->
-                    <td class="py-3 px-3 align-middle whitespace-nowrap">
-                      ${o.order_dt}
-                    </td>
-
-                    <!-- 주문자(ID) -->
-                    <td class="py-3 px-3 align-middle whitespace-nowrap">
-                      <span class="truncate inline-block max-w-[150px]">${o.buyer_name}</span>
-                      <span class="text-gray-400 ml-1">(${o.u_id})</span>
-                    </td>
-
-                    <!-- 결제수단 -->
-                    <td class="py-3 px-3 align-middle whitespace-nowrap">
+                      <c:set var="shipBadge" value="bg-gray-100 text-gray-700"/>
                       <c:choose>
-                        <c:when test="${o.pay_method=='CARD'}">카드</c:when>
-                        <c:when test="${o.pay_method=='VIRTUAL'}">가상계좌</c:when>
-                        <c:when test="${o.pay_method=='TRANSFER'}">계좌이체</c:when>
-                        <c:when test="${o.pay_method=='KAKAOPAY'}">카카오페이</c:when>
-                        <c:when test="${o.pay_method=='NAVERPAY'}">네이버페이</c:when>
-                        <c:otherwise>-</c:otherwise>
+                        <c:when test="${o.o_delivery_state=='배송중'}"><c:set var="shipBadge" value="bg-violet-100 text-violet-700"/></c:when>
+                        <c:when test="${o.o_delivery_state=='배송완료'}"><c:set var="shipBadge" value="bg-emerald-100 text-emerald-700"/></c:when>
                       </c:choose>
-                    </td>
-
-                    <!-- 결제금액 -->
-                    <td class="py-3 px-3 align-middle text-right whitespace-nowrap">
-                      <fmt:formatNumber value="${o.total_amount}" type="number"/>원
-                    </td>
-
-                    <!-- 상태 배지 -->
-                    <td class="py-3 px-3 align-middle whitespace-nowrap">
-                      <c:set var="badge" value="bg-gray-100 text-gray-700"/>
-                      <c:choose>
-                        <c:when test="${o.status=='PAID'}"><c:set var="badge" value="bg-blue-100 text-blue-700"/></c:when>
-                        <c:when test="${o.status=='READY'}"><c:set var="badge" value="bg-amber-100 text-amber-700"/></c:when>
-                        <c:when test="${o.status=='SHIPPED'}"><c:set var="badge" value="bg-violet-100 text-violet-700"/></c:when>
-                        <c:when test="${o.status=='DELIVERED'}"><c:set var="badge" value="bg-emerald-100 text-emerald-700"/></c:when>
-                        <c:when test="${o.status=='CANCEL'}"><c:set var="badge" value="bg-rose-100 text-rose-700"/></c:when>
-                        <c:when test="${o.status=='REFUND'}"><c:set var="badge" value="bg-slate-200 text-slate-700"/></c:when>
-                      </c:choose>
-                      <span class="px-2 py-1 text-xs rounded-full ${badge}">
-                        <c:out value="${o.status_name != null ? o.status_name : o.status}"/>
+                      <span class="px-2 py-1 text-xs rounded-full ${shipBadge}">
+                        ${o.o_delivery_state}
                       </span>
                     </td>
 
-                    <!-- 관리 -->
-                    <td class="py-3 px-3 align-middle text-center">
-                      <a href="${path}/admin_order/detail?order_no=${o.order_no}"
-                         class="inline-block px-3 py-1 rounded-lg border hover:bg-gray-50">상세</a>
+                    <!-- 주문상태 -->
+                    <td class="py-3 px-3 align-middle">
+                      <c:set var="ordBadge" value="bg-gray-100 text-gray-700"/>
+                      <c:choose>
+                        <c:when test="${o.o_status=='주문완료'}"><c:set var="ordBadge" value="bg-blue-100 text-blue-700"/></c:when>
+                        <c:when test="${o.o_status=='환불'}"><c:set var="ordBadge" value="bg-rose-100 text-rose-700"/></c:when>
+                        <c:when test="${o.o_status=='반품진행'}"><c:set var="ordBadge" value="bg-amber-100 text-amber-700"/></c:when>
+                        <c:when test="${o.o_status=='교환진행'}"><c:set var="ordBadge" value="bg-slate-200 text-slate-700"/></c:when>
+                      </c:choose>
+                      <span class="px-2 py-1 text-xs rounded-full ${ordBadge}">
+                        ${o.o_status}
+                      </span>
+                    </td>
+
+                    <!-- 주문번호(링크) — 표시: o_num만 / 전송: o_num + pd_id -->
+                    <td class="py-3 px-3 align-middle">
+                      <div class="cell-scroll">
+                        <a href="${path}/admin_order/detail?o_num=${o.o_num}&pd_id=${o.pd_id}" class="text-blue-600 hover:underline font-medium">
+                          #${o.o_num}
+                        </a>
+                      </div>
+                    </td>
+
+                    <!-- 주문일시 -->
+                    <td class="py-3 px-3 align-middle">
+                      <div class="cell-scroll">
+                        <fmt:formatDate value="${o.o_date}" pattern="yyyy-MM-dd"/>
+                      </div>
+                    </td>
+
+                    <!-- 주문자(회원번호) -->
+                    <td class="py-3 px-3 align-middle">
+                      <div class="cell-scroll">
+                        ${o.o_name} <span class="text-gray-400">(${o.u_member_id})</span>
+                      </div>
+                    </td>
+
+                    <!-- 결제수단 -->
+                    <td class="py-3 px-3 align-middle">
+                      <div class="cell-scroll">
+                        <c:out value="${o.o_payment}"/>
+                      </div>
+                    </td>
+
+                    <!-- 결제금액 -->
+                    <td class="py-3 px-3 align-middle text-right">
+                      <div class="cell-scroll">
+                        <fmt:formatNumber value="${o.o_price}" type="number"/>원
+                      </div>
                     </td>
                   </tr>
                 </c:forEach>
@@ -248,14 +242,14 @@
 
         <!-- 페이징 -->
         <div class="mt-6 flex items-center justify-center gap-1">
-          <c:if test="${paging.prev}">
+          <c:if test="${paging.prev gt 0}">
             <a class="px-3 py-2 border rounded-lg hover:bg-gray-50"
                href="${path}/admin_order?pageNum=${paging.startPage-1}&${pageQuery}">&laquo;</a>
           </c:if>
 
           <c:forEach var="i" begin="${paging.startPage}" end="${paging.endPage}">
             <c:choose>
-              <c:when test="${i==paging.pageNum}">
+              <c:when test="${i eq paging.currentPage}">
                 <span class="px-3 py-2 rounded-lg bg-blue-600 text-white">${i}</span>
               </c:when>
               <c:otherwise>
@@ -265,7 +259,7 @@
             </c:choose>
           </c:forEach>
 
-          <c:if test="${paging.next}">
+          <c:if test="${paging.next gt 0}">
             <a class="px-3 py-2 border rounded-lg hover:bg-gray-50"
                href="${path}/admin_order?pageNum=${paging.endPage+1}&${pageQuery}">&raquo;</a>
           </c:if>
@@ -278,38 +272,5 @@
   <%@ include file="../setting/footer.jsp" %>
   <!-- 푸터 끝 -->
 
-  <!-- 스크립트 (체크박스 전체선택 + 일괄변경) -->
-  <script>
-    // 전체 선택 토글
-    const checkAll = document.getElementById('checkAll');
-    const rowChecks = () => Array.from(document.querySelectorAll('input[name="rowCheck"]'));
-    if (checkAll) {
-      checkAll.addEventListener('change', (e) => {
-        rowChecks().forEach(cb => cb.checked = e.target.checked);
-      });
-    }
-
-    // 일괄 상태 변경
-    const bulkBtn  = document.getElementById('bulkApplyBtn');
-    const bulkNos  = document.getElementById('bulkOrderNos');
-    const bulkForm = document.getElementById('bulkStatusForm');
-
-    if (bulkBtn && bulkNos && bulkForm) {
-      bulkBtn.addEventListener('click', () => {
-        const selected = rowChecks().filter(cb => cb.checked).map(cb => cb.value);
-        if (selected.length === 0) {
-          alert('선택된 주문이 없습니다.');
-          return;
-        }
-        const to = bulkForm.querySelector('select[name="to"]').value;
-        if (!to) {
-          alert('변경할 상태를 선택하세요.');
-          return;
-        }
-        bulkNos.value = selected.join(',');
-        bulkForm.submit();
-      });
-    }
-  </script>
 </body>
 </html>

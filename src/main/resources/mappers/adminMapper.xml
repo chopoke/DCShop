@@ -6,6 +6,15 @@
   
  <mapper namespace="com.spring.DCShop.mypage.dao.AdminDAO">
 	
+	<!-- 관리자메인-건수 -->
+	<select id="countBoard"   resultType="int">SELECT COUNT(*) FROM board_tbl</select>
+	<select id="countOrder"   resultType="int">SELECT COUNT(*) FROM order_tbl</select>
+	<select id="countProduct" resultType="int">SELECT COUNT(*) FROM product_tbl</select>
+	<select id="countQna"     resultType="int">SELECT COUNT(*) FROM qna_tbl</select>
+	<select id="countReview"  resultType="int">SELECT COUNT(*) FROM review_tbl</select>
+	<select id="countUser"    resultType="int">SELECT COUNT(*) FROM user_tbl</select>
+	
+	
 	<!-- 회원가입자 최신 5건 조회 -->
 	<select id="adminUserList1" resultType="com.spring.DCShop.user.dto.UserDTO">
 		<![CDATA[
@@ -334,4 +343,132 @@
 	     WHERE pd_id = #{pd_id}
 	  </update>
 	  
+	  <!-- 주문관리 - 목록 -->
+	  <select id="findOrder" parameterType="map" resultType="map">
+	  	SELECT *
+		  FROM (
+		    SELECT ROWNUM AS "rn", x.*
+		    FROM (
+		      SELECT
+		        o.o_num            AS "o_num",
+		        o.pd_id            AS "pd_id",
+		        o.o_date           AS "o_date",
+		        o.o_name           AS "o_name",
+		        o.u_member_id      AS "u_member_id",
+		        o.o_payment        AS "o_payment",
+		        o.o_price          AS "o_price",
+		        o.o_delivery_state AS "o_delivery_state",
+		        o.o_status         AS "o_status"
+		      FROM order_tbl o
+		      WHERE 1=1
+		        <!-- 날짜 범위 -->
+		        <if test="from != null and from != ''">
+		          <![CDATA[ AND o.o_date >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
+		        </if>
+		        <if test="to != null and to != ''">
+		          <![CDATA[ AND o.o_date <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
+		        </if>
+		
+		        <!-- 상태/결제수단 -->
+		        <if test="oStatus != null and oStatus != ''">
+		          AND o.o_status = #{oStatus}
+		        </if>
+		        <if test="oPayment != null and oPayment != ''">
+		          AND o.o_payment = #{oPayment}
+		        </if>
+		
+		        <!-- 키워드: 이름 LIKE -->
+		        <if test="field == 'o_name' and keywordText != null and keywordText != ''">
+		          AND o.o_name LIKE '%' || #{keywordText} || '%'
+		        </if>
+		
+		        <!-- 키워드: 숫자(equal). 숫자 아닐 경우 0건 처리 -->
+		        <if test="field == 'o_num'">
+		          <choose>
+		            <when test="keywordNum != null">
+		              AND o.o_num = #{keywordNum}
+		            </when>
+		            <when test="keywordText != null and keywordText != ''">
+		              AND 1 = 0
+		            </when>
+		          </choose>
+		        </if>
+		
+		        <if test="field == 'pd_id'">
+		          <choose>
+		            <when test="keywordNum != null">
+		              AND o.pd_id = #{keywordNum}
+		            </when>
+		            <when test="keywordText != null and keywordText != ''">
+		              AND 1 = 0
+		            </when>
+		          </choose>
+		        </if>
+		
+		      ORDER BY o.o_date DESC, o.o_num DESC, o.pd_id DESC
+		    ) x
+		    <![CDATA[ WHERE ROWNUM <= #{endRow} ]]>
+		  )
+		  <![CDATA[ WHERE "rn" >= #{startRow} ]]>
+	  </select>
+	  
+	  <!-- 주문관리 - 건수 -->
+	  <select id="adminCountOrder" parameterType="map" resultType="int">
+	  	SELECT COUNT(*)
+		  FROM order_tbl o
+		  WHERE 1=1
+		    <if test="from != null and from != ''">
+		      <![CDATA[ AND o.o_date >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
+		    </if>
+		    <if test="to != null and to != ''">
+		      <![CDATA[ AND o.o_date <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
+		    </if>
+		    <if test="oStatus != null and oStatus != ''">
+		      AND o.o_status = #{oStatus}
+		    </if>
+		    <if test="oPayment != null and oPayment != ''">
+		      AND o.o_payment = #{oPayment}
+		    </if>
+		    <if test="field == 'o_name' and keywordText != null and keywordText != ''">
+		      AND o.o_name LIKE '%' || #{keywordText} || '%'
+		    </if>
+		    <if test="field == 'o_num'">
+		      <choose>
+		        <when test="keywordNum != null">
+		          AND o.o_num = #{keywordNum}
+		        </when>
+		        <when test="keywordText != null and keywordText != ''">
+		          AND 1 = 0
+		        </when>
+		      </choose>
+		    </if>
+		    <if test="field == 'pd_id'">
+		      <choose>
+		        <when test="keywordNum != null">
+		          AND o.pd_id = #{keywordNum}
+		        </when>
+		        <when test="keywordText != null and keywordText != ''">
+		          AND 1 = 0
+		        </when>
+		      </choose>
+		    </if>
+	  </select>
+	  
+	  <!-- 주문관리 - 상세 -->
+	  <select id="findOrderDetail" parameterType="map" resultType="map">
+	  	SELECT o.*
+	    FROM order_tbl o
+	    WHERE o.o_num = #{oNum}
+	      AND o.pd_id = #{pdId}
+	  </select>
+	  
+	  <!-- 주문관리 - 상태변경 -->
+	  <update id="adminOrderStatus" parameterType="map">
+	  	UPDATE order_tbl
+	    SET o_status = #{toStatus}
+	    WHERE (o_num, pd_id) IN
+	    <foreach collection="keys" item="k" open="(" close=")" separator=",">
+	      (#{k.oNum}, #{k.pdId})
+	    </foreach>
+	  </update>
 </mapper>

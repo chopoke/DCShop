@@ -9,6 +9,19 @@ import com.spring.DCShop.user.dto.UserDTO;
 
 public interface AdminDAO {
 
+	// 관리자메인 - 게시판건수
+	public int countBoard();
+	// 관리자메인 - 주문건수
+	public int countOrder();
+	// 관리자메인 - 상품건수
+	public int countProduct();
+	// 관리자메인 - 문의건수
+	public int countQna();
+	// 관리자메인 - 리뷰건수
+	public int countReview();
+	// 관리자메인 - 회원건수
+	public int countUser();
+	
 	// 회원목록-최신가입자5건조회
 	public List<UserDTO> adminUserList1();
 	
@@ -55,5 +68,16 @@ public interface AdminDAO {
 	// 상품관리 - 수정처리
 	public int adminProductUpdate(ShopDTO dto);
 	
+	// 주문관리 - 목록검색
+	public List<Map<String, Object>> findOrder(Map<String, Object> sc);
+	
+	// 주문관리 - 건수
+	public int adminCountOrder(Map<String,  Object> sc);
+	
+	// 주문관리 - 상세
+	public Map<String, Object> findOrderDetail(long oNum, long pdId);
+	
+	// 주문관리 - 상태변경
+	public int adminOrderStatus(Map<String, Object> param);
 	
 }
