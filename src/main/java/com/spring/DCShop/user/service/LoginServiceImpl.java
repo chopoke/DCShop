@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.spring.DCShop.board.dao.BoardDAO;
 import com.spring.DCShop.user.dao.LoginDAO;
 import com.spring.DCShop.user.dto.UserDTO;
 

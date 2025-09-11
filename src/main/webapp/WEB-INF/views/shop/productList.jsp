@@ -120,7 +120,7 @@
 							</div>
 							<div class="p-3">
 								<div class="text-sm text-gray-600 mb-1 p-4 flex flex-col flex-1"></div>
-								<h3 class="font-medium text-gray-900 mb-2" id="pd_name">${dto.pd_name}</h3>
+								<h4 class="font-medium text-gray-900 mb-2" id="pd_name">${dto.pd_name}</h4>
 								
 								<!-- 비교표현 gt a gt b = a > b -->
 								<c:set var="hasDiscount" value="${dto.pd_discount_rate gt 0}" />	
@@ -148,7 +148,7 @@
 									</c:choose>
 								</div>
 								<div class="flex items-center">
-									<div class="flex items-center text-blue-400 mr-2"
+									<div class="flex items-center text-blue-500 mr-2"
 										aria-label="별점 ${dto.review_score}점">
 										<c:forEach begin="1" end="${dto.review_score}">
 											<i class="ri-star-fill text-sm"></i>
@@ -158,12 +158,12 @@
 										</c:forEach>
 									</div>
 									<span class="text-sm text-gray-600">${dto.review_count}</span>
-								</div>
+								</div> 
 								<div class="mt-auto flex justify-end">  
 							    <span 
-							    class="inline-flex items-center h-10 px-4 rounded-lg bg-blue-600 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 active:scale-[.99] transition"
+							    class="inline-flex items-center h-10 px-4 rounded-lg bg-blue-300 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 active:scale-[.99] transition"
 							    data-pd-id="${dto.pd_id}" role="button" onclick="return addToCart(event, ${dto.pd_id})" tabindex="0">
-							      장바구니담기
+							      담기
 							    </span>
 							  </div>
 							</div>
