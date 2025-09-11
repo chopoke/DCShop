@@ -31,15 +31,6 @@ public class MypageDAOImpl implements MypageDAO{
 	}
 	
 	@Override
-	public List<OrderDTO> orderListById(Map<String, Object> orderListById) {
-		System.out.println("MypageDAOImpl => orderListById");
-		
-		List<OrderDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.orderListById", orderListById);
-		
-		return list;
-	}
-
-	@Override
 	public List<CartDTO> getCartList(Map<String, Object> productListInfo) {
 
 		System.out.println("MypageDAOImpl => getCartList");
@@ -105,4 +96,33 @@ public class MypageDAOImpl implements MypageDAO{
 		return deleteCnt;
 	}
 	
+	// 주문내역 페이지 주문리스트
+	@Override
+	public List<OrderDTO> orderListById(Map<String, Object> orderListById) {
+		System.out.println("MypageDAOImpl => orderListById");
+		
+		List<OrderDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.orderListById", orderListById);
+		
+		return list;
+	}
+	
+	// 주문리스트 총 개수
+	@Override
+	public int orderListTotal(int u_member_id) {
+		System.out.println("MypageDAOImpl => orderListTotal");
+		
+		int total = sqlSession.selectOne("com.spring.DCShop.mypage.dao.MypageDAO.orderListTotal", u_member_id);
+		
+		return total;
+	}
+	
+	// 주문 상세 내역
+	@Override
+	public List<OrderDTO> orderDetailAction(Long o_num) {
+		System.out.println("MypageDAOImpl => orderDetailAction");
+		
+		List<OrderDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.orderDetailAction", o_num);
+		
+		return list;
+	}
 }

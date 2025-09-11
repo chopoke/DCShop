@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.spring.DCShop.board.page.Paging;
 import com.spring.DCShop.mypage.dao.MypageDAO;
 import com.spring.DCShop.mypage.dto.CartDTO;
 import com.spring.DCShop.mypage.dto.MyPetDTO;
@@ -257,22 +258,6 @@ public class MypageServiceImpl implements MypageService {
 		model.addAttribute("productTotalPrice", productTotalPrice);
 	}
 	
-	// 주문내역 페이지에서 주문리스트 가져오기
-	@Override
-	public void orderListById(HttpServletRequest request, HttpServletResponse response, Model model) {
-		System.out.println("MypageServiceImpl => orderListById");
-		
-		int session_u_member_id = (Integer)request.getSession().getAttribute("session_u_member_id");
-		
-		Map<String, Object> orderListById = new HashMap<String, Object>();
-		
-		orderListById.put("u_member_id", session_u_member_id);
-		
-		List<OrderDTO> orderList = myDao.orderListById(orderListById);
-		
-		model.addAttribute("order", orderList);
-	}
-		
 	private String mapSize(Double w) {
 	    if (w == null) return null;
 	    if (w < 4)  return "소형";
@@ -320,5 +305,49 @@ public class MypageServiceImpl implements MypageService {
 		map.put("p_num", p_num);
 		map.put("u_member_id", memberId);
 		return myDao.petInfoDelete(map);
+	}
+	
+	// 주문내역 페이지에서 주문리스트 가져오기
+	@Override
+	public void orderListById(HttpServletRequest request, HttpServletResponse response, Model model) {
+		System.out.println("MypageServiceImpl => orderListById");
+		
+		int session_u_member_id = (Integer)request.getSession().getAttribute("session_u_member_id");
+		String pageNum = request.getParameter("pageNum");
+		
+		// 전체 주문내역 갯수 카운트
+		Paging paging = new Paging(pageNum);
+		int total = myDao.orderListTotal(session_u_member_id);
+		System.out.println("total : " + total);
+		
+		paging.setTotalCount(total);
+		
+		int start = paging.getStartRow();
+		int end = paging.getEndRow();
+		
+		Map<String, Object> orderListById = new HashMap<String, Object>();
+		
+		orderListById.put("u_member_id", session_u_member_id);
+		orderListById.put("start", start);
+		orderListById.put("end", end);
+		
+		List<OrderDTO> orderList = myDao.orderListById(orderListById);
+		
+		model.addAttribute("order", orderList);
+		model.addAttribute("paging", paging);
+	}
+	
+	// 주문 상세 내역
+	@Override
+	public void orderDetailAction(HttpServletRequest request, HttpServletResponse response, Model model) {
+		System.out.println("MypageServiceImpl => orderDetailAction");
+		
+		Long o_num = Long.valueOf(request.getParameter("o_num"));
+		
+		List<OrderDTO> list = myDao.orderDetailAction(o_num);
+		
+		System.out.println("list : " + list);
+		
+		model.addAttribute("order", list);
 	}
 }

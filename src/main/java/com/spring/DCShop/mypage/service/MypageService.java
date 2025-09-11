@@ -35,9 +35,6 @@ public interface MypageService {
 	// 주문내역 가져오기
 	public void orderListInfo(HttpServletRequest request, HttpServletResponse response, Model model);
 
-	// 주문내역 페이지에서 주문리스트 가져오기
-	public void orderListById(HttpServletRequest request, HttpServletResponse response, Model model); 
-		
 	// 기존 펫 정보 가져오기
 	public void getPetList(HttpServletRequest request, HttpServletResponse response, Model model);
 	
@@ -47,4 +44,9 @@ public interface MypageService {
 	// 반려동물 정보 삭제
 	public int deletePetInfo(String p_num, HttpServletRequest request, HttpServletResponse response, Model model);
 
+	// 주문내역 페이지에서 주문리스트 가져오기
+	public void orderListById(HttpServletRequest request, HttpServletResponse response, Model model); 
+	
+	// 주문 상세 내역
+	public void orderDetailAction(HttpServletRequest request, HttpServletResponse response, Model model);
 }

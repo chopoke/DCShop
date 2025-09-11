@@ -62,59 +62,55 @@
 			class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
 
 			<!-- 사이드바 -->
-			<aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
-				<!-- 프로필 -->
-				<form id="avatarForm" action="${path}/mypage_imgUpload.do"
-					method="post" enctype="multipart/form-data">
-					<input type="hidden" name="u_id" value="${sessionScope.sessionid}">
-					<input type="file" id="u_image" name="u_image" accept="image/*"
-						style="display: none;">
-				</form>
-				<c:choose>
-					<c:when test="${empty dto.u_image}">
-						<c:url var="imgUrl" value="/resources/img_main/mypage_default.png" />
-					</c:when>
-					<c:otherwise>
-						<c:url var="imgUrl"
-							value="/resources/image/profile/${dto.u_image}" />
-					</c:otherwise>
-				</c:choose>
+         	<aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
+	            <!-- 프로필 -->
+	            <form id="avatarForm" action="${path}/mypage_imgUpload.do"
+	               method="post" enctype="multipart/form-data">
+	               <input type="hidden" name="u_id" value="${sessionScope.sessionid}">
+	               <input type="file" id="u_image" name="u_image" accept="image/*"
+	                  style="display: none;">
+	            </form>
+	            <c:choose>
+	               <c:when test="${empty dto.u_image}">
+	                  <c:url var="imgUrl" value="/resources/img_main/mypage_default.png" />
+	               </c:when>
+	               <c:otherwise>
+	                  <c:url var="imgUrl"
+	                     value="/resources/image/profile/${dto.u_image}" />
+	               </c:otherwise>
+	            </c:choose>
 
-				<div class="relative inline-block">
-					<img id="profileImg" src="${imgUrl}" alt="Profile"
-						class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
-					<label for="u_image"
-						class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-white border shadow
-         						flex items-center justify-center cursor-pointer hover:shadow-md"
-						title="프로필 사진 변경"> <i
-						class="ri-pencil-fill text-gray-700 text-base"></i> <span
-						class="sr-only">프로필 사진 변경</span>
-					</label>
-				</div>
-				<!-- <img src="resources/img_main/mypage_default.png" alt="Profile"
-	               class="rounded-full w-28 h-28 object-cover mb-4"> -->
-
-				<h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
-				<h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
-				<p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
-				<button
-					class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600"
-					onclick="window.location='${path}/mypage_pwdcheck.do'">정보수정</button>
-
-				<!-- 네비게이션 -->
-				<nav class="w-full space-y-2 text-sm">
-					<a href="./orderList"
-						class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> <a
-						href="#" class="block py-2 px-3 rounded hover:bg-gray-100">위시리스트</a>
-					<a href="./cartList"
-						class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> <a
-						href="#" class="block py-2 px-3 rounded hover:bg-gray-100">1:1
-						문의</a> <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a>
-					<a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a>
-					<a href="#"
-						class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
-				</nav>
-			</aside>
+	            <div class="relative inline-block">
+	               <img id="profileImg" src="${imgUrl}" alt="Profile"
+	                  class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
+	               <label for="u_image"
+	                  class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-white border shadow
+	                           flex items-center justify-center cursor-pointer hover:shadow-md"
+	                  title="프로필 사진 변경"> <i
+	                  class="ri-pencil-fill text-gray-700 text-base"></i> <span
+	                  class="sr-only">프로필 사진 변경</span>
+	               </label>
+	            </div>
+	            <!-- <img src="resources/img_main/mypage_default.png" alt="Profile"
+	                  class="rounded-full w-28 h-28 object-cover mb-4"> -->
+	
+	            <h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+	            <h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
+	            <p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
+	            <button
+	               class="px-4 py-2 bg-black text-white !rounded-lg mb-6 hover:bg-blue-600"
+	               onclick="window.location='${path}/mypage_pwdcheck.do'">정보수정</button>
+	
+	            <!-- 네비게이션 -->
+	            <nav class="w-full space-y-2 text-sm">
+	                  <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> 
+	                  <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
+	                  <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
+	                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
+	                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
+	                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+               </nav>
+         </aside>
 
 			<!-- 페이지 헤더 -->
 			<main class="flex-1 p-8 bg-gray-50">
@@ -185,7 +181,7 @@
 					<div
 						class="p-4 border-b border-gray-200 flex justify-between items-center">
 						<div class="text-sm text-gray-600">
-							총 <span class="font-medium text-gray-900">0</span> 건
+							총 <span class="font-medium text-gray-900">${paging.count}</span> 건
 						</div>
 					</div>
 
@@ -205,9 +201,6 @@
 										주문일시</th>
 									<th
 										class="px-4 py-3 text-left text-sm font-medium text-gray-700">
-										주문자(ID)</th>
-									<th
-										class="px-4 py-3 text-left text-sm font-medium text-gray-700">
 										결제수단</th>
 									<th
 										class="px-4 py-3 text-left text-sm font-medium text-gray-700">
@@ -221,17 +214,20 @@
 								<c:if test="${not empty order}">
 									<c:forEach var="item" items="${order}">
 										<c:set var="pd" value="${item.productDto[0]}" />
-										<tr>
-											<th class="px-4 py-3 text-left"><input type="checkbox"
-												class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" />
+										<tr class="bg-white dark:bg-gray-800">
+											<th class="px-4 py-3 text-left">
+												<input type="checkbox" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" />
 											</th>
-											<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-												<c:out value="${item.o_Num}" />
-											</th>
+											<td >
+												<a href="${path}/orderDetail?o_num=${item.o_Num}" class="px-6 py-4 text-gray-900 no-underline"> 
+													<c:out value="${item.o_Num}" />
+												</a>
+											</td>
 											<td class="px-6 py-4"><c:out value="${item.o_date}" /></td>
-											<td class="px-6 py-4"><c:out value="${item.u_Member_Id}" /></td>
 											<td class="px-6 py-4"><c:out value="${item.o_Payment}" /></td>
-											<td class="px-6 py-4"><c:out value="${item.o_price}" /></td>
+											<td class="px-6 py-4">
+												<fmt:formatNumber value="${item.o_price}" type="number" maxFractionDigits="0"/>원
+											</td>
 											<td class="px-6 py-4"><c:out value="${item.o_Status}" /></td>
 										</tr>
 									</c:forEach>
@@ -249,22 +245,24 @@
 					<!-- 페이지네이션 -->
 					<div class="p-4 border-t border-gray-200 flex justify-center">
 						<nav class="flex items-center space-x-1">
-							<button
-								class="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50"
-								disabled>
-								<div class="w-4 h-4 flex items-center justify-center">
-									<i class="ri-arrow-left-s-line"></i>
-								</div>
-							</button>
-							<button class="px-3 py-2 text-sm bg-primary text-white rounded">
-								1</button>
-							<button
-								class="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 disabled:opacity-50"
-								disabled>
-								<div class="w-4 h-4 flex items-center justify-center">
-									<i class="ri-arrow-right-s-line"></i>
-								</div>
-							</button>
+							<!-- 이전 버튼 (currentPage - 1) -->
+							<c:if test="${paging.currentPage > 1}">
+								<a href="${path}/orderList?pageNum=${paging.currentPage - 1}" 
+								   class="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 no-underline">
+								    <i class="ri-arrow-left-s-line"></i>
+								</a>
+							</c:if>
+							<c:forEach var="num" begin="${paging.startPage}" end="${paging.endPage}">
+								<a href="${path}/orderList?pageNum=${num}"
+									 class="px-3 py-2 text-sm rounded no-underline ${paging.currentPage == num ? 'bg-primary text-white' : 'text-gray-500 hover:text-gray-700'}"> ${num} </a>
+							</c:forEach>
+							<!-- 다음 버튼 (currentPage + 1) -->
+							<c:if test="${paging.currentPage < paging.pageCount}">
+								<a href="${path}/orderList?pageNum=${paging.currentPage + 1}" 
+								   class="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 no-underline">
+								    <i class="ri-arrow-right-s-line"></i>
+								</a>
+							</c:if>
 						</nav>
 					</div>
 				</div>

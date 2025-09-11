@@ -12,8 +12,6 @@ public interface MypageDAO {
 	
 	public List<OrderDTO> getOrderList(Map<String, Object> productListInfo);
 	
-	public List<OrderDTO> orderListById(Map<String, Object> orderListById);
-	
 	public List<CartDTO> getCartList(Map<String, Object> productListInfo);
 	
 	public int pwdcheck(Map<String, Object> map);
@@ -40,4 +38,12 @@ public interface MypageDAO {
 	// 동물 정보 삭제
 	public int petInfoDelete(Map<String, Object> map);
 	
+	// 주문내역 페이지 주문리스트
+	public List<OrderDTO> orderListById(Map<String, Object> orderListById);
+	
+	// 주문리스트 총 개수
+	public int orderListTotal(int u_member_id);
+
+	// 주문 상세 내역
+	public List<OrderDTO> orderDetailAction(Long o_num);
 }
