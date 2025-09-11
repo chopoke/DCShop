@@ -201,7 +201,10 @@ public class BoardServiceImpl implements BoardService {
 				String saveDir = request.getSession().getServletContext().getRealPath("/resources/board_upload/");
 				System.out.println("saveDir : " + saveDir);
 
-				String realDir = "D:\\DEV05\\workspace_DCshop\\DCShop\\src\\main\\webapp\\resources\\board_upload\\";
+				//String realDir = "D:\\DEV05\\workspace_DCshop\\DCShop\\src\\main\\webapp\\resources\\board_upload\\";
+				String realDir = "D:\\DEV05\\workspace_team\\DCShop\\src\\main\\webapp\\resources\\board_upload\\";
+				//String realDir = request.getSession().getServletContext().getRealPath("/resources/board_upload/");
+				//new java.io.File(realDir).mkdirs();
 				System.out.println("realDir : " + realDir);
 
 				file.transferTo(new File(saveDir + file.getOriginalFilename())); // import java.io.File

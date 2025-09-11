@@ -22,7 +22,6 @@
 
 	<%-- 배송비 0원이 있으면 플래그 true --%>
 	<c:if test="${pdShip == 0}">
-
 		<c:set var="hasFreeShipping" value="true" />
 	</c:if>
 
@@ -30,7 +29,6 @@
 	<c:if test="${pdShip gt shippingFeeSum}">
 		<c:set var="shippingFeeSum" value="${pdShip}" />
 	</c:if>
->>>>>>> b0c5f03c7944d8488062f109854e1360b2cdd801
 </c:forEach>
 
 
@@ -39,18 +37,6 @@
 
 <%-- 플래그에 따라 최종 배송비 확정 --%>
 <c:choose>
-
-<<<<<<< HEAD
-   <c:when test="${hasFreeShipping}">
-      <c:set var="shippingFee" value="0" />
-   </c:when>
-   <c:when test="${dissubtotal >= 100000}">
-      <c:set var="shippingFee" value="0" />
-   </c:when>
-   <c:otherwise>
-      <c:set var="shippingFee" value="${shippingFeeSum}" />
-   </c:otherwise>
-=======
 	<c:when test="${hasFreeShipping}">
 		<c:set var="shippingFee" value="0" />
 	</c:when>
@@ -60,8 +46,6 @@
 	<c:otherwise>
 		<c:set var="shippingFee" value="${shippingFeeSum}" />
 	</c:otherwise>
->>>>>>> b0c5f03c7944d8488062f109854e1360b2cdd801
-
 </c:choose>
 
 <c:set var="dissubtotalSum" value="${dissubtotal + shippingFee}" />
@@ -350,10 +334,9 @@ tailwind.config = {
 
 				<!-- 네비게이션 -->
 				<nav class="w-full space-y-2 text-sm">
+	               <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> 
 	               <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
-	               <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">반려동물 정보수정</a> 
 	               <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
-	               <a href="./recommendProduct" class="block py-2 px-3 rounded hover:bg-gray-100">1:1 문의</a> 
 	               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
 	               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
 	               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
@@ -362,190 +345,7 @@ tailwind.config = {
 
 			<!-- 페이지 헤더 -->
 			<main class="flex-1 p-8 bg-gray-50">
-<<<<<<< HEAD
-	            <h1 class="text-3xl font-bold text-gray-900 mb-2">장바구니</h1>
-	            <div class="d-flex justify-content-between align-items-center mb-3">
-	               <div class="text-secondary small">
-	                  주문한 상품 총: <strong id="totalItemsCount">${cartCountSum}</strong>개
-	               </div>
-	
-	               <button id="deleteSelectedBtn"
-	                  class="btn btn-outline-secondary btn-sm"
-	                  onclick="deleteSelected()">선택상품 삭제</button>
-	            </div>
-	
-	            <!-- 장바구니 상품 목록 -->
-	            <div class="card shadow-sm mb-4">
-	               <div class="card-body p-0">
-	                  <div class="table-responsive" style="max-height:300px; overflow-y:auto; border:1px solid #ccc;">
-	                     <table class="table align-middle mb-0">
-	                        <thead class="table-light">
-	                           <tr>
-	                              <th class="ps-3"><input class="form-check-input"
-	                                 type="checkbox" id="selectAll" /></th>
-	                              <th>상품정보</th>
-	                              <th class="text-center">수량</th>
-	                              <th class="text-end">상품금액</th>
-	                              <th class="text-end">주문금액</th>
-	                              <th class="text-center">삭제</th>
-	                           </tr>
-	                        </thead>
-	                        <tbody class="border-top" id="cartItems">
-	
-	                           <c:forEach var="item" items="${cart}">
-	
-	                              <div id="cart-item" data-id="${item.pdId}"></div>
-	                              <c:set var="pd" value="${item.productDto[0]}" />
-	                              <c:set var="rate" value="${pd.pdDiscountRate}" />
-	                              <c:set var="hasDiscount" value="${rate gt 0 and rate lt 100}" />
-	                              <c:set var="discPriceInt"
-	                                 value="${ (pd.pdPrice * (100 - rate)) div 100 }" />
-	                              <tr class="cart-row" data-pd-id="${item.pdId}"
-	                                 data-ct-id="${item.ctNum}">
-	                                 <td class="ps-3"><input
-	                                    class="form-check-input cart-item-checkbox" type="checkbox"
-	                                    value="${item.pdId}" data-ct-id="${item.ctNum}" /></td>
-	                                 <td>
-	                                    <div class="d-flex align-items-center gap-3">
-	                                       <input type="hidden" class="pd-img"
-	                                          value="<c:out value="${pd.pdImageUrl}"/>"> <input
-	                                          type="hidden" class="pd-discount"
-	                                          value="<c:out value="${pd.pdDiscountRate}"/>"> <img
-	                                          src="<c:url value="${pd.pdImageUrl}"/>" alt="상품 이미지"
-	                                          class="rounded w-16 h-16 object-cover" width="64"
-	                                          height="64" />
-	                                       <div>
-	                                          <div class="fw-semibold pd-name">
-	                                             <c:out value="${pd.pdName}" />
-	                                          </div>
-	
-	                                          <div class="text-secondary small mt-1">
-	                                             <c:if test="${pd.pdOption != ''}">
-	                                                ${pd.pdOption}
-	                                             </c:if>
-	                                          </div>
-	                                       </div>
-	                                    </div>
-	                                 </td>
-	                                 <td class="text-center">
-	                                    <div class="d-inline-flex align-items-center gap-2">
-	                                       <button class="btn btn-outline-secondary btn-sm"
-	                                          onclick="decFunction(${item.pdId})" aria-label="수량 감소">
-	                                          <i class="bi bi-dash"></i>
-	                                       </button>
-	
-	                                       <span class="quantity-display fw-semibold pd-qty"> <c:out
-	                                             value="${item.ctQuantity}" />
-	                                       </span>
-	
-	                                       <button class="btn btn-outline-secondary btn-sm"
-	                                          onclick="plusFunction(${item.pdId})" aria-label="수량 증가">
-	                                          <i class="bi bi-plus"></i>
-	                                       </button>
-	                                    </div>
-	                                 </td>
-	
-	                                 <td class="text-end fw-semibold "><c:choose>
-	                                       <c:when test="${hasDiscount}">
-	                                          <span class="price-now money"> <fmt:formatNumber
-	                                                value="${discPriceInt}" type="currency"
-	                                                currencySymbol="₩" minFractionDigits="0"
-	                                                maxFractionDigits="0" />
-	                                          </span>
-	                                          <s class="price-old money order-amount"> <fmt:formatNumber
-	                                                value="${pd.pdPrice}" type="currency" currencySymbol="₩"
-	                                                minFractionDigits="0" maxFractionDigits="0" />
-	                                          </s>
-	                                       </c:when>
-	                                       <c:otherwise>
-	                                          <span class="price-now money order-amount"> <fmt:formatNumber
-	                                                value="${pd.pdPrice}" type="currency" currencySymbol="₩"
-	                                                minFractionDigits="0" maxFractionDigits="0" />
-	                                          </span>
-	                                       </c:otherwise>
-	                                    </c:choose></td>
-	
-	
-	                                 <td class="text-end fw-bold"><fmt:formatNumber
-	                                       value="${discPriceInt * item.ctQuantity}" type="currency"
-	                                       currencySymbol="₩" minFractionDigits="0"
-	                                       maxFractionDigits="0" /></td>
-	                                 <td class="text-center">
-	                                    <button class="btn btn-link text-secondary px-2"
-	                                       onclick="removeFunction(${item.pdId}, this)"
-	                                       aria-label="삭제">
-	                                       <i class="bi bi-x-lg"></i>
-	                                    </button>
-	                                 </td>
-	                              </tr>
-	                           </c:forEach>
-	
-	                        </tbody>
-	                     </table>
-	                  </div>
-	               </div>
-	            </div>
-	
-	            <!-- 주문 요약 및 액션 버튼 (교체본) -->
-	            <div class="card shadow-sm rounded-3">
-	               <div class="card-body">
-	                  <div class="d-flex flex-wrap align-items-center gap-3">
-	
-	
-	                     <div
-	                        class="ms-auto d-flex align-items-center gap-3 flex-wrap justify-content-end">
-	
-	                        <div class="text-end fw-bold order-amount">
-	                           <div class="text-secondary small">총 상품금액</div>
-	                           <div class="fs-5 fw-semibold" id="totalAmount">
-	                              <fmt:formatNumber value="${dissubtotal}" type="currency"
-	                                 currencySymbol="₩" minFractionDigits="0"
-	                                 maxFractionDigits="0" />
-	                           </div>
-	                        </div>
-	
-	                        <span class="text-secondary d-none d-md-inline">+</span>
-	                        <div class="vr d-none d-md-block"></div>
-	
-	                        <div class="text-end">
-	                           <div class="text-secondary small">배송비</div>
-	                           <div class="fs-5 fw-semibold" id="shippingFee">
-	                              <c:choose>
-	                                 <c:when test="${shippingFee == 0}">무료</c:when>
-	                                 <c:when test="${discPriceInt >= 100000}">무료</c:when>
-	                                 <c:otherwise>
-	                                    <fmt:formatNumber value="${shippingFeeSum}" type="currency"
-	                                       currencySymbol="₩" minFractionDigits="0"
-	                                       maxFractionDigits="0" />
-	                                 </c:otherwise>
-	                              </c:choose>
-	                           </div>
-	                        </div>
-	
-	                        <span class="text-secondary d-none d-md-inline">=</span>
-	                        <div class="vr d-none d-md-block"></div>
-	
-	                        <div class="text-end">
-	                           <div class="text-secondary small">총 결제금액</div>
-	                           <div class="fs-4 fw-bold text-primary" id="finalAmount">
-	
-	                              <fmt:formatNumber value="${dissubtotalSum}" type="currency"
-	                                 currencySymbol="₩" minFractionDigits="0"
-	                                 maxFractionDigits="0" />
-	                           </div>
-	                        </div>
-	                        
-	                     </div>
-	                     
-	                  </div>
-	                  <hr>
-	                           <div align="right">
-	                           <button class="px-4 py-2 bg-black text-white !rounded-lg hover:bg-blue-600" onclick="checkout()">결제하기</button>
-	                           </div>
-	               </div>
-	            </div>
-	         </main>
-=======
+
 				<h1 class="text-3xl font-bold text-gray-900 mb-2">장바구니</h1>
 				<div class="d-flex justify-content-between align-items-center mb-3">
 					<div class="text-secondary small">
@@ -727,7 +527,6 @@ tailwind.config = {
 					</div>
 				</div>
 			</main>
->>>>>>> b0c5f03c7944d8488062f109854e1360b2cdd801
 		</div>
 	</div>
 

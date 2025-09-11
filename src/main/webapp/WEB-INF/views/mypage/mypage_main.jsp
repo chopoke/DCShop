@@ -105,10 +105,9 @@ tailwind.config = {
 
 				<!-- 네비게이션 -->
 				<nav class="w-full space-y-2 text-sm">
+	               <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> 
 	               <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
-	               <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">반려동물 정보수정</a> 
 	               <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
-	               <a href="./recommendProduct" class="block py-2 px-3 rounded hover:bg-gray-100">1:1 문의</a> 
 	               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
 	               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
 	               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
@@ -238,7 +237,7 @@ tailwind.config = {
 				<!-- 랜덤 : 상품 추천 -->
 				
 				<br><br>
-				<br><br>
+				
 				
 				<section>
 					<h2 class="text-lg font-semibold mb-3">상품 추천</h2>
