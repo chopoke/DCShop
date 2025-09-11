@@ -35,4 +35,10 @@ public class ShopController {
 	    service.productListAction(request, response, model);
 	    return "shop/productList"; 
 	}
+	
+	@RequestMapping("eventproductList.do")
+	public String eventproductList(HttpServletRequest request, HttpServletResponse response, Model model) {
+		logger.info("=== url -> eventproductList ===");
+		return "shop/eventpage";
+	}
 }

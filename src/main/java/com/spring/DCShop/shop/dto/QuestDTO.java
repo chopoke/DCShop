@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 public class QuestDTO {
 	private int q_num;	//문의 번호 -> NVL
     private int pd_id;	//문의가 달린 상품 번호 -> 받아야 함
-    private int u_member_id; //문의를 한 유저넘버 -> 세션으로 받기
+    private int u_member_id; //문의를 한 유저넘버 -> insert할땐 세션으로 받기
+    private String u_id;	//문의를 한 유저.
     private String q_answer; //답변 여부 
     private String q_title;  //문의 제목 ㅁ
     private String q_content;//문의 내용 ㅁ
@@ -17,15 +18,18 @@ public class QuestDTO {
     private String q_img;	 //문의 이미지
     private String q_category; //문의 종류 ㅁ
     
+    private int rn;		//상품에 달린 문의의 번호
+    
 	public QuestDTO() {
 		super();
 	}
-	public QuestDTO(int q_num, int pd_id, int u_member_id, String q_answer, String q_title, String q_content,
-			String q_secret, Date q_regDate, String q_img, String q_category) {
+	public QuestDTO(int q_num, int pd_id, int u_member_id, String u_id, String q_answer, String q_title, String q_content,
+			String q_secret, Date q_regDate, String q_img, String q_category, int rn) {
 		super();
 		this.q_num = q_num;
 		this.pd_id = pd_id;
 		this.u_member_id = u_member_id;
+		this.u_id = u_id;
 		this.q_answer = q_answer;
 		this.q_title = q_title;
 		this.q_content = q_content;
@@ -33,6 +37,7 @@ public class QuestDTO {
 		this.q_regDate = q_regDate;
 		this.q_img = q_img;
 		this.q_category = q_category;
+		this.rn = rn;
 	}
 	public int getQ_num() {
 		return q_num;
@@ -51,6 +56,12 @@ public class QuestDTO {
 	}
 	public void setU_member_id(int u_member_id) {
 		this.u_member_id = u_member_id;
+	}
+	public String getU_id() {
+		return u_id;
+	}
+	public void setU_id(String u_id) {
+		this.u_id = u_id;
 	}
 	public String getQ_answer() {
 		return q_answer;
@@ -94,12 +105,24 @@ public class QuestDTO {
 	public void setQ_category(String q_category) {
 		this.q_category = q_category;
 	}
+	
+	public int getRn() {
+		return rn;
+	}
+	public void setRn(int rn) {
+		this.rn = rn;
+	}
+	
+	
 	@Override
 	public String toString() {
-		return "QuestDTO [q_num=" + q_num + ", pd_id=" + pd_id + ", u_member_id=" + u_member_id + ", q_answer="
-				+ q_answer + ", q_title=" + q_title + ", q_content=" + q_content + ", q_secret=" + q_secret
-				+ ", q_regDate=" + q_regDate + ", q_img=" + q_img + ", q_category=" + q_category + "]";
+		return "QuestDTO [q_num=" + q_num + ", pd_id=" + pd_id + ", u_member_id=" + u_member_id + ", u_id=" + u_id
+				+ ", q_answer=" + q_answer + ", q_title=" + q_title + ", q_content=" + q_content + ", q_secret="
+				+ q_secret + ", q_regDate=" + q_regDate + ", q_img=" + q_img + ", q_category=" + q_category + ", rn="
+				+ rn + "]";
 	}
+	
+	
     
 }
 //CREATE TABLE qna_tbl (

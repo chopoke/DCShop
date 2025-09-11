@@ -45,13 +45,12 @@
 
       <!-- 메인 콘텐츠 -->
       <main class="flex-1 p-8 bg-gray-50">
-        <h1 class="text-2xl font-bold mb-2">${sessionid}님의 마이페이지</h1>
-        <p class="text-gray-500 mb-6">상품을 검색하고 상태를 일괄 변경하거나 등록/수정/삭제할 수 있습니다.</p>
+        <h1 class="text-2xl font-bold mb-2">상품관리</h1><br>
+        
 
         <section class="bg-white border rounded-xl shadow-sm">
           <div class="p-4">
-            <h2 class="text-lg font-semibold mb-3">상품관리</h2>
-
+			<p class="text-gray-500 mb-6">상품을 검색하고 상태를 일괄 변경하거나 등록/수정/삭제할 수 있습니다.</p>
             <!-- 검색줄 -->
             <form action="${path}/admin_product" method="get" class="flex gap-2 w-full mb-3 flex-wrap">
               <!-- 상태 필터 -->
@@ -89,27 +88,30 @@
             <!-- 버튼 줄 -->
             <div class="flex flex-wrap gap-2 mb-3">
               <form id="bulkOffForm"  action="${path}/admin_product_status" method="post">
-			    <input type="hidden" name="to" value="OFF" />
-			    <button type="button" id="bulkOffBtn" class="px-3 py-2 border rounded-lg hover:bg-gray-50">품절</button>
-			  </form>
-			
-			  <form id="bulkOnForm"   action="${path}/admin_product_status" method="post">
-			    <input type="hidden" name="to" value="ON" />
-			    <button type="button" id="bulkOnBtn" class="px-3 py-2 border rounded-lg hover:bg-gray-50">판매중</button>
-		  	  </form>
-			
-			  <form id="bulkWaitForm" action="${path}/admin_product_status" method="post">
-			    <input type="hidden" name="to" value="WAIT" />
-			    <button type="button" id="bulkWaitBtn" class="px-3 py-2 border rounded-lg hover:bg-gray-50">재입고대기</button>
-			  </form>
-			
-			  <!-- 선택 삭제 -->
-			  <form id="bulkDelForm"  action="${path}/admin_product_delete" method="post">
-			    <button type="button" id="bulkDelBtn" class="px-3 py-2 border rounded-lg text-red-600 hover:bg-red-50">삭제</button>
-			  </form>
-			  
-			  <!-- 상품등록 버튼 -->
-              <a href="${path}/admin_product_insert" class="px-3 py-2 border rounded-lg bg-blue-600 text-white hover:bg-blue-700 text-center">상품등록</a>
+                <input type="hidden" name="to" value="OFF" />
+                <button type="button" id="bulkOffBtn" class="px-3 py-2 border rounded-lg hover:bg-gray-50">품절</button>
+              </form>
+
+              <form id="bulkOnForm"   action="${path}/admin_product_status" method="post">
+                <input type="hidden" name="to" value="ON" />
+                <button type="button" id="bulkOnBtn" class="px-3 py-2 border rounded-lg hover:bg-gray-50">판매중</button>
+              </form>
+
+              <form id="bulkWaitForm" action="${path}/admin_product_status" method="post">
+                <input type="hidden" name="to" value="WAIT" />
+                <button type="button" id="bulkWaitBtn" class="px-3 py-2 border rounded-lg hover:bg-gray-50">재입고대기</button>
+              </form>
+
+              <!-- 선택 삭제 -->
+              <form id="bulkDelForm"  action="${path}/admin_product_delete" method="post">
+                <button type="button" id="bulkDelBtn" class="px-3 py-2 border rounded-lg text-red-600 hover:bg-red-50">삭제</button>
+              </form>
+
+              <!-- 상품등록 버튼 -->
+              <a href="${path}/admin_product_insert" class="inline-flex items-center justify-center h-10 px-4 py-0 rounded-lg border bg-blue-600 text-white hover:bg-blue-700 no-underline align-middle">상품등록</a>
+
+              <!-- 상품수정 버튼 (체크된 1건 수정) -->
+              <button type="button" id="bulkEditBtn" class="inline-flex items-center justify-center h-10 px-4 py-0 rounded-lg border bg-yellow-600 text-white hover:bg-yellow-700 align-middle">상품수정</button>
             </div>
           </div>
         </section>
@@ -121,7 +123,7 @@
               <thead class="bg-gray-50 sticky top-0 z-10">
                 <tr class="text-left text-gray-600">
                   <th class="px-4 py-3 w-10"><input id="checkAll" type="checkbox" class="accent-gray-800" /></th>
-                  <th class="px-4 py-3 w-24">썸네일</th>
+                  <th class="px-4 py-3 w-28">썸네일</th>
                   <th class="px-4 py-3 w-36 whitespace-nowrap">상품번호</th>
                   <th class="px-4 py-3 text-center whitespace-nowrap">상품명</th>
                   <th class="px-4 py-3 w-28 text-right whitespace-nowrap">가격</th>
@@ -177,7 +179,7 @@
 
                         <!-- 상품명 + 보조정보: 브랜드 -->
                         <td class="px-4 py-3 text-center whitespace-nowrap">
-                          <a href="${path}/product/${p.pd_id}" class="text-gray-900 hover:underline font-medium">${p.pd_name}</a>
+                          <a href="${path}/ad_shop_detailAction.pd?pdId=${p.pd_id}" class="text-gray-900 hover:underline font-medium">${p.pd_name}</a>
                           <div class="text-xs text-gray-400">${p.pd_brand}</div>
                         </td>
 
@@ -216,7 +218,7 @@
           <c:if test="${paging.pageCount > 1}">
             <div class="p-4 border-t bg-white">
               <div class="flex items-center justify-between gap-4 flex-wrap">
-                <!-- 좌측: 현재/전체 페이지 (count 게터 없어서 안전한 표기만) -->
+                <!-- 좌측: 현재/전체 페이지 -->
                 <div class="text-sm text-gray-500">
                   페이지 ${paging.currentPage} / ${paging.pageCount}
                 </div>
@@ -297,7 +299,17 @@
     document.getElementById('bulkOffBtn')?.addEventListener('click', () => submitBulk('bulkOffForm'));
     document.getElementById('bulkOnBtn')?.addEventListener('click', () => submitBulk('bulkOnForm'));
     document.getElementById('bulkWaitBtn')?.addEventListener('click', () => submitBulk('bulkWaitForm'));
-    document.getElementById('bulkDelBtn')?.addEventListener('click', () => { if (confirm('선택한 상품을 삭제하시겠습니까?')) submitBulk('bulkDelForm'); });
+    document.getElementById('bulkDelBtn')?.addEventListener('click', () => {
+      if (confirm('선택한 상품을 삭제하시겠습니까?')) submitBulk('bulkDelForm');
+    });
+
+    // 선택 1건 수정 이동
+    document.getElementById('bulkEditBtn')?.addEventListener('click', () => {
+      const ids = collectIds();
+      if (ids.length === 0) { alert('수정할 상품을 선택하세요.'); return; }
+      if (ids.length > 1)   { alert('수정은 한 건만 가능합니다. 하나만 선택하세요.'); return; }
+      location.href = '${path}/admin_product_update?pd_id=' + ids[0];
+    });
   </script>
 
 </body>

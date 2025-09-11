@@ -72,6 +72,14 @@
 <body class="product-detail-page">
   <div class="wrap">
     <%@ include file="/WEB-INF/views/setting/header.jsp" %>
+    
+    <!-- 플래시 메시지(alert) -->
+    <c:if test="${not empty sessionScope.msg}">
+      <script>
+        alert('${fn:escapeXml(sessionScope.msg)}');
+      </script>
+      <c:remove var="msg" scope="session" />
+    </c:if>
 	<div id="header-spacer" style="height: var(--header-height, 96px)"></div>
 
     <div id="container">
@@ -261,7 +269,7 @@
 					    <div class="actions-sub">
 					      <button type="button"
 					              class="btn-list"
-					              onclick="location.href='${path}/ad_product_list.pd'">상품목록</button>
+					              onclick="location.href='${path}/shop_main.do'">상품목록</button>
 					    </div>
 					  </td>
 					</tr>
@@ -374,7 +382,6 @@
 					
 				  </section>
 				</div>
-
             </div>
           </div>
         </div>
