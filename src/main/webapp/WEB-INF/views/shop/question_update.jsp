@@ -67,6 +67,65 @@
 	    .modal { display:none; }
 	    .modal.show { display:flex; }
   	</style>
+<script>
+   $(function() {  // 상세페이지가 로딩되면
+      // 수정 버튼 클릭시 question_update함수 호출
+      $('#UpdateQuestion').click(function() {
+    	  question_update();
+      });
+   
+      $('#DeleteQuestion').click(function() {
+    	  question_delete();
+   	  });
+   });
+   
+   function question_delete(){
+      let param = {	//문의자는 session이므로 controller에서 request로 직접받음.
+   		 "q_num": $('#q_num').val(),
+      }
+      $.ajax({
+          url: '${path}/question_deleteAction.qa',  // 컨트롤러 이동(3)
+          type: 'POST',
+          data: param,
+          success: function() {  // 콜백함수(6) => 문의삭제가 완료되면 서버에서 콜백함수 호출
+         	alert('문의가 삭제되었습니다.');
+         	window.location.reload();
+         	history.back();
+          },
+          error: function() {
+            alert('문의가 삭제되지않았니다.');
+          }
+       });
+   }
+   
+   
+   // [작성 버튼 클릭 시 호출]
+   function question_update() {
+	// 문의 내용을 파라미터로 넘김 
+	let q_secret_val = $('#q_secret').is(':checked') ? 'Y' : 'N';
+      let param = {	//문의자는 session이므로 controller에서 request로 직접받음.
+   		 "q_num": $('#q_num').val(),
+         "q_title" : $('#q_title').val(),		//문의 제목
+         "q_content" : $('#q_content').val(),	//문의 내용
+         "q_secret" : q_secret_val,
+         "q_category" : $('#q_category').val(),
+      }
+      $.ajax({
+         url: '${path}/question_updateAction.qa',  // 컨트롤러 이동(3)
+         type: 'POST',
+         data: param,
+         success: function() {  // 콜백함수(6) => 문의작성이 완료되면 서버에서 콜백함수 호출
+        	alert('문의가 수정되었습니다.');
+        	sessionStorage.setItem('reloadCheck', 'true'); // 문자열로 새로고침용 세션 저장
+        	history.back();
+         },
+         error: function() {
+            alert('문의가 수정되지 않았습니다.');
+         }
+      });
+   }
+   
+</script>
   </head>
   	<body class="bg-gray-100">
   	
@@ -102,6 +161,7 @@
 		      
 	      <!-- 메인 콘텐츠 -->
 	      <main class="flex-1 p-8 bg-gray-50">
+	      <form action="#">
 		    <div class="max-w-4xl mx-auto p-6">
 		      <div class="bg-white rounded-lg shadow-sm p-6 min-h-screen">
 		        <h1 class="text-2xl font-semibold text-gray-900 mb-6">문의사항 수정</h1>
@@ -111,8 +171,11 @@
 		            <div class="flex items-start space-x-4">
 		              <label class="w-24 pt-2 text-sm font-medium text-gray-700">제목</label>
 		              <div class="flex-1">
-		                <input type="text" class="w-full px-3 h-10 bg-white border border-gray-300 rounded focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
-		                  placeholder="${dto.q_title}"/>
+		              
+		              <input type="hidden" id="q_num" name="q_num" value="${dto.q_num}">
+		              
+		                <input name="q_title" id="q_title" type="text" class="w-full px-3 h-10 bg-white border border-gray-300 rounded focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
+		                  placeholder="${dto.q_title}" value="${dto.q_title}"/>
 		              </div>
 		            </div>
 		            <div class="flex items-start space-x-4">
@@ -133,7 +196,7 @@
 		                </div>
 		                <label class="inline-flex items-center cursor-pointer">
 		                  <div class="relative">
-		                    <input type="checkbox" class="sr-only peer" />
+		                    <input type="checkbox" class="sr-only peer" name="q_secret" id="q_secret" <c:if test="${dto.q_secret == 'Y'}">checked</c:if>/>
 		                    <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full 
 		                    			rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white 
 		                    			after:content-[''] after:absolute after:top-[2px] after:start-[2px] 
@@ -141,7 +204,7 @@
 		                    			after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
 		                    </div>
 		                  </div>
-		                  <span class="ml-2 text-sm font-medium text-gray-700">비밀글</span>
+		                  <span class="ml-2 text-sm font-medium text-gray-700">비밀글 여부</span>
 		                </label>
 		              </div>
 		            </div>
@@ -150,25 +213,29 @@
 		              <div class="flex-1">
 		                <textarea
 		                  class="w-full px-3 py-2 bg-white border border-gray-300 rounded focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
-		                  rows="10"
-		                  placeholder="${dto.q_content}"></textarea>
+		                  rows="10" name="q_content" id="q_content"
+		                  placeholder="${dto.q_content}">${dto.q_content}</textarea>
 		              </div>
 		            </div>
 		          </div>
 		          <div class="flex justify-end pt-4">
 		            <button onclick="history.back()" class="px-6 h-10 !bg-black text-white !rounded-button hover:!bg-blue-200 transition-colors !whitespace-nowrap !mr-3">
 		              뒤로가기
-		            </button>  
+		            </button>
 		            <button type="reset" class="px-6 h-10 !bg-gray-100 !text-gray-600 !rounded-button hover:!bg-gray-200 !transition-colors !whitespace-nowrap !mr-3">
 		              취소
 		            </button>
-		            <button onclick="history.back()" class="px-6 h-10 !bg-blue-200 text-white !rounded-button hover:!bg-blue-600 !transition-colors !whitespace-nowrap">
+		            <button id="UpdateQuestion" class="px-6 h-10 !bg-blue-200 text-white !rounded-button hover:!bg-blue-600 !transition-colors !whitespace-nowrap">
 		              수정
+		            </button>
+		            <button id="DeleteQuestion" class="px-6 h-10 !bg-red-500 text-white !rounded-button hover:!bg-red-200 !transition-colors !whitespace-nowrap">
+		              삭제
 		            </button>
 		          </div>
 		        </div>
 		      </div>
-	      </div>
+	      	</div>
+      	  </form>
 		</main>
      </div>
    </div>

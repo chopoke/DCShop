@@ -23,6 +23,15 @@
     .modal { display:none; }
     .modal.show { display:flex; }
   </style>
+  <script>
+   $(function() {  // 상세페이지가 로딩되면
+      $('#DeleteQuestion').click(function(q_num) {
+          if (confirm("문의를 삭제하시겠습니까?")) {	//바로 삭제
+          	window.location.href = '${path}/question_deleteAction.qa?q_num='+q_num;
+          }
+      };
+   });
+</script>
 </head>
 <body class="bg-gray-100">
 
@@ -206,7 +215,7 @@
                            class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">답변</a>
                         <a href="${path}/admin_qna/delete?q_num=${q.q_num}"
                            class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                           onclick="return confirm('삭제하시겠습니까?');">삭제</a>
+                           onclick="DeleteQuestion(${dto.q_num})">삭제</a>
                       </div>
                     </td>
                   </tr>

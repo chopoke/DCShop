@@ -358,14 +358,28 @@
 
     window.editQuestion = function () {
         if (confirm("문의를 수정하시겠습니까?")) {
-            // TODO: 수정 페이지로 이동 or 수정 모달 오픈
-            window.location.href = '${path}/question_update.qa?q_num=' + document.getElementById("modalqNum").value;
+            // TODO: 수정 페이지로 이동
+            window.location.href = '${path}/question_update.qa?q_num='+document.getElementById("modalqNum").value;
         }
     };
 
-    window.deleteQuestion = function () {
-        if (confirm("문의를 삭제하시겠습니까?")) {
-            // TODO: 삭제 요청 후 닫기
+    window.deleteQuestion = function () {	//;
+        if (confirm("문의를 삭제하시겠습니까?")) {	//바로 삭제
+        	let param = {	//문의자는 session이므로 controller에서 request로 직접받음.
+   	   		 "q_num": document.getElementById("modalqNum").value,
+	   	      }
+	   	      $.ajax({
+	   	          url: '${path}/question_deleteAction.qa',  // 컨트롤러 이동(3)
+	   	          type: 'POST',
+	   	          data: param,
+	   	          success: function() {  // 콜백함수(6) => 문의삭제가 완료되면 서버에서 콜백함수 호출
+	   	         	alert('문의가 삭제되었습니다.');
+	   	         	window.location.reload();
+	   	          },
+	   	          error: function() {
+	   	            alert('문의가 삭제되지않았니다.');
+   	          }
+   	       });
         }
     };
 

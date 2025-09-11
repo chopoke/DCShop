@@ -60,7 +60,13 @@ public class QnaController {
 		
 		int q_num = Integer.parseInt(request.getParameter("q_num"));
 		logger.info("q_num"+q_num);
+		
 		QuestDTO dto = service.qnaDetail(q_num);
+		
+		if(dto.getU_member_id() != (Integer)request.getSession().getAttribute("session_u_member_id")) {
+			return "redirect:/";	//글 작성자 본인이 아니라면 페이지 접근 불가.
+		}
+		
 		model.addAttribute("dto", dto);
 		
 		return "shop/question_update";
@@ -71,18 +77,22 @@ public class QnaController {
 	public String quest_updateAction(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
 		logger.info("<<< url ==> /question_insert.qa >>>");
-		//q_title		
-		//q_content
-		//q_category
 
+		service.updateQuestion(request, response, model);
 		
+		return null;
+	}
+	
+	
+	
+	@RequestMapping("/question_deleteAction.qa")
+	public String quest_deleteAction(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("<<< url ==> /question_insert.qa >>>");
+
+		service.deleteQuest(request, response, model);
 		
-		int q_num = Integer.parseInt(request.getParameter("q_num"));
-		
-		QuestDTO dto = service.qnaDetail(q_num);
-		model.addAttribute("dto", dto);
-		
-		return "shop/quest_update";
+		return null;
 	}
 }
 

@@ -24,6 +24,32 @@
     .modal.show { display:flex; }
   </style>
 </head>
+<script>
+	setInterval(function() {
+	  if (sessionStorage.getItem('reloadCheck') === 'true') {
+	    sessionStorage.removeItem('reloadCheck');
+	    window.location.reload();
+	  }
+	}, 500);
+
+   function question_delete(q_num){
+      let param = {	//문의자는 session이므로 controller에서 request로 직접받음.
+   		 "q_num": q_num,
+      }
+      $.ajax({
+          url: '${path}/question_deleteAction.qa',  // 컨트롤러 이동(3)
+          type: 'POST',
+          data: param,
+          success: function() {  // 콜백함수(6) => 문의삭제가 완료되면 서버에서 콜백함수 호출
+         	alert('문의가 삭제되었습니다.');
+         	window.location.reload();
+          },
+          error: function() {
+            alert('문의가 삭제되지않았니다.');
+          }
+       });
+   }
+ </script>
 <body class="bg-gray-100">
 
   <!-- 헤더 시작 -->
@@ -158,7 +184,7 @@
                     <td class="py-2 px-3 align-center">
                       <div class="ellipsis" title="${q.q_title}">
                         <a href="javascript:void(0)" class="text-blue-600 hover:underline"
-                           onclick="window.location='${path}/question_update.qa?q_num=${q.q_num}'">${q.q_title}</a>
+                           onclick="window.location.href='${path}/question_update.qa?q_num=${q.q_num}'">${q.q_title}</a>
                       </div>
                       <%-- <div class="text-gray-400 text-xs ellipsis" title="${q.preview}">${q.preview}</div> --%>
                     </td>
@@ -189,10 +215,9 @@
                     <td class="py-2 px-3 align-center">
                       <div class="flex flex-wrap gap-1">
                         <button type="button" class="px-2 py-1 border rounded hover:bg-gray-50"
-                                onclick="window.location='${path}/question_update.qa?q_num=${q.q_num}'">수정</button>
-                        <a href="${path}/mypage_qna.do/delete?q_num=${q.q_num}"
-                           class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                           onclick="return confirm('삭제하시겠습니까?');">삭제</a>
+                                onclick="window.location.href='${path}/question_update.qa?q_num=${q.q_num}'">수정</button>
+                        <a class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                           onclick="question_delete(${q.q_num})">삭제</a>
                       </div>
                     </td>
                   </tr>

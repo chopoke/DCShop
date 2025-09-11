@@ -90,6 +90,7 @@
             $('#q_title').val("");
             $('#q_content').val("");
             question_list();   // 문의목록 새로고침(7)
+            window.location.reload();
          },
          error: function() {
             alert('문의가 등록되지 않았습니다.');

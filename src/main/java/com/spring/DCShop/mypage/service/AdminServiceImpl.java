@@ -377,11 +377,11 @@ public class AdminServiceImpl implements AdminService{
 		Integer sessionId = (Integer)(request.getSession().getAttribute(("session_u_member_id")));
 		
 		if(sessionId != null && u_role != null && ("USER"== u_role || "USER".equals(u_role))) {
-			//관리자 페이지를 요청한 사람이 일반 회원이라면 타인의 정보를 조회하지 못하게 하기 위해 map에 담기.
-			map.put("sessionId", sessionId);
+			// 일반 회원이 관리자 페이지를 요청했다면 타인의 정보를 조회하지 못함.
+			return;
 		}
 		else if(sessionId != null && u_role != null && (u_role=="ADMIN" || "ADMIN".equals(u_role))){
-			//관리자 권한이 admin이라면 조회 ok 다음으로 넘어가기.
+			//관리자 권한이 admin이라면 그냥 조회 ok 다음으로 넘어가기.
 		}
 		else {	//로그인을 안했다면 그냥 리턴
 			return;

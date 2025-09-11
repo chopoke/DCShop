@@ -21,5 +21,9 @@ public interface QnaService {
 	
 	public QuestDTO qnaDetail(int q_num);
 	
-	public QuestDTO updateQuestion(int q_num);
+	public void updateQuestion(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException;
+	
+	public void deleteQuest(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException;
 }
