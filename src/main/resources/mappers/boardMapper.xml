@@ -38,6 +38,7 @@
 					 	 		WHERE b.b_num = c.b_num) AS b_comments
 						FROM user_tbl u, board_tbl b
 						WHERE u.u_member_id = b.u_member_id
+						  AND b.b_category IN ('자유', '꿀팁', '리뷰', '질문')
 						  <if test="keyword != null and keyword != ''">
 						  AND b.b_title LIKE '%'||#{keyword}||'%'
 						  </if>
@@ -81,6 +82,7 @@
  	<select id="boardListTotal" resultType="int">
  		SELECT COUNT(*) FROM board_tbl
  		<where>
+ 			AND b_category IN ('자유', '꿀팁', '리뷰', '질문')
  			<if test="keyword != null and keyword != ''">
 			  AND b_title LIKE '%'||#{keyword}||'%'
 			  </if>
@@ -252,7 +254,13 @@
 		SET b_title = #{b_title}, 
 			b_contents = #{b_contents},
 			b_category = #{b_category},
-			b_updateDate = SYSDATE
+			b_updateDate = SYSDATE,
+			b_image = <if test='b_image != null'>
+						#{b_image}
+					  </if>
+					  <if test='b_image == null'>
+						null
+					  </if>
 		WHERE b_num = #{b_num} 
 	</update>
 	

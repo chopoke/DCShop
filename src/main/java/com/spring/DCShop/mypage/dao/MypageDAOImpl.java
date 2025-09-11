@@ -1,6 +1,5 @@
 package com.spring.DCShop.mypage.dao;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +50,15 @@ public class MypageDAOImpl implements MypageDAO{
 	@Override
 	public List<QuestDTO> myQnaList(Map<String, Object> map){
 		return sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.myQnaList", map);
+	}
+	@Override
+	public List<CartDTO> getMyCartList(Map<String, Object> productListInfo) {
+
+		System.out.println("MypageDAOImpl => getMyCartList");
+		
+		List<CartDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.getMyCartList", productListInfo);
+		
+		return list;
 	}
 	
 	@Override
@@ -105,6 +113,13 @@ public class MypageDAOImpl implements MypageDAO{
 	@Override
 	public int petInfoDelete(Map<String, Object> map) {
 		int deleteCnt = sqlSession.update("com.spring.DCShop.mypage.dao.MypageDAO.petInfoDelete", map);
+		return deleteCnt;
+	}
+	
+	// 회원 정보 삭제(탈퇴)
+	@Override
+	public int userInfoDelete(Map<String, Object> map) {
+		int deleteCnt = sqlSession.update("com.spring.DCShop.mypage.dao.MypageDAO.userInfoDelete", map);
 		return deleteCnt;
 	}
 }

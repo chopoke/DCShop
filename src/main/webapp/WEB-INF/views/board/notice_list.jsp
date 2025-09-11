@@ -62,17 +62,19 @@
 
 		<!-- 게시글 목록 -->
 		<div class="board-list table_div">
-			<form>
+			<form id="noticeFilterForm" method="get" action="${path}/notice_list">
+				<input type="hidden" name="pageNum" value="1" />
+				<input type="hidden" id="categoryInput" name="category" value="${category}" />
 				<table>
 					<tr>
 						<th style="width: 80px">번호</th>
 						<th style="width: 80px">
 							<div class="board-filter">
-								<a href="#" class="filter-link">구분▼</a>
-								<div class="filter-menu">
-									<a href="#">전체</a> 
-									<a href="#">공지</a> 
-									<a href="#">이벤트</a>
+								<a href="#" class="filter-link">${category == null || category=='전체' ? '전체' : category}▼</a>
+								<div class="filter-menu" id="filter-menu">
+									<a href="?category=전체" data-cat="전체">전체</a> 
+									<a href="?category=공지" data-cat="공지">공지</a> 
+									<a href="?category=이벤트" data-cat="이벤트">이벤트</a>
 						<th style="width: auto">제목</th>
 						<th style="width: 100px">작성자</th>
 						<th style="width: 80px"><img
@@ -99,32 +101,55 @@
 						</c:forEach>
 					</c:forEach>
 				</table>
-				<!-- 글쓰기 버튼 (로그인 시) -->
+				 <!-- 글쓰기 버튼 (로그인 시)
 				<div align="right">
 					<br> <input type="button" class="inputButton" value="글쓰기"
 						id="btnInsert">
 				</div>
+				 -->
+					<!-- 글쓰기 버튼 (admin 전용) -->
+				<c:if test="${sessionScope.sessionid eq 'admin'}">
+					<div align="right">
+						<br> <input type="button" class="inputButton" value="글쓰기"
+							id="btnInsert">
+					</div>
+				</c:if>
 			</form>
 		</div>
+
+		<script>
+		document.addEventListener("DOMContentLoaded", function(){
+			const form = document.getElementById("noticeFilterForm");
+			const catInput = document.getElementById("categoryInput");
+			document.querySelectorAll("#filter-menu a").forEach(function(a){
+				a.addEventListener("click", function(e){
+					e.preventDefault();
+					catInput.value = this.dataset.cat;
+					form.action = "${path}/notice_list";
+					form.submit();
+				});
+			});
+		});
+		</script>
 
 		<!-- 페이징 -->
 		<div class="paging">
 			<ul class="pagination">
 				<!-- 이전 버튼 활성화 -->
 				<c:if test="${paging.startPage > 10}">
-					<li><a href="${path}/notice_list?pageNum=${paging.prev}"
+					<li><a href="${path}/notice_list?pageNum=${paging.prev}&category=${category}"
 						class="prevPage"> << </a></li>
 				</c:if>
 				<!-- 페이지 번호 처리 -->
 				<c:forEach var="num" begin="${paging.startPage}"
 					end="${paging.endPage}">
-					<li><a href="${path}/notice_list?pageNum=${num}"
+					<li><a href="${path}/notice_list?pageNum=${num}&category=${category}"
 						class="<c:if test='${num == paging.currentPage}'> active </c:if>'">${num}</a>
 					</li>
 				</c:forEach>
 				<!-- 다음 버튼 활성화 -->
 				<c:if test="${paging.endPage < paging.pageCount}">
-					<li><a href="${path}/notice_list?pageNum=${paging.next}"
+					<li><a href="${path}/notice_list?pageNum=${paging.next}&category=${category}"
 						class="nextPage"> >> </a></li>
 				</c:if>
 			</ul>

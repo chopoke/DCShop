@@ -259,7 +259,7 @@ public class MypageServiceImpl implements MypageService {
 		
 		productListInfo.put("u_member_id", session_u_member_id);
 		
-		List<CartDTO> cartList = myDao.getCartList(productListInfo);
+		List<CartDTO> cartList = myDao.getMyCartList(productListInfo);
 
 		System.out.println("cart" + cartList);
 		
@@ -360,5 +360,17 @@ public class MypageServiceImpl implements MypageService {
 		map.put("p_num", p_num);
 		map.put("u_member_id", memberId);
 		return myDao.petInfoDelete(map);
+	}
+	
+	// 회원탈퇴
+	public int deleteUserInfo(HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		Integer memberId = (Integer) request.getSession().getAttribute("session_u_member_id");
+		String pwd = request.getParameter("u_password");
+		Map<String, Object> map = new HashMap<>();
+		map.put("u_member_id", memberId);
+		map.put("u_password", pwd);
+		int deleteCtn = myDao.userInfoDelete(map);
+		return deleteCtn;
 	}
 }

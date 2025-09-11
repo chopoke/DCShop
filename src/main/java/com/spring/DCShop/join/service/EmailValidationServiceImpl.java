@@ -10,6 +10,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,11 +18,16 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.spring.DCShop.join.dao.CustomerDAO;
+
 @Service
 public class EmailValidationServiceImpl implements EmailValidationService, InitializingBean {
 
 	private JavaMailSender mailSender;
 
+	@Autowired
+	private CustomerDAO customerDAO;
+	
 	// --- SMTP 기본 설정을 위해서 app.properties에서 값 가져오기 ---
 	@Value("${mail.host}")
 	private String host;
@@ -58,9 +64,9 @@ public class EmailValidationServiceImpl implements EmailValidationService, Initi
 	private String writeTimeout;
 	@Value("${mail.debug}")
 	private String debug;
-
 	@Value("${email.code.ttl.millis}")
 	private long codeTtlMillis;
+
 
 	/**
 	 * 
@@ -110,10 +116,14 @@ public class EmailValidationServiceImpl implements EmailValidationService, Initi
 	 */
 	@Override
 	public String sendValidationCode(HttpServletRequest request) {
-
+		String code = "";
 		String to = request.getParameter("to");
-		System.out.println(to);
-		String code = generate6Digits();
+		
+		code = Integer.toString(customerDAO.userEmailCheck(to));
+
+		if(code.equals("0")) {
+			code = generate6Digits();
+		}
 		String subject = "[인증번호] " + code;
 		String body = new StringBuilder().append("인증번호는 ").append(code).append(" 입니다.\n").append("유효시간: ")
 				.append(codeTtlMillis / 1000).append("초").toString();
@@ -123,7 +133,6 @@ public class EmailValidationServiceImpl implements EmailValidationService, Initi
 		long expireAt = System.currentTimeMillis() + codeTtlMillis;
 		request.getSession(true).setAttribute("EMAIL_CODE", code);
 		request.getSession().setAttribute("EMAIL_CODE_EXPIRE", expireAt);
-
 		return code;
 	}
 	

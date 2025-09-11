@@ -12,11 +12,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 public interface OrderService {
 
-	// 결제자 정보
+	// 회원 정보
 	public void orderUserAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
 	
+	// 결제자 세션 저장
+	public void orderInfoAction(String jsonBody, HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException;
+	
 	// 결제내역 저장
-	public void orderInsertAction(@RequestBody String jsonBody, JSONObject jsonObject, HttpServletRequest request) throws Exception;
+	public void orderInsertAction(JSONObject jsonObject, HttpServletRequest request) throws Exception;
 
 }

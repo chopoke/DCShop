@@ -15,12 +15,13 @@ public interface MypageDAO {
 	
 	public List<CartDTO> getCartList(Map<String, Object> productListInfo);
 	
-	
-	// mypage 문의목록 - 갯수
+	// mypage Qna목록 - 갯수
 	public int myQnaCnt(Map<String, Object> map);
 	
-	// mypage 문의목록 - 리스트 
+	// mypage Qna목록 - 리스트 
 	public List<QuestDTO> myQnaList(Map<String, Object> param);
+	
+	public List<CartDTO> getMyCartList(Map<String, Object> productListInfo);
 	
 	public int pwdcheck(Map<String, Object> map);
 	
@@ -45,4 +46,7 @@ public interface MypageDAO {
 	
 	// 동물 정보 삭제
 	public int petInfoDelete(Map<String, Object> map);
+	
+	// 회원 정보 삭제
+	public int userInfoDelete(Map<String, Object> map);	
 }

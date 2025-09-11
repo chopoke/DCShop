@@ -45,7 +45,7 @@ function startEmailTimer(ttlSec){
     $('#btnVerify').prop('disabled', false).removeClass('hidden');
     $('#emailCode').prop('disabled', false).removeClass('hidden').focus();
     $('#emailTimer').addClass('muted');
-
+	$('#input-group-text').removeClass('hidden');
     if(isNaN(left) || left <= 0){ onExpire(); return; }
     $('#emailTimer').text(formatSec(left));
 
@@ -100,11 +100,22 @@ $.ajax({
 	    */
      cache: false,
      success : function(res){
-	    if(res && res.ok){
+     	console.log(res);
+	    if(res.ok){
 		    showMsg('인증코드가 전송되었습니다. 입력 후 검증을 눌러주세요.', 'ok', 3000); // 3초 뒤 사라짐
 		    var ttl = Number(res.ttlSec) || 180;
 		    startEmailTimer(ttl);
-		}else{
+		} else {
+			if(res.duplicate == "duplicate") {
+			    $('#emailCode').val("");
+				$('#emailTimer').addClass('hidden');   
+		        $('#input-group-text').addClass('hidden'); // 있으면 숨김
+		        $('#btnVerify').addClass('hidden');
+		        $('#emailCode').addClass('hidden').prop('disabled', true);
+		        $('#emailTimer').text('인증 완료').removeClass('muted');
+		        showMsg('중복된 이메일이 존재합니다..', 'err', 3000);
+				return;
+			}
 		    showMsg('발송 실패 또는 만료되었습니다.', 'err', 3000);
 	    }
      },

@@ -27,7 +27,7 @@ public class OrderServiceImpl implements OrderService{
 	@Autowired
 	OrderDAO dao;
 	
-	// 결제자 정보
+	// 회원 정보
 	public void orderUserAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
 		System.out.println("OrderServiceImpl - orderUserAction");
@@ -40,12 +40,45 @@ public class OrderServiceImpl implements OrderService{
 		model.addAttribute("user", dto);
 		
 	}
+	
+	// 결제자 세션 저장
+	public void orderInfoAction(String jsonBody, HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		System.out.println("OrderServiceImpl - orderInfoAction");
+		
+		JSONParser parser = new JSONParser();
+		
+		try {
+            // 클라이언트에서 받은 JSON 요청 바디 => 정보가 잘 넘어오는지 확인
+            JSONObject orderData = (JSONObject) parser.parse(jsonBody);
+            String o_name = (String) orderData.get("o_name");
+            String o_phone = (String) orderData.get("o_phone");
+            String o_address = (String) orderData.get("o_address");
+            String o_zip_code = (String) orderData.get("o_zip_code");
+            String o_request = (String) orderData.get("o_request");
+            JSONArray orderList = (JSONArray) orderData.get("orderList");
+            
+            System.out.println("orderData[o_name] : " + o_name);
+            System.out.println("orderData[o_phone] : " + o_phone);
+            System.out.println("orderData[o_address] : " + o_address);
+            System.out.println("orderData[o_zip_code] : " + o_zip_code);
+            System.out.println("orderData[o_request] : " + o_request);
+            System.out.println("orderData[orderList] : " + orderList);
+            
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        
+        request.getSession().setAttribute("orderInfo", jsonBody);
+		
+	}
 
 	// 결제내역 저장
 	@Override
-	public void orderInsertAction(String jsonBody, JSONObject jsonObject, HttpServletRequest request) throws Exception {
+	public void orderInsertAction(JSONObject jsonObject, HttpServletRequest request) throws Exception {
 		System.out.println("OrderServiceImpl - orderInsertAction()");
 				
+		String orderInfoStr = (String) request.getSession().getAttribute("orderInfo");
 		JSONParser parser = new JSONParser();
 		
         Long o_num;					// 주문번호(Pk)
@@ -62,95 +95,98 @@ public class OrderServiceImpl implements OrderService{
         String o_status;			// 주문상태 (주문완료/환불/반품진행/교환진행)
         String o_payment_key;		// 결제키
 
-        try {
-        	JSONObject requestData = (JSONObject) parser.parse(jsonBody);
-        	
-        	JSONObject orderInfo = (JSONObject) requestData.get("orderInfo");
-            System.out.println("orderInfo = " + orderInfo.toJSONString());
-            
-            // 공통정보
-            // 숫자들은 JSONParser가 Long으로 파싱하므로 바로 캐스팅 후 intValue() 사용
-            o_name = (String) orderInfo.get("o_name");
-            o_phone = (String) orderInfo.get("o_phone");
-            o_address = (String) orderInfo.get("o_address");
-            o_zip_code = Integer.parseInt((String) orderInfo.get("o_zip_code"));
-            o_request = (String)orderInfo.get("o_request");
-            
-            u_member_id = (Integer) request.getSession().getAttribute("session_u_member_id");
-            o_num = Long.valueOf(jsonObject.get("orderId").toString());
-            o_payment_key = (String) jsonObject.get("paymentKey");
-            
-            // 결제 수단
-            String method = (String) jsonObject.get("method");
-            if(method.equals("간편결제")) {
-            	JSONObject easyPay = (JSONObject) jsonObject.get("easyPay");
-            	o_payment = (String) easyPay.get("provider");
-            } else {
-            	o_payment = method;
-            }
-            
-            // 결제 상태가 DONE 일 때 주문완료
-            String status = (String) jsonObject.get("status");
-            if(status.equals("DONE")) {
-            	o_status = "주문완료";
-            } else {
-            	o_status = "";
-            }
-
-            // 상품 리스트
-            JSONArray orderList = (JSONArray) orderInfo.get("orderList");
-            for (Object obj : orderList) {
-            	JSONObject product = (JSONObject) obj;
-            	
-            	pd_id = ((Long) product.get("pd_id")).intValue();
-            	o_price = ((Long) product.get("o_price")).intValue();
-                o_count = ((Long) product.get("o_count")).intValue();
-                
-                OrderDTO dto = new OrderDTO();
-                
-                dto.setO_num(o_num);
-                dto.setPd_id(pd_id);
-                dto.setU_member_id(u_member_id);
-                dto.setO_name(o_name);
-                dto.setO_phone(o_phone);
-                dto.setO_price(o_price);
-                dto.setO_count(o_count);
-                dto.setO_payment(o_payment);
-                dto.setO_address(o_address);
-                dto.setO_zip_code(o_zip_code);
-                dto.setO_request(o_request);
-                dto.setO_status(o_status);
-                dto.setO_payment_key(o_payment_key);
-                
-                System.out.println(dto);
-                
-                // 결제내역 저장
-                dao.orderInsertAction(dto);
-                
-                Map<String, Object> p_map = new HashMap<String, Object>();
-                p_map.put("pd_stock", o_count);
-                p_map.put("pd_id", pd_id);
-                // 재고수량 업데이트
-                dao.productStockUpdate(p_map);
-                
-                int selectCnt = dao.cartCheck(u_member_id);
-                
-                if(selectCnt > 0) {
-                	Map<String, Object> c_map = new HashMap<String, Object>();
-                    c_map.put("u_member_id", u_member_id);
-                    c_map.put("pd_id", pd_id);
-                    // 장바구니 삭제
-                    dao.cartDelete(c_map);
-                }
-                
-            }
-            
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        };
+        if(orderInfoStr != null) {
+	        try {
+	        	JSONObject orderInfo = (JSONObject) parser.parse(orderInfoStr);
+	            System.out.println("orderInfo = " + orderInfo.toJSONString());
+	            
+	            // 공통정보
+	            // 숫자들은 JSONParser가 Long으로 파싱하므로 바로 캐스팅 후 intValue() 사용
+	            o_name = (String) orderInfo.get("o_name");
+	            o_phone = (String) orderInfo.get("o_phone");
+	            o_address = (String) orderInfo.get("o_address");
+	            o_zip_code = Integer.parseInt((String) orderInfo.get("o_zip_code"));
+	            o_request = (String)orderInfo.get("o_request");
+	            
+	            u_member_id = (Integer) request.getSession().getAttribute("session_u_member_id");
+	            o_num = Long.valueOf(jsonObject.get("orderId").toString());
+	            o_payment_key = (String) jsonObject.get("paymentKey");
+	            
+	            // 결제 수단
+	            String method = (String) jsonObject.get("method");
+	            if(method.equals("간편결제")) {
+	            	JSONObject easyPay = (JSONObject) jsonObject.get("easyPay");
+	            	o_payment = (String) easyPay.get("provider");
+	            } else {
+	            	o_payment = method;
+	            }
+	            
+	            // 결제 상태가 DONE 일 때 주문완료
+	            String status = (String) jsonObject.get("status");
+	            if(status.equals("DONE")) {
+	            	o_status = "주문완료";
+	            } else {
+	            	o_status = "주문실패";
+	            }
+	
+	            // 상품 리스트
+	            JSONArray orderList = (JSONArray) orderInfo.get("orderList");
+	            for (Object obj : orderList) {
+	            	JSONObject product = (JSONObject) obj;
+	            	
+	            	pd_id = ((Long) product.get("pd_id")).intValue();
+	            	o_price = ((Long) product.get("o_price")).intValue();
+	                o_count = ((Long) product.get("o_count")).intValue();
+	                
+	                OrderDTO dto = new OrderDTO();
+	                
+	                dto.setO_num(o_num);
+	                dto.setPd_id(pd_id);
+	                dto.setU_member_id(u_member_id);
+	                dto.setO_name(o_name);
+	                dto.setO_phone(o_phone);
+	                dto.setO_price(o_price);
+	                dto.setO_count(o_count);
+	                dto.setO_payment(o_payment);
+	                dto.setO_address(o_address);
+	                dto.setO_zip_code(o_zip_code);
+	                dto.setO_request(o_request);
+	                dto.setO_status(o_status);
+	                dto.setO_payment_key(o_payment_key);
+	                
+	                System.out.println(dto);
+	                
+	                // 결제내역 저장
+	                dao.orderInsertAction(dto);
+	                
+	                Map<String, Object> p_map = new HashMap<String, Object>();
+	                p_map.put("pd_stock", o_count);
+	                p_map.put("pd_id", pd_id);
+	                // 재고수량 업데이트
+	                dao.productStockUpdate(p_map);
+	                
+	                int selectCnt = dao.cartCheck(u_member_id);
+	                
+	                if(selectCnt > 0) {
+	                	Map<String, Object> c_map = new HashMap<String, Object>();
+	                    c_map.put("u_member_id", u_member_id);
+	                    c_map.put("pd_id", pd_id);
+	                    // 장바구니 삭제
+	                    dao.cartDelete(c_map);
+	                }
+	                
+	            }
+	            
+	        } catch (ParseException e) {
+	            throw new RuntimeException(e);
+	        }
+        } else {
+        	System.out.println("orderInfo 세션에 값이 없습니다.");
+        }
         
 	    if (request.getSession() != null) {
 	    	request.getSession().removeAttribute("goPay");
+	    	request.getSession().removeAttribute("orderInfo");
 	    }
         
 	}
