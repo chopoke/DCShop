@@ -24,8 +24,10 @@ public class ShopController {
 	public String shop_main(HttpServletRequest request, HttpServletResponse response, Model model) {
 		logger.info("=== url -> shop_main ===");
 		
+		// 상품 목록
 		service.productListAction(request, response, model);
-		
+		// 카테고리 갯수
+		service.getCategoryCnt(request, response, model);
 		return "shop/shop_main";
 	}
 	
@@ -34,5 +36,11 @@ public class ShopController {
 	    logger.info("=== url -> productList ===");
 	    service.productListAction(request, response, model);
 	    return "shop/productList"; 
+	}
+	
+	@RequestMapping("eventproductList.do")
+	public String eventproductList(HttpServletRequest request, HttpServletResponse response, Model model) {
+		logger.info("=== url -> eventproductList ===");
+		return "shop/eventpage";
 	}
 }

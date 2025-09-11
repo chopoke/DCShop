@@ -78,7 +78,7 @@
 									<th style="width: 150px"> 이미지 </th>
 									<td style="width: 150px; text-align:left">
 										<c:if test="${board.b_image != null}">
-											<img src="${board.b_image}">
+											<img src="<c:url value='${board.b_image}'/>" style="width:300px; height:auto">
 											<input type="file" class="input" name="b_image" 
 											id="b_image" accept="fimage/*">
 										</c:if>

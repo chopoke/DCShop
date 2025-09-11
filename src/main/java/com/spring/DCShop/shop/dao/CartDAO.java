@@ -23,5 +23,7 @@ public interface CartDAO {
 	
 	public int deleteProductFromCart(Map<String, Object> increaseInfo);
 	
+	public int deleteProductsFromCart(Map<String, Object> increaseInfo);
+	
 	public int changeProductFromCart(Map<String, Object> deleteInfo);
 }

@@ -136,27 +136,27 @@
 					<div class="flex items-center">
 						<a href="${path}/shop_main.do?petType=1&category=1100" class="no-underline"> 
 							<span class="text-sm text-gray-700">의류</span></a>
-							<span class="text-xs text-gray-500 ml-auto">갯수</span>
+							<span class="text-xs text-gray-500 ml-auto"><c:out value="${categoryCounts['1100']}" default="0"/></span>
 					</div>
 					<div class="flex items-center">
 						<a href="${path}/shop_main.do?petType=1&category=1200" class="no-underline"> 
 							<span class="text-sm text-gray-700">미용/위생</span></a>
-							<span class="text-xs text-gray-500 ml-auto">갯수</span>
+							<span class="text-xs text-gray-500 ml-auto"><c:out value="${categoryCounts['1200']}" default="0"/></span>
 					</div>
 					<div class="flex items-center">
 						<a href="${path}/shop_main.do?petType=1&category=1300" class="no-underline"> 
 							<span class="text-sm text-gray-700">화장실</span></a>
-							<span class="text-xs text-gray-500 ml-auto">갯수</span>
+							<span class="text-xs text-gray-500 ml-auto"><c:out value="${categoryCounts['1300']}" default="0"/></span>
 					</div>
 					<div class="flex items-center">
 						<a href="${path}/shop_main.do?petType=1&category=1400" class="no-underline"> 
 							<span class="text-sm text-gray-700">장난감</span></a>
-							<span class="text-xs text-gray-500 ml-auto">갯수</span>
+							<span class="text-xs text-gray-500 ml-auto"><c:out value="${categoryCounts['1400']}" default="0"/></span>
 					</div>
 					<div class="flex items-center">
 						<a href="${path}/shop_main.do?petType=1&category=1500" class="no-underline"> 
 							<span class="text-sm text-gray-700">목줄/리드줄</span></a>
-							<span class="text-xs text-gray-500 ml-auto">갯수</span>
+							<span class="text-xs text-gray-500 ml-auto"><c:out value="${categoryCounts['1500']}" default="0"/></span>
 					</div>
 				</div>
 			</div>
@@ -179,27 +179,27 @@
 					<div class="flex items-center">
 						<a href="${path}/shop_main.do?petType=2&category=2100" class="no-underline"> 
 							<span class="text-sm text-gray-700">의류</span></a>
-							<span class="text-xs text-gray-500 ml-auto">갯수</span>
+							<span class="text-xs text-gray-500 ml-auto"><c:out value="${categoryCounts['2100']}" default="0"/></span>
 					</div>
 					<div class="flex items-center">
 						<a href="${path}/shop_main.do?petType=2&category=2200" class="no-underline"> 
 							<span class="text-sm text-gray-700">미용/위생</span></a>
-							<span class="text-xs text-gray-500 ml-auto">갯수</span>
+							<span class="text-xs text-gray-500 ml-auto"><c:out value="${categoryCounts['2200']}" default="0"/></span>
 					</div>
 					<div class="flex items-center">
 						<a href="${path}/shop_main.do?petType=2&category=2300" class="no-underline"> 
 							<span class="text-sm text-gray-700">모래</span></a>
-							<span class="text-xs text-gray-500 ml-auto">갯수</span>
+							<span class="text-xs text-gray-500 ml-auto"><c:out value="${categoryCounts['2300']}" default="0"/></span>
 					</div>
 					<div class="flex items-center">
 						<a href="${path}/shop_main.do?petType=2&category=2400" class="no-underline"> 
 							<span class="text-sm text-gray-700">장난감</span></a>
-							<span class="text-xs text-gray-500 ml-auto">갯수</span>
+							<span class="text-xs text-gray-500 ml-auto"><c:out value="${categoryCounts['2400']}" default="0"/></span>
 					</div>
 					<div class="flex items-center">
 						<a href="${path}/shop_main.do?petType=2&category=2500" class="no-underline"> 
 							<span class="text-sm text-gray-700">스크래쳐</span></a>
-							<span class="text-xs text-gray-500 ml-auto">갯수</span>
+							<span class="text-xs text-gray-500 ml-auto"><c:out value="${categoryCounts['2500']}" default="0"/></span>
 					</div>
 				</div>
 			</div>
@@ -386,7 +386,9 @@
 		<!-- Header -->
 		<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
 			<div>
+
 				<h1 class="text-2xl md:text-3xl font-bold text-gray-900">해당 상품</h1>
+
 				<p class="text-gray-600 mt-1">${total} results</p>
 			</div>
 			<!-- 세부 카테고리 -->
@@ -513,7 +515,7 @@
 			            params.set("subcategory", subcategory);
 			            params.set("sortOrder", sortOrder);
 			            if (searchKeyword) params.set("searchKeyword", searchKeyword); else params.delete("searchKeyword");
-			            history.pushState(null, "", location.pathname + "?" + qs2.toString());	
+			            history.pushState(null, "", location.pathname + "?" + params.toString());	
 			        },
 			        error: function () {
 			            $("#product-grid").html("오류");

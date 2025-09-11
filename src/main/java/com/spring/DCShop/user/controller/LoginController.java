@@ -67,11 +67,11 @@ public class LoginController {
 		return "main";
 	}
 	
-	@RequestMapping("comm_main.do")
-	public String comm_main() {
+	@RequestMapping("order_detail.do")
+	public String order_detail() {
 		logger.info("=== url -> comm_main ===");
 		
-		return "comm/comm_main";
+		return "mypage/order_detail";
 	}
 	
 		@RequestMapping("shopMain3.do")

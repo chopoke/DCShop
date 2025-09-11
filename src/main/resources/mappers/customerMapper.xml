@@ -41,4 +41,8 @@
 	<select id="userNickNameCheck" parameterType="String" resultType="int">
 		SELECT COUNT(*) FROM USER_TBL WHERE U_NICkNAME = #{strNickName}
 	</select>
+	
+	<select id="userEmailCheck" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM USER_TBL WHERE U_EMAIL = #{strEmail}
+	</select>
 </mapper>

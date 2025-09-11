@@ -37,6 +37,10 @@ public interface ReviewService {
 	public void reviewDeleteAction(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
 	
+	// 리뷰 작성 화면
+	public String reviewInsertForm(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException;
+	
 	// 리뷰 작성 처리
 	public String reviewInsertAction(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;

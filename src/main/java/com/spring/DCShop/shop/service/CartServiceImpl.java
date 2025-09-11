@@ -18,6 +18,8 @@ import com.spring.DCShop.shop.dao.ProductDAO;
 import com.spring.DCShop.shop.dto.CartDTO;
 import com.spring.DCShop.shop.dto.CartItemRequest;
 import com.spring.DCShop.shop.dto.CheckoutRequest;
+import com.spring.DCShop.shop.dto.DeleteReq;
+import com.spring.DCShop.shop.dto.ItemReq;
 import com.spring.DCShop.shop.dto.UserDTO;
 
 
@@ -73,7 +75,7 @@ public class CartServiceImpl implements CartService {
 		CartItemRequest caritem = new CartItemRequest();
 		caritem.setPdId((long) pdId);
 		caritem.setPdName(pDto.getPd_name());
-		caritem.setPdPrice(pDto.getPd_price()*qty);
+		caritem.setPdPrice(pDto.getPd_price());
 		caritem.setQty(qty);
 		caritem.setPdImg(pDto.getPd_image_url());
 		caritem.setPdDiscountRate(pDto.getPd_discount_rate());
@@ -85,21 +87,21 @@ public class CartServiceImpl implements CartService {
 		// 주문 금액이 10만원 이상이면 무료배송
 		// 총 금액 계산
 		if(caritem.getPdDiscountRate() > 0) {
-			discountPrice = (caritem.getPdPrice() * (100 - caritem.getPdDiscountRate())) / 100;
+			discountPrice = ((caritem.getPdPrice() * caritem.getQty()) * (100 - caritem.getPdDiscountRate())) / 100;
 			if(discountPrice >= 100000) {
 				pdShippingFee = 0;
 			} else {
 				pdShippingFee = pDto.getPd_shipping_fee();
 			}
 			totalClient = (long) (discountPrice + pdShippingFee);
-			totalDiscount = caritem.getPdPrice() - discountPrice;
+			totalDiscount = (caritem.getPdPrice() * caritem.getQty()) - discountPrice;
 		} else {
-			if(caritem.getPdPrice() > 100000) {
+			if((caritem.getPdPrice() * caritem.getQty()) > 100000) {
 				pdShippingFee = 0;
 			} else {
 				pdShippingFee = pDto.getPd_shipping_fee();
 			}
-			totalClient = (long) (caritem.getPdPrice() + pdShippingFee);
+			totalClient = (long) ((caritem.getPdPrice() * caritem.getQty()) + pdShippingFee);
 			totalDiscount = 0;
 		}
 		
@@ -188,6 +190,11 @@ public class CartServiceImpl implements CartService {
 		
 	}
 
+	/*
+	 * 
+	 * @Purpose 단건 삭제하기
+	 * 
+	 */
 	@Override
 	public int deleteProductFromCart(HttpServletRequest request, Map<String, Object> map) {
 		System.out.println("CartServiceImpl => deleteProductFromCart");
@@ -206,6 +213,8 @@ public class CartServiceImpl implements CartService {
 		int deleteResult = cartdao.deleteProductFromCart(deleteInfo);
 		return deleteResult;
 	}
+	
+	
 	
 	@Override
 	public int changeProductFromCart(HttpServletRequest request, Map<String, Object> map) {
@@ -227,6 +236,33 @@ public class CartServiceImpl implements CartService {
 		
 		int changeResult = cartdao.changeProductFromCart(changeInfo);
 		return changeResult;
+	}
+
+	@Override
+	public int deleteProductsFromCart(HttpServletRequest request, DeleteReq req) {
+		System.out.println("CartServiceImpl => deleteProductsFromCart");
+		
+		// 세션 아이디 가져오기
+		int uMemberId = (Integer) request.getSession().getAttribute("session_u_member_id");
+
+		// 상품 아이디 가져오기
+		
+		List<ItemReq> itemReqs = req.getItems();
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("uMemberId", uMemberId);
+		
+		List<Map<String, Object>> items = new ArrayList<>();
+		for (ItemReq cb : itemReqs) {
+		    Map<String, Object> m = new HashMap<>();
+		    m.put("pdId", cb.getPdId());   // ⚠️ 여기서 getCtId() 쓰면 안 됩니다!
+		    m.put("ctId", cb.getCtId());
+		    items.add(m);
+		}
+		params.put("items", items);
+		
+		int deleteResult = cartdao.deleteProductsFromCart(params);
+		return deleteResult;
 	}
 
 }
