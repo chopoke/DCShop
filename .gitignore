@@ -1,6 +1,7 @@
 # Maven 설정 파일 무시
 .project
 .classpath
+classpath
 .springBeans
 .settings/
 config/
