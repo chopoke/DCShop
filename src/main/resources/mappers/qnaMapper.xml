@@ -65,7 +65,7 @@
    
    <select id="questDetail" parameterType="int" resultType="com.spring.DCShop.shop.dto.QuestDTO">
       SELECT q.*
-          , u_id
+           , u_id
         FROM product_tbl p
            , qna_tbl q
            , user_tbl u
@@ -77,14 +77,15 @@
    <update id="updateQuest" parameterType="com.spring.DCShop.shop.dto.QuestDTO">
       UPDATE qna_tbl
          SET q_title =  #{q_title}
-          , q_category =  #{q_category}
-          , q_secret =  #{q_secret}
-          , q_content =  #{q_content}
+           , q_category =  #{q_category}
+           , q_secret =  #{q_secret}
+           , q_content =  #{q_content}
        WHERE q_num = #{q_num}
    </update>
    
    <delete id="deleteQuest" parameterType="int">
       DELETE FROM qna_tbl
-         WHERE q_num = #{q_num}
+       WHERE q_num = #{q_num}
    </delete>
+   
 </mapper> 
