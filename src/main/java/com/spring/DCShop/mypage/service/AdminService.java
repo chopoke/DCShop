@@ -46,6 +46,10 @@ public interface AdminService {
 	public void adminProductInsert(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
 	
+	// 문의관리 - 문의 리스트
+	public void adminQnaList(HttpServletRequest request, HttpServletResponse response, Model model)
+ 			throws ServletException, IOException;
+
 	// 상품관리 - 상품수정폼
 	public void adminProductUpdateForm(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;

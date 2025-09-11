@@ -10,38 +10,6 @@
 
 <title>QnA</title>
 
-<script>
-	tailwind.config = {
-		theme : {
-			extend : {
-				colors : {
-					primary : "#ff6b35",
-					secondary : "#ffa726",
-				},
-				borderRadius : {
-					none : "0px",
-					sm : "4px",
-					DEFAULT : "8px",
-					md : "12px",
-					lg : "16px",
-					xl : "20px",
-					"2xl" : "24px",
-					"3xl" : "32px",
-					full : "9999px",
-					button : "8px",
-				},
-			},
-		},
-	};
-</script>
-<script src="https://cdn.tailwindcss.com/3.4.16"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-	href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
-	rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
-	rel="stylesheet" />
 <style>
 :where([class^="ri-"])::before {
 	content: "\f3c2";
@@ -204,7 +172,7 @@
 				<div class="border-b px-6 py-4 flex justify-between items-center">
 					<h3 class="text-xl font-bold text-gray-900">문의 상세</h3>
 					<button onclick="closeQuestionDetail()"
-						class="text-gray-500 hover:text-gray-700">
+						class="!text-gray-500 hover:!text-gray-700">
 						<i class="ri-close-line text-2xl"></i>
 					</button>
 				</div>
@@ -215,6 +183,7 @@
 								<h4 id="modalTitle"
 									class="text-lg font-medium text-gray-900 mb-1"></h4>
 								<div class="flex items-center space-x-4 text-sm text-gray-500">
+									<input type="hidden" id="modalqNum" name="qNum">
 									<!-- 작성자 번호 -->
 									<span id="modalWriter"></span>
 
@@ -227,10 +196,10 @@
 								</div>
 							</div>
 							<div class="flex space-x-2">
-								<button onclick="editQuestion()" class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 whitespace-nowrap">
+								<button onclick="editQuestion()" class="px-3 py-1 border !border-gray-300 rounded text-sm hover:!bg-gray-50 whitespace-nowrap">
 									수정
 								</button>
-								<button onclick="deleteQuestion()" class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50 whitespace-nowrap">
+								<button onclick="deleteQuestion()" class="px-3 py-1 border !border-gray-300 rounded text-sm hover:!bg-gray-50 whitespace-nowrap">
 									삭제
 								</button>
 							</div>
@@ -246,12 +215,9 @@
 							</div>
 							<div id="adminReplyContent" class="bg-orange-50 rounded-lg p-4">
 								<div class="flex justify-between items-start mb-2">
-									<span class="text-sm text-gray-500">2025-02-28 14:30</span>
+									<span class="text-sm text-gray-500" id="답변 등록시간"></span>
 								</div>
-								<!-- 임시 답변. -->
-								<p class="text-gray-700 whitespace-pre-line">안녕하세요, 고객님.
-									문의주신 주문은 현재 출고 준비중이며, 내일 오전 중으로 배송될 예정입니다. 추가 문의사항이 있으시다면 언제든
-									문의해주세요. 감사합니다.</p>
+								<p class="text-gray-700 whitespace-pre-line" id="답변 내용"></p>
 							</div>
 							<!-- Admin Reply Form -->
 							<div id="adminReplyForm" class="mt-4">
@@ -266,7 +232,7 @@
 										</textarea>
 									<div class="flex justify-end">
 										<button onclick="submitAdminReply()"
-											class="bg-primary text-white px-4 py-2 rounded-button hover:bg-orange-600 transition-colors">
+											class="!bg-primary !text-white px-4 py-2 !rounded-button hover:!bg-orange-600 transition-colors">
 											답변 등록</button>
 									</div>
 								</div>
@@ -302,6 +268,7 @@
     const adminReplyDate = adminReplyContent.querySelector('span');
     const adminReplyMessage = adminReplyContent.querySelector('p');
 
+    //모달 띄우기 함수
     window.showQuestionDetail = async function (qNum) {
         // UI 초기화
         elTitle.textContent = '불러오는 중...';
@@ -319,7 +286,7 @@
         modal.classList.remove("hidden");
         modal.classList.add("flex");
         document.body.style.overflow = "hidden";
-		
+        
         try {
             const res = await fetch("<c:url value='/api/qna/'/>" + qNum, {
                 method: 'GET',
@@ -346,13 +313,13 @@
             const dto = await res.json();
             const sessionUserId = '${sessionScope.session_u_member_id}';
             const isAuthor = (dto.u_member_id == sessionUserId);
-
+            
             // 작성자만 수정/삭제 버튼 보이기
             if (isAuthor) {
                 editButton.style.display = 'block';
                 deleteButton.style.display = 'block';
             }
-
+			
             // 답변 상태에 따라 관리자 답변 영역 표시
             // ++ 어드민
             if (dto.q_answer === 'N') {
@@ -374,10 +341,11 @@
             elContent.textContent = dto.q_content || '';
             const cat = (dto.q_category && dto.q_category.trim()) || '기타';
             elCategoryBadge.textContent = cat;
-
+            document.getElementById("modalqNum").value = qNum; // DTO에서 가져온 qNum을 hidden 필드에 저장
+            
         } catch (e) {
             console.error(e);
-            alert('네트워크 오류가 발생했습니다.');
+            alert('오류가 발생했습니다.');
             closeQuestionDetail();
         }
     };
@@ -390,14 +358,28 @@
 
     window.editQuestion = function () {
         if (confirm("문의를 수정하시겠습니까?")) {
-            // TODO: 수정 페이지로 이동 or 수정 모달 오픈
-            // 예: window.location.href = '/qna/edit?q_num=' + qNum;
+            // TODO: 수정 페이지로 이동
+            window.location.href = '${path}/question_update.qa?q_num='+document.getElementById("modalqNum").value;
         }
     };
 
-    window.deleteQuestion = function () {
-        if (confirm("문의를 삭제하시겠습니까?")) {
-            // TODO: 삭제 요청 후 닫기
+    window.deleteQuestion = function () {	//;
+        if (confirm("문의를 삭제하시겠습니까?")) {	//바로 삭제
+        	let param = {	//문의자는 session이므로 controller에서 request로 직접받음.
+   	   		 "q_num": document.getElementById("modalqNum").value,
+	   	      }
+	   	      $.ajax({
+	   	          url: '${path}/question_deleteAction.qa',  // 컨트롤러 이동(3)
+	   	          type: 'POST',
+	   	          data: param,
+	   	          success: function() {  // 콜백함수(6) => 문의삭제가 완료되면 서버에서 콜백함수 호출
+	   	         	alert('문의가 삭제되었습니다.');
+	   	         	window.location.reload();
+	   	          },
+	   	          error: function() {
+	   	            alert('문의가 삭제되지않았니다.');
+   	          }
+   	       });
         }
     };
 

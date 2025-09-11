@@ -148,9 +148,13 @@ public class AdminController {
 		return "redirect:/admin_product";
 	}
 	
+	// 문의 리스트
 	@RequestMapping("admin_qna")
-	public String admin_qna() {
+	public String admin_qna(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
 		logger.info("=== url -> admin_qna ===");
+		
+		service.adminQnaList(request, response, model);
 		
 		return "admin/admin_qna";
 	}

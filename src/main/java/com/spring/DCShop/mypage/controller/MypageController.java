@@ -160,6 +160,16 @@ public class MypageController {
 	    return "redirect:/mypage_editPet.do"; // 목록 페이지로
 	}
 
+	@RequestMapping("mypage_qna.do")
+	public String admin_qna(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_qna ===");
+		
+		myService.myQnaList(request, response, model);
+		
+		return "mypage/mypage_qna";
+	}
+	
 	// 장바구니 페이지 이동
 	@RequestMapping("cartList")
 	public String cartList(HttpServletRequest req, HttpServletResponse res, Model model)
@@ -217,7 +227,6 @@ public class MypageController {
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("ok", cnt == 1);
 	    return result;
-
 	}
 	
 	// 탈퇴 확인 페이지

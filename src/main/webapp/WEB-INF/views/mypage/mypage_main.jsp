@@ -77,7 +77,7 @@
                <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
 
                <a href="./recommendProduct" class="block py-2 px-3 rounded hover:bg-gray-100">1:1 문의</a> 
-               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
+               <a href="./mypage_qna.do" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
                <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
                <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
             </nav>

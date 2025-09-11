@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.spring.DCShop.board.dto.BoardDTO;
+import com.spring.DCShop.shop.dto.QuestDTO;
 import com.spring.DCShop.shop.dto.ShopDTO;
 import com.spring.DCShop.user.dto.UserDTO;
 
@@ -84,5 +85,11 @@ public interface AdminDAO {
 	
 	// 주문관리 - 배송상태변경
 	public int adminOrderDelivery(String oNum, String newStatus);
+	
+	// 문의관리 - 갯수
+	public int adminQnaCnt(Map<String, Object> map);
+	
+	// 문의관리 - 리스트 
+	public List<QuestDTO> adminQnaList(Map<String, Object> param);
 	
 }

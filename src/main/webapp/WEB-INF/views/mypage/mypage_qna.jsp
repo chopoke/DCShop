@@ -7,7 +7,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>관리자 - 문의관리 | 독캣배송</title>
+  <title>유저 - 내 문의 | 독캣배송</title>
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
   <style type="text/css">
     .hero-section1 { width:100%; background:white; padding:.5rem 0; padding-top:5rem; }
@@ -23,16 +23,33 @@
     .modal { display:none; }
     .modal.show { display:flex; }
   </style>
-  <script>
-   $(function() {  // 상세페이지가 로딩되면
-      $('#DeleteQuestion').click(function(q_num) {
-          if (confirm("문의를 삭제하시겠습니까?")) {	//바로 삭제
-          	window.location.href = '${path}/question_deleteAction.qa?q_num='+q_num;
-          }
-      };
-   });
-</script>
 </head>
+<script>
+	setInterval(function() {
+	  if (sessionStorage.getItem('reloadCheck') === 'true') {
+	    sessionStorage.removeItem('reloadCheck');
+	    window.location.reload();
+	  }
+	}, 500);
+
+   function question_delete(q_num){
+      let param = {	//문의자는 session이므로 controller에서 request로 직접받음.
+   		 "q_num": q_num,
+      }
+      $.ajax({
+          url: '${path}/question_deleteAction.qa',  // 컨트롤러 이동(3)
+          type: 'POST',
+          data: param,
+          success: function() {  // 콜백함수(6) => 문의삭제가 완료되면 서버에서 콜백함수 호출
+         	alert('문의가 삭제되었습니다.');
+         	window.location.reload();
+          },
+          error: function() {
+            alert('문의가 삭제되지않았니다.');
+          }
+       });
+   }
+ </script>
 <body class="bg-gray-100">
 
   <!-- 헤더 시작 -->
@@ -54,26 +71,27 @@
         <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
 
         <!-- 네비게이션 -->
-        <nav class="w-full space-y-2 text-sm">
-          <a href="${path}/admin_board"   class="block py-2 px-3 rounded hover:bg-gray-100">게시판관리</a>
-          <a href="${path}/admin_order"   class="block py-2 px-3 rounded hover:bg-gray-100">주문관리</a>
-          <a href="${path}/admin_product" class="block py-2 px-3 rounded hover:bg-gray-100">상품관리</a>
-          <a href="${path}/admin_qna"     class="block py-2 px-3 rounded bg-gray-900 text-white">문의관리</a>
-          <a href="${path}/admin_review"  class="block py-2 px-3 rounded hover:bg-gray-100">리뷰관리</a>
-          <a href="${path}/admin_user"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
-          <a href="${path}/logout" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+        <!-- 네비게이션 -->
+		<nav class="w-full space-y-2 text-sm">
+           <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Order History</a> 
+           <a href="${path}/order_detail.do" class="block py-2 px-3 rounded hover:bg-gray-100">Wishlist</a>
+           <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Shopping Cart</a>
+           <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">1:1 Contact</a>
+           <a href="./mypage_qna.do" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a>
+           <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Product Review</a>
+           <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">Log Out</a>
         </nav>
       </aside>
 
       <!-- 메인 콘텐츠 -->
       <main class="flex-1 p-8 bg-gray-50">
-        <h1 class="text-2xl font-bold mb-6">문의관리</h1>
+        <h1 class="text-2xl font-bold mb-6">내 문의</h1>
 
         <!-- 검색/필터 -->
-        <form action="${path}/admin_qna" method="get" class="mb-4">
+        <form action="${path}/mypage_qna.do" method="get" class="mb-4">
           <div class="bg-white border rounded-lg p-4 grid grid-cols-1 md:grid-cols-12 gap-3">
             <div class="md:col-span-3">
-              <label class="block text-sm text-gray-600 mb-1">처리상태</label>
+              <label class="block text-sm text-gray-600 mb-1">답변상태</label>
               <select name="q_answer" class="w-full border rounded px-3 py-2">
                 <option value="">전체</option>
                 <option value="Y"  <c:if test="${param.q_answer == 'Y'}">selected</c:if>>답변 완료</option>
@@ -113,41 +131,31 @@
         </form>
 
         <!-- 일괄 처리 버튼 -->
-        <form id="bulkForm" action="${path}/admin_qna/bulk" method="post" class="mb-3">
+        <form id="bulkForm" action="${path}/mypage_qna.do/bulk" method="post" class="mb-3">
           <input type="hidden" name="action" id="bulkAction" value="">
-          <div class="flex flex-wrap items-center gap-2">
-            <button type="button" onclick="setBulk('DONE')" class="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700">선택 완료처리</button>
-            <button type="button" onclick="setBulk('WAIT')" class="px-3 py-2 bg-amber-500 text-white rounded hover:bg-amber-600">선택 대기로</button>
-            <button type="button" onclick="setBulk('HOLD')" class="px-3 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">선택 보류</button>
-            <button type="button" onclick="setBulk('DELETE')" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700">선택 삭제</button>
-            <span class="text-sm text-gray-500 ml-1">체크 후 일괄 처리하세요.</span>
-          </div>
-
           <!-- 목록 -->
           <div class="mt-3 bg-white border rounded-lg overflow-x-auto">
             <table class="min-w-full tbl-fixed">
               <colgroup>
-                <col style="width:44px;">
+                <col style="width:100px;">
                 <col style="width:100px;">
                 <col style="width:120px;">
-                <col style="width:120px;">
-                <col style="width:90px;">
-                <col style="width:110px;">
-                <col style="width:110px;">
+                <col style="width:80px;">
+                <col style="width:130px;">
+                <col style="width:130px;">
                 <col style="width:100px;">
-                <col style="width:160px;">
+                <col style="width:140px;">
               </colgroup>
               <thead class="bg-gray-100 text-sm">
                 <tr>
-                  <th class="py-2 px-3 text-left"><input type="checkbox" id="chkAll" /></th>
-                  <th class="py-2 px-3 text-left">문의번호</th>
-                  <th class="py-2 px-3 text-left">카테고리</th>
-                  <th class="py-2 px-3 text-left">제목</th>
-                  <th class="py-2 px-3 text-left">작성자</th>
-                  <th class="py-2 px-3 text-left">등록일</th>
-                  <th class="py-2 px-3 text-left">처리일</th>
-                  <th class="py-2 px-3 text-left">상태</th>
-                  <th class="py-2 px-3 text-left">관리</th>
+                  <th class="py-2 px-3 text-center">문의번호</th>
+                  <th class="py-2 px-3 text-center">카테고리</th>
+                  <th class="py-2 px-3 text-center">제목</th>
+                  <th class="py-2 px-3 text-center">작성자</th>
+                  <th class="py-2 px-3 text-center">등록일</th>
+                  <th class="py-2 px-3 text-center">처리일</th>
+                  <th class="py-2 px-3 text-center">답변상태</th>
+                  <th class="py-2 px-3 text-center">처리</th>
                 </tr>
               </thead>
               <tbody class="text-sm">
@@ -159,11 +167,8 @@
 
                 <c:forEach var="q" items="${list}">
                   <tr class="border-t">
-                    <td class="py-2 px-3 align-top">
-                      <input type="checkbox" name="q_nums" value="${q.q_num}" class="rowChk"/>
-                    </td>
-                    <td class="py-2 px-3 align-top">#${q.q_num}</td>
-                    <td class="py-2 px-3 align-top">
+                    <td class="py-2 px-3 align-center">#${q.q_num}</td>
+                    <td class="py-2 px-3 align-center">
                       <span class="text-gray-700">
                         <c:choose>
                           <c:when test="${q.q_category == '환불'}">환불</c:when>
@@ -176,16 +181,16 @@
                         </c:choose>
                       </span>
                     </td>
-                    <td class="py-2 px-3 align-top">
+                    <td class="py-2 px-3 align-center">
                       <div class="ellipsis" title="${q.q_title}">
                         <a href="javascript:void(0)" class="text-blue-600 hover:underline"
-                           onclick="window.location='${path}/question_answer.qa?q_num=${q.q_num}'">${q.q_title}</a>
+                           onclick="window.location.href='${path}/question_update.qa?q_num=${q.q_num}'">${q.q_title}</a>
                       </div>
                       <%-- <div class="text-gray-400 text-xs ellipsis" title="${q.preview}">${q.preview}</div> --%>
                     </td>
-                    <td class="py-2 px-3 align-top ellipsis" title="${q.u_id}">${q.u_id}</td>
-                    <td class="py-2 px-3 align-top"><fmt:formatDate value="${q.q_regDate}" pattern="yyyy-MM-dd" /></td>
-                    <td class="py-2 px-3 align-top">
+                    <td class="py-2 px-3 align-center ellipsis" title="${q.u_id}">${q.u_id}</td>
+                    <td class="py-2 px-3 align-center"><fmt:formatDate value="${q.q_regDate}" pattern="yyyy-MM-dd" /></td>
+                    <td class="py-2 px-3 align-center">
                       <%-- <c:choose>	처리일
                         <c:when test="${not empty q.completed_at}">
                           <fmt:formatDate value="${q.completed_at}" pattern="yyyy-MM-dd" />
@@ -207,15 +212,12 @@
 							</span>
 						</td>
 					</c:if>
-                    <td class="py-2 px-3 align-top">
+                    <td class="py-2 px-3 align-center">
                       <div class="flex flex-wrap gap-1">
                         <button type="button" class="px-2 py-1 border rounded hover:bg-gray-50"
-                                onclick="openModal(${q.q_num})">보기</button>
-                        <a href="${path}/admin_qna/replyForm?q_num=${q.q_num}"
-                           class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">답변</a>
-                        <a href="${path}/admin_qna/delete?q_num=${q.q_num}"
-                           class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                           onclick="DeleteQuestion(${dto.q_num})">삭제</a>
+                                onclick="window.location.href='${path}/question_update.qa?q_num=${q.q_num}'">수정</button>
+                        <a class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                           onclick="question_delete(${q.q_num})">삭제</a>
                       </div>
                     </td>
                   </tr>
@@ -229,18 +231,18 @@
         <div class="mt-4 flex justify-center">
           <nav class="inline-flex -space-x-px overflow-hidden rounded-md border bg-white">
             <c:if test="${paging.startPage > 10}">
-              <a href="${path}/admin_qna?pageNum=${paging.prev}" class="px-3 py-2 text-sm hover:bg-gray-50 border-r">Prev</a>
+              <a href="${path}/mypage_qna.do?pageNum=${paging.prev}" class="px-3 py-2 text-sm hover:bg-gray-50 border-r">Prev</a>
             </c:if>
             <c:forEach var="i" begin="${paging.startPage}" end="${paging.endPage}">
 	            <c:if test="${num != 0}">
-	              <a href="${path}/admin_qna?pageNum=${i}"
+	              <a href="${path}/mypage_qna.do?pageNum=${i}"
 	                 class="px-3 py-2 text-sm border-r <c:if test='${paging.currentPage==i}'>bg-blue-600 text-white</c:if>">
 	                ${i}
 	              </a>
 	             </c:if>
             </c:forEach>
             <c:if test="${paging.startPage < paging.pageCount}">
-              <a href="${path}/admin_qna?pageNum=${paging.next}" class="px-3 py-2 text-sm hover:bg-gray-50">Next</a>
+              <a href="${path}/mypage_qna.do?pageNum=${paging.next}" class="px-3 py-2 text-sm hover:bg-gray-50">Next</a>
             </c:if>
           </nav>
         </div>
@@ -262,7 +264,7 @@
           <dt class="text-gray-500">카테고리</dt><dd id="m_cat" class="col-span-3">-</dd>
           <dt class="text-gray-500">작성자</dt><dd id="m_writer" class="col-span-3">-</dd>
           <dt class="text-gray-500">등록일</dt><dd id="m_created" class="col-span-3">-</dd>
-          <dt class="text-gray-500">상태</dt><dd id="m_status" class="col-span-3">-</dd>
+          <dt class="text-gray-500">답변상태</dt><dd id="m_status" class="col-span-3">-</dd>
         </dl>
         <div>
           <div class="text-gray-500 text-sm mb-1">제목</div>
@@ -274,7 +276,7 @@
         </div>
 
         <!-- 간단 답변 등록 -->
-        <form action="${path}/admin_qna/replyQuick" method="post" class="mt-2">
+        <form action="${path}/mypage_qna.do/replyQuick" method="post" class="mt-2">
           <input type="hidden" name="q_num" id="m_qid_input" value="">
           <textarea name="reply" rows="4" class="w-full border rounded px-3 py-2" placeholder="간단한 답변을 입력하세요."></textarea>
           <div class="mt-3 flex justify-end gap-2">

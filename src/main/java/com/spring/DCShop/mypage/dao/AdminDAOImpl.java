@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.spring.DCShop.board.dto.BoardDTO;
+import com.spring.DCShop.shop.dto.QuestDTO;
 import com.spring.DCShop.shop.dto.ShopDTO;
 import com.spring.DCShop.user.dto.UserDTO;
 
@@ -205,6 +206,15 @@ public class AdminDAOImpl implements AdminDAO{
 
 	
 	
+	// 문의관리 - qna 리스트 갯수
+	@Override
+	public int adminQnaCnt(Map<String, Object> map){
+		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.adminQnaCnt", map);
+	}
 	
-
+	// 문의관리 - qna 리스트 
+	@Override
+	public List<QuestDTO> adminQnaList(Map<String, Object> map){
+		return sqlSession.selectList("com.spring.DCShop.mypage.dao.AdminDAO.adminQnaList", map);
+	}
 }

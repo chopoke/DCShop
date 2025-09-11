@@ -96,9 +96,45 @@ public class QnaServiceImpl implements QnaService{
 	@Override
 	public QuestDTO qnaDetail(int q_num) {
 		//문의 번호 받아와서 객체에 담기
-		QuestDTO dto = dao.qusetDetail(q_num);
+		QuestDTO dto = dao.questDetail(q_num);
 		System.out.println(dto);
 		return dto;
+	}
+	
+	@Override
+	public void updateQuestion(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		QuestDTO dto = new QuestDTO();
+		
+		int q_num = Integer.parseInt(request.getParameter("q_num"));
+		String q_title = request.getParameter("q_title");
+		String q_content = request.getParameter("q_content");
+		String q_secret = request.getParameter("q_secret");
+		String q_category = request.getParameter("q_category");
+		
+		dto.setQ_num(q_num);
+		dto.setQ_title(q_title);
+		dto.setQ_category(q_category);
+		dto.setQ_content(q_content);
+		// 비밀글 여부
+		dto.setQ_secret(q_secret);
+		
+		System.out.println(dto);
+		dao.updateQuest(dto);	//수정
+	}
+	
+	public void deleteQuest(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException{
+		
+		Integer q_num = Integer.parseInt(request.getParameter("q_num"));
+		// 로그인 한 사람의 유저넘버 불러오기
+		int u_member_id = (Integer)request.getSession().getAttribute("session_u_member_id");
+		// 로그인한 사람이 작성자 본인이 맞는지 체크하기 위한 데이터 불러오기
+		QuestDTO check = dao.questDetail(q_num);
+		
+		if(q_num != null && check.getU_member_id()==u_member_id) {//로그인 한 사람이 글 작성자 본인이라면
+			dao.deleteQuest(q_num);
+		}
 	}
 }
 
