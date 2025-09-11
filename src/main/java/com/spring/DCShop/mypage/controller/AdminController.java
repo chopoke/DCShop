@@ -70,14 +70,23 @@ public class AdminController {
 		return "admin/admin_order_detail";
 	}
 	
-	// 주문관리 - 일괄상태변경
+	// 주문관리 - 주문상태변경
 	@RequestMapping("admin_order_status")
 	public String admin_order_status(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
 		logger.info("=== url -> admin_order_status ===");
 		service.adminOrderStatus(request, response, model);
-		return "redirect:/admin_order";
+		return "redirect:/admin_order_detail";
 	}
+	
+	// 주문관리 - 배송상태변경
+		@RequestMapping("admin_order_delivery")
+		public String admin_order_delivery(HttpServletRequest request, HttpServletResponse response, Model model) 
+				throws ServletException, IOException {
+			logger.info("=== url -> admin_order_delivery ===");
+			service.adminOrderDelivery(request, response, model);
+			return "redirect:/admin_order_detail";
+		}
 	
 	
 	// 상품관리 - 목록/검색/필터

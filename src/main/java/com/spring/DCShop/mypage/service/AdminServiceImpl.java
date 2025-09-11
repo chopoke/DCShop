@@ -446,77 +446,53 @@ public class AdminServiceImpl implements AdminService{
 	@Override
 	public void adminOrderDetail(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		String oNumStr = request.getParameter("o_num");
-		String pdIdStr = request.getParameter("pd_id");
-		if(oNumStr == null || pdIdStr == null) {
-			model.addAttribute("dto", null);
-			return;
-		}
-		long oNum = Long.parseLong(oNumStr);
-		long pdId = Long.parseLong(pdIdStr);
+		String oNum = request.getParameter("o_num");
+		if (oNum == null || oNum.trim().isEmpty()) {
+	        oNum = (String) request.getSession().getAttribute("last_o_num"); // ★ 보정
+	    }
+
+	    if (oNum == null || oNum.trim().isEmpty()) {
+	        model.addAttribute("info", null);
+	        model.addAttribute("items", java.util.Collections.emptyList());
+	        model.addAttribute("detailError", "주문번호가 없습니다.");
+	        return;
+	    }
 		
-		Map<String, Object> dto = dao.findOrderDetail(oNum, pdId);
-		model.addAttribute("dto", dto);
+		Map<String, Object> info = dao.adminOrderInfo(oNum);
+		List<Map<String, Object>> items = dao.adminOrderProductList(oNum);
+		
+		String pdId = request.getParameter("pd_id");
+		request.getSession().setAttribute("last_o_num", oNum);
+		model.addAttribute("info", info);
+		model.addAttribute("items", items);
+		model.addAttribute("o_num", oNum);
+		model.addAttribute("pd_id", pdId);
+		
 	}
 
-	// 주문관리 - 상태변경
+	// 주문관리 - 주문상태변경
 	@Override
 	public void adminOrderStatus(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
-		String toStatus = request.getParameter("to");
-		String orderKey = request.getParameter("order_keys");
-		
-
-		 // trim + 빈 값 체크 (isEmpty() 사용 안 함)
-	    if (toStatus != null)  toStatus  = toStatus.trim();
-	    if (orderKey != null) orderKey = orderKey.trim();
-	    if (toStatus == null || toStatus.length() == 0
-	     || orderKey == null || orderKey.length() == 0) {
-	        return;
-	    }
-
-	    // "o_num:pd_id,o_num:pd_id,..." -> List<Map{oNum,pdId}>
-	    List<Map<String, Object>> keys = new ArrayList<>();
-
-	    int i = 0;
-	    int n = orderKey.length();
-	    while (i < n) {
-	        // 콤마까지 토큰 자르기
-	        int j = orderKey.indexOf(',', i);
-	        String token = (j == -1) ? orderKey.substring(i) : orderKey.substring(i, j);
-
-	        // trim (간단히)
-	        token = token.trim();
-	        if (token.length() > 0) {
-	            // 콜론 위치 찾기
-	            int c = token.indexOf(':');
-	            if (c > 0 && c < token.length() - 1) {
-	                String left  = token.substring(0, c).trim();
-	                String right = token.substring(c + 1).trim();
-	                try {
-	                    long oNum = Long.parseLong(left);
-	                    long pdId = Long.parseLong(right);
-	                    Map<String, Object> m = new HashMap<>();
-	                    m.put("oNum", oNum);
-	                    m.put("pdId", pdId);
-	                    keys.add(m);
-	                } catch (NumberFormatException ignore) {
-	                    // 숫자 아님 → 스킵
-	                }
-	            }
-	        }
-
-	        if (j == -1) break; // 마지막 토큰 처리 끝
-	        i = j + 1;          // 다음 토큰 시작
-	    }
-
-	    if (keys.size() > 0) {
-	        Map<String, Object> param = new HashMap<>();
-	        param.put("toStatus", toStatus);
-	        param.put("keys", keys);
-	        dao.adminOrderStatus(param);
-	    }
+        String newStatus = request.getParameter("new_status");
+        String oNum = request.getParameter("o_num");
         
+        int updated = dao.adminOrderStatus(oNum, newStatus);
+        model.addAttribute("updatedCount", updated);
+        request.getSession().setAttribute("last_o_num", oNum);
+	}
+
+	// 주문관리 - 배송상태변경
+	@Override
+	public void adminOrderDelivery(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		String oNum  = request.getParameter("o_num");
+	    String state = request.getParameter("new_state");
+	    
+	    int updated = dao.adminOrderDelivery(oNum, state);
+	    model.addAttribute("updatedShipCount", updated);
+	    request.getSession().setAttribute("last_o_num", oNum);
+		
 	}
 	
 

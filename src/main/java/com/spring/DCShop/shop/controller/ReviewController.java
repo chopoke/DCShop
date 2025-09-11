@@ -14,8 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.spring.DCShop.shop.dto.ProductDTO;
-import com.spring.DCShop.shop.service.ProductService;
 import com.spring.DCShop.shop.service.ReviewServiceImpl;
 
 @Controller

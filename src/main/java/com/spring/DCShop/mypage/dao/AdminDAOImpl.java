@@ -167,20 +167,34 @@ public class AdminDAOImpl implements AdminDAO{
 		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.adminCountOrder", sc);
 	}
 	
-	// 주문관리 - 상세
+	// 주문관리 - 상세_정보
 	@Override
-	public Map<String, Object> findOrderDetail(long oNum, long pdId) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("oNum", oNum);
-		map.put("pdId", pdId);
-		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.findOrderDetail", map);
+	public Map<String, Object> adminOrderInfo(String oNum) {
+		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.adminOrderInfo", oNum);
 	}
 	
-	// 주문관리 - 상태변경
+	// 주문관리 - 상세_상품목록
 	@Override
-	public int adminOrderStatus(Map<String, Object> param) {
-		int statusCnt = sqlSession.update("com.spring.DCShop.mypage.dao.AdminDAO.adminOrderStatus", param);
-		return statusCnt;
+	public List<Map<String, Object>> adminOrderProductList(String oNum) {
+		return sqlSession.selectList("com.spring.DCShop.mypage.dao.AdminDAO.adminOrderProductList", oNum);
+	}
+	
+	// 주문관리 - 주문상태변경
+	@Override
+	public int adminOrderStatus(String oNum, String newStatus) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("oNum", oNum);
+		param.put("newStatus", newStatus);
+		return sqlSession.update("com.spring.DCShop.mypage.dao.AdminDAO.adminOrderStatus", param);
+	}
+	
+	// 주문관리 - 배송상태변경
+	@Override
+	public int adminOrderDelivery(String oNum, String newStatus) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("oNum", oNum);
+		param.put("newStatus", newStatus);
+		return sqlSession.update("com.spring.DCShop.mypage.dao.AdminDAO.adminOrderDelivery", param);
 	}
 	
 	

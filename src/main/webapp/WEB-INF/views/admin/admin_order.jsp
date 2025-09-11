@@ -200,9 +200,9 @@
                     <!-- 주문번호(링크) — 표시: o_num만 / 전송: o_num + pd_id -->
                     <td class="py-3 px-3 align-middle">
                       <div class="cell-scroll">
-                        <a href="${path}/admin_order/detail?o_num=${o.o_num}&pd_id=${o.pd_id}" class="text-blue-600 hover:underline font-medium">
-                          #${o.o_num}
-                        </a>
+                        <a href="${path}/admin_order_detail?o_num=${o.o_num}<c:if test='${not empty o.pd_id}'>&amp;pd_id=${o.pd_id}</c:if>" class="text-blue-600 hover:underline font-medium">
+						  #${o.o_num}
+						</a>
                       </div>
                     </td>
 

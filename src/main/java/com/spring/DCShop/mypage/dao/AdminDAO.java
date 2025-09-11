@@ -74,10 +74,15 @@ public interface AdminDAO {
 	// 주문관리 - 건수
 	public int adminCountOrder(Map<String,  Object> sc);
 	
-	// 주문관리 - 상세
-	public Map<String, Object> findOrderDetail(long oNum, long pdId);
+	// 주문관리 - 상세_정보
+	public Map<String, Object> adminOrderInfo(String oNum);
+	// 주문관리 - 상세_상품목록
+	public List<Map<String, Object>> adminOrderProductList(String oNum);
 	
-	// 주문관리 - 상태변경
-	public int adminOrderStatus(Map<String, Object> param);
+	// 주문관리 - 주문상태변경
+	public int adminOrderStatus(String oNum, String newStatus);
+	
+	// 주문관리 - 배송상태변경
+	public int adminOrderDelivery(String oNum, String newStatus);
 	
 }

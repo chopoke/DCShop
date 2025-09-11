@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 
 public interface OrderService {
 

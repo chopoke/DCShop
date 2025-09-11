@@ -62,7 +62,11 @@ public interface AdminService {
 	public void adminOrderDetail(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
 	
-	// 주문관리 - 상태변경
+	// 주문관리 - 주문상태변경
 	public void adminOrderStatus(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
+	
+	// 주문관리 - 배송상태변경
+	public void adminOrderDelivery(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException;
 }
