@@ -1,6 +1,5 @@
 package com.spring.DCShop.mypage.dao;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +11,7 @@ import com.spring.DCShop.mypage.dto.CartDTO;
 import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.dto.MypageDTO;
 import com.spring.DCShop.mypage.dto.OrderDTO;
+import com.spring.DCShop.mypage.dto.ProductDTO;
 
 @Repository
 public class MypageDAOImpl implements MypageDAO{
@@ -112,5 +112,18 @@ public class MypageDAOImpl implements MypageDAO{
 	public int userInfoDelete(Map<String, Object> map) {
 		int deleteCnt = sqlSession.update("com.spring.DCShop.mypage.dao.MypageDAO.userInfoDelete", map);
 		return deleteCnt;
+	}
+
+	@Override
+	public List<MyPetDTO> userOfPets(int u_member_id) {
+		List<MyPetDTO> petINfo = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.userOfPets", u_member_id);
+		return petINfo;
+	}
+
+	@Override
+	public List<ProductDTO> productInfo(Map<String, Object> map) {
+		System.out.println(map);
+		List<ProductDTO> productInfo = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.productInfo", map);
+		return productInfo;
 	}
 }

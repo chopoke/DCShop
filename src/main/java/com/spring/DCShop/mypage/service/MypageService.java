@@ -1,6 +1,8 @@
 package com.spring.DCShop.mypage.service;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,4 +48,7 @@ public interface MypageService {
 	
 	// 회원탈퇴
 	public int deleteUserInfo(HttpServletRequest request, HttpServletResponse response, Model model);
+	
+	// 회원가입-펫등록 기반정보, 상품 5개 추천하기
+	public void chooseRandomProduct(HttpServletRequest request, HttpServletResponse response, Model model);
 }

@@ -47,6 +47,9 @@ public class MypageController {
 		// 주문 상품 리스트와 장바구니 리스트 가져와서 뿌려주기
 		myService.getCartAndOrderList(request, response, model);
 		
+		// 랜덤
+		myService.chooseRandomProduct(request, response, model);
+		
 		// 세셔정보 없으면 만들어주고 있으면 가져오기
 		HttpSession session = request.getSession(false);
 	    String loginId = (String) session.getAttribute("sessionid");

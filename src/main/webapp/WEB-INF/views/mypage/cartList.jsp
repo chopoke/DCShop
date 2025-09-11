@@ -125,10 +125,20 @@
 	
 	// 수량 증가
    function plusFunction(pdId) {
-		console.log(pdId);
+	   const qtyId = "qty-" + pdId;  
+		const qtyPdId = "qty-input-" + pdId;
+	    const pd_stock = document.getElementById("pd_stock-"+pdId);
+	   
+	    const input = document.getElementById(qtyPdId);
+
+	    if(input.value == pd_stock.value) {
+		   alert(input.value + "갯수는 현 재고의 수량을 초과합니다.");
+		   return false;
+	    }
+	    
 		let obj = new Object();
 		obj.pdId = pdId;
-		   
+		
 		let jsonData = JSON.stringify(obj);
 	    $.ajax({
 	    	url : CTX + '/incQty.do',
@@ -137,8 +147,6 @@
 	    	contentType: 'application/json;charset=UTF-8',
 	    	success : function(res) {
 	    		if (res.result === 'ok') {
-	    	        // 해당 카드의 수량 텍스트 교체
-	    			//document.getElementById(qtyId).textContent = res.qty;
 	    			window.location.href = CTX + '/cartList';
 	    		}
 	    	},
@@ -149,7 +157,7 @@
    }
     // 수량 감소
    function decFunction(pdId) {
-
+	    const qtyId = "qty-" + pdId;  
 		let obj = new Object();
 		obj.pdId = pdId;
 		   
@@ -161,8 +169,6 @@
 	    	contentType: 'application/json;charset=UTF-8',
 	    	success : function(res) {
 	    		if (res.result === 'ok') {
-	    	        // 해당 카드의 수량 텍스트 교체
-	    			//document.getElementById(qtyId).textContent = res.qty;
 	    			window.location.href = CTX + '/cartList';
 	    		}
 	    	},
@@ -242,8 +248,7 @@
 	  	    form.appendChild(input);
 	  }
    }
-     
-
+   
 </script>
 <style type="text/css">
 .hero-section1 {
@@ -251,6 +256,16 @@
 	background: white;
 	padding: .5rem 0;
 	padding-top: 5rem;
+}
+
+.qty-input::-webkit-inner-spin-button,
+.qty-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.qty-input {
+  -moz-appearance: textfield;
 }
 </style>
 </head>
@@ -338,7 +353,8 @@
 				<!-- 장바구니 상품 목록 -->
 				<div class="card shadow-sm mb-4">
 					<div class="card-body p-0">
-						<div class="table-responsive" style="max-height:300px; overflow-y:auto; border:1px solid #ccc;">
+						<div class="table-responsive"
+							style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc;">
 							<table class="table align-middle mb-0">
 								<thead class="table-light">
 									<tr>
@@ -368,9 +384,10 @@
 												value="${item.pdId}" data-ct-id="${item.ctNum}" /></td>
 											<td>
 												<div class="d-flex align-items-center gap-3">
-													<input type="hidden" class="pd-img"
-														value="<c:out value="${pd.pdImageUrl}"/>"> <input
-														type="hidden" class="pd-discount"
+													<input type="hidden" id="pd_stock-${pd.pdId}"
+														value="${pd.pdStock}" /> <input type="hidden"
+														class="pd-img" value="<c:out value="${pd.pdImageUrl}"/>">
+													<input type="hidden" class="pd-discount"
 														value="<c:out value="${pd.pdDiscountRate}"/>"> <img
 														src="<c:url value="${pd.pdImageUrl}"/>" alt="상품 이미지"
 														class="rounded w-16 h-16 object-cover" width="64"
@@ -385,9 +402,22 @@
 																${pd.pdOption}
 															</c:if>
 														</div>
+
+
+														<c:if test="${pd.pdStock < 5}">
+															<div id="stockArea"
+																class="flex items-center text-red-500 text-[10px] font-semibold space-x-2">
+																<i class="ri-alarm-warning-line text-[10px]"></i> <span>품절임박
+																	| </span> <span id="stockText"><c:out
+																		value="${pd.pdStock}" />개 남았습니다</span>
+															</div>
+														</c:if>
 													</div>
 												</div>
 											</td>
+
+
+											<!-- 수량 조절 -->
 											<td class="text-center">
 												<div class="d-inline-flex align-items-center gap-2">
 													<button class="btn btn-outline-secondary btn-sm"
@@ -395,8 +425,8 @@
 														<i class="bi bi-dash"></i>
 													</button>
 
-													<span class="quantity-display fw-semibold pd-qty"> <c:out
-															value="${item.ctQuantity}" />
+													<span id="qty-${item.pdId}" class="quantity-display fw-semibold pd-qty">
+														<input type="number" class="form-control text-center qty-input" id="qty-input-${item.pdId}" style="width: 6rem;" inputmode="numeric" value="<c:out value="${item.ctQuantity}"/>"/>
 													</span>
 
 													<button class="btn btn-outline-secondary btn-sm"
