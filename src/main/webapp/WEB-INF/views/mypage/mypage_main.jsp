@@ -97,26 +97,33 @@
 									<th scope="col" class="px-6 py-3 rounded-s-lg">주문번호</th>
 									<th scope="col" class="px-6 py-3">제품명</th>
 									<th scope="col" class="px-6 py-3">배송상태</th>
-									<th scope="col" class="px-6 py-3">수량</th>
 									<th scope="col" class="px-6 py-3 rounded-e-lg">가격</th>
 								</tr>
 							</thead>
 							<tbody>
 								<c:choose>
 									<c:when test="${not empty order}">
-										<c:forEach var="c" items="${order}">
+										<c:forEach var="o" items="${order}">
 											<c:set var="hasPd"
-												value="${not empty c.productDto and fn:length(c.productDto) gt 0}" />
-											<c:set var="pd" value="${hasPd ? c.productDto[0] : null}" />
+												value="${not empty o.productDto and fn:length(o.productDto) gt 0}" />
+											<c:set var="pd" value="${hasPd ? o.productDto[0] : null}" />
 
 											<tr class="bg-white dark:bg-gray-800">
 												<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-													<c:out value="${c.o_Num}" />
+													<a href="${path}/orderDetail?o_num=${o.o_Num}" class="px-6 py-4 text-gray-900 no-underline"> 
+														<c:out value="${o.o_Num}" />
+													</a>
 												</th>
-												<td class="px-6 py-4"><c:out value="${pd.pdName}" /></td>
-												<td class="px-6 py-4"><c:out value="${c.o_Delivery_State}" /></td>
-												<td class="px-6 py-4"><c:out value="${c.o_Count}" /></td>
-												<td class="px-6 py-4"><c:out value="${c.o_Count * (hasPd ? pd.pdPrice : 0)}" /></td>
+												<td class="px-6 py-4">
+													<c:out value="${pd.pdName}" />
+													<c:if test="${o.productCount > 1}">
+														외 <c:out value="${o.productCount - 1}"/>건
+													</c:if>
+												</td>
+												<td class="px-6 py-4"><c:out value="${o.o_Delivery_State}" /></td>
+												<td class="px-6 py-4">
+													<fmt:formatNumber value="${o.o_price}" type="number" maxFractionDigits="0"/>원
+												</td>
 											</tr>
 										</c:forEach>
 									</c:when>
@@ -134,8 +141,9 @@
 									<th scope="row" class="px-6 py-3 text-base">Total</th>
 									<td class="px-6 py-3"></td>
 									<td class="px-6 py-3"></td>
-									<td class="px-6 py-3">${productCountSum}</td>
-									<td class="px-6 py-3">${productTotalPrice}</td>
+									<td class="px-6 py-3">
+										<fmt:formatNumber value="${productTotalPrice}" type="number" maxFractionDigits="0"/>원
+									</td>
 								</tr>
 							</tfoot>
 						</table>

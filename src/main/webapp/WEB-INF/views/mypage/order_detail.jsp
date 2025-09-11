@@ -118,7 +118,7 @@ tailwind.config = {
 	                  class="rounded-full w-28 h-28 object-cover mb-4"> -->
 	
 	            <h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
-	            <h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
+	            <h2 class="text-lg font-semibold">${sessionScope.session_u_nickname}</h2>
 	            <p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
 	            <button
 	               class="px-4 py-2 bg-black text-white !rounded-lg mb-6 hover:bg-blue-600"
@@ -230,9 +230,11 @@ tailwind.config = {
 			              	<tr>
 			                <td class="px-6 py-4">
 			                  <div class="flex items-center">
-			                    <div
-			                      class="h-16 w-16 flex-shrink-0 rounded-lg bg-gray-100"
-			                    ><img alt="${product.pdName}" src="<c:url value='${product.pdImageUrl}'/>"></div>
+			                    <div class="h-16 w-16 flex-shrink-0 rounded-lg bg-gray-100">
+			                    	<a href="${path}/ad_shop_detailAction.pd?pdId=${product.pdId}" class="h-16 w-16 flex-shrink-0 rounded-lg"> 
+				                    	<img alt="${product.pdName}" src="<c:url value='${product.pdImageUrl}'/>" class="h-16 w-16 flex-shrink-0 rounded-lg">
+									</a>
+			                    </div>
 			                    <div class="ml-4">
 			                      <div class="text-sm font-medium text-gray-900">
 			                        ${product.pdName}
@@ -445,7 +447,7 @@ tailwind.config = {
 	<%@ include file="../setting/footer.jsp"%>
 	<!-- 푸터 끝 -->
 	<script type="text/javascript">
-	const dil = '${order[0].o_Status}';
+	const dil = '${order[0].o_Delivery_State}';
 
 	const statusCircle1 = document.getElementById('statusCircle1');
 	const statusCircle2 = document.getElementById('statusCircle2');

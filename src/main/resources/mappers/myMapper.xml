@@ -8,7 +8,7 @@
  	
 	<!-- OrderList 가져오기 : 주문 리스트 -->
 	<select id="getOrderList" resultMap="orderMap">
-	    <![CDATA[
+	    <!-- <![CDATA[
 			SELECT *
 			FROM (
 			  SELECT t.*,
@@ -17,7 +17,29 @@
 			  WHERE  u_member_id = #{u_member_id}
 			)
 			WHERE rn <= 5
-		]]>
+		]]> -->
+		<![CDATA[
+        SELECT *
+        FROM (
+            SELECT 
+                o.o_num,
+                MAX(o.o_delivery_state) AS o_delivery_state,
+                MAX(o.o_status) AS o_status,
+                SUM(o.o_price * o.o_count)
+                + CASE 
+         			WHEN SUM(o.o_price * o.o_count) > 100000 THEN 0 
+         			ELSE MAX(pd.pd_shipping_fee) 
+       			  END AS o_price,
+                COUNT(o.pd_id) AS product_count,          
+                MIN(o.pd_id) AS pd_id               
+            FROM order_tbl o, product_tbl pd
+            WHERE o.u_member_id = #{u_member_id}
+              AND o.pd_id = pd.pd_id
+            GROUP BY o.o_num
+            ORDER BY MAX(o.o_date) DESC, o.o_num DESC
+        ) 
+        WHERE ROWNUM <= 5
+    	]]>
 	</select>
 	
 	<resultMap id="orderMap" type="com.spring.DCShop.mypage.dto.OrderDTO">
@@ -38,6 +60,7 @@
 	  <result property="o_Request" 	        column="o_request"/>
 	  <result property="o_Status" 	        column="o_status"/>
 	  <result property="o_payment_key" 	    column="o_payment_key"/>
+	  <result property="productCount"       column="product_count"/>
 	  <collection property="productDto"     column="pd_id"     select="getProductList"/>
 	</resultMap>
 	

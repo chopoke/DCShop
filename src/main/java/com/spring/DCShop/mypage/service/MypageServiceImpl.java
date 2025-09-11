@@ -54,12 +54,10 @@ public class MypageServiceImpl implements MypageService {
 		orderList.forEach(i -> {
 			productCountSum += i.getO_Count();
 		});
-
+		
 		productTotalPrice = 0;
 		orderList.forEach(i -> {
-			i.getProductDto().forEach(j -> {
-				productTotalPrice += i.getO_Count() * j.getPdPrice();
-			});
+			productTotalPrice += i.getO_price();
 		});
 		
 		model.addAttribute("order", orderList);
@@ -248,9 +246,7 @@ public class MypageServiceImpl implements MypageService {
 
 		productTotalPrice = 0;
 		orderList.forEach(i -> {
-			i.getProductDto().forEach(j -> {
-				productTotalPrice += i.getO_Count() * j.getPdPrice();
-			});
+			productTotalPrice += i.getO_price();
 		});
 		
 		model.addAttribute("order", orderList);

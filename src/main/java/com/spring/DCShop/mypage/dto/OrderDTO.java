@@ -12,7 +12,7 @@ public class OrderDTO {
 	private String o_name;
 	private String o_phone;
 	private Date o_date;
-	private Timestamp o_date_detail;
+	private Timestamp o_date_detail;		// 결제 상세날짜
 	private int o_price;
 	private String o_Delivery_State;
 	private Date o_Delivery_Date;
@@ -23,6 +23,7 @@ public class OrderDTO {
 	private String o_Request;
 	private String o_Status;
 	private String o_payment_key;
+	private int productCount; 		// 상품개수
 	private List<ProductDTO> productDto;
 	
 	public OrderDTO() {
@@ -32,7 +33,7 @@ public class OrderDTO {
 
 	public OrderDTO(Long o_Num, int pd_Id, int u_Member_Id, String o_name, String o_phone, Date o_date, Timestamp o_date_detail, int o_price,
 			String o_Delivery_State, Date o_Delivery_Date, int o_Count, String o_Payment, String o_Address,
-			int o_Zip_Code, String o_Request, String o_Status, String o_payment_key, List<ProductDTO> productDto) {
+			int o_Zip_Code, String o_Request, String o_Status, String o_payment_key, int productCount, List<ProductDTO> productDto) {
 		super();
 		this.o_Num = o_Num;
 		this.pd_Id = pd_Id;
@@ -51,6 +52,7 @@ public class OrderDTO {
 		this.o_Request = o_Request;
 		this.o_Status = o_Status;
 		this.o_payment_key = o_payment_key;
+		this.productCount = productCount;
 		this.productDto = productDto;
 	}
 
@@ -196,6 +198,14 @@ public class OrderDTO {
 
 	public void setProductDto(List<ProductDTO> productDto) {
 		this.productDto = productDto;
+	}
+	
+	public int getProductCount() {
+		return productCount;
+	}
+	
+	public void setProductCount(int productCount) {
+		this.productCount = productCount;
 	}
 
 	@Override

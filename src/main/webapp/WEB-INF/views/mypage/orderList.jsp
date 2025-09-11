@@ -146,32 +146,13 @@
 								<option>주문취소</option>
 							</select>
 						</div>
-
-						<!-- 결제수단 -->
-						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-2">결제수단</label>
-							<select
-								class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent pr-8">
-								<option>전체</option>
-								<option>카드</option>
-								<option>계좌이체</option>
-								<option>카카오페이</option>
-								<option>토스페이</option>
-								<option>네이버페이</option>
-							</select>
+						<div></div>
+						<div align="right">
+							<button
+								class="px-6 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-blue-600 transition-colors whitespace-nowrap !rounded-button">
+								검색</button>
 						</div>
-
-						<!-- 주문번호 검색 -->
-						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-2">주문번호</label>
-							<div class="flex space-x-2">
-								<input type="text" placeholder="주문번호를 입력하세요"
-									class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
-								<button
-									class="px-6 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-blue-600 transition-colors whitespace-nowrap !rounded-button">
-									검색</button>
-							</div>
-						</div>
+						
 					</div>
 				</div>
 
@@ -212,23 +193,23 @@
 							</thead>
 							<tbody>
 								<c:if test="${not empty order}">
-									<c:forEach var="item" items="${order}">
-										<c:set var="pd" value="${item.productDto[0]}" />
+									<c:forEach var="o" items="${order}">
+										<c:set var="pd" value="${o.productDto[0]}" />
 										<tr class="bg-white dark:bg-gray-800">
 											<th class="px-4 py-3 text-left">
 												<input type="checkbox" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" />
 											</th>
 											<td >
-												<a href="${path}/orderDetail?o_num=${item.o_Num}" class="px-6 py-4 text-gray-900 no-underline"> 
-													<c:out value="${item.o_Num}" />
+												<a href="${path}/orderDetail?o_num=${o.o_Num}" class="px-6 py-4 text-gray-900 no-underline"> 
+													<c:out value="${o.o_Num}" />
 												</a>
 											</td>
-											<td class="px-6 py-4"><c:out value="${item.o_date}" /></td>
-											<td class="px-6 py-4"><c:out value="${item.o_Payment}" /></td>
+											<td class="px-6 py-4"><c:out value="${o.o_date}" /></td>
+											<td class="px-6 py-4"><c:out value="${o.o_Payment}" /></td>
 											<td class="px-6 py-4">
-												<fmt:formatNumber value="${item.o_price}" type="number" maxFractionDigits="0"/>원
+												<fmt:formatNumber value="${o.o_price}" type="number" maxFractionDigits="0"/>원
 											</td>
-											<td class="px-6 py-4"><c:out value="${item.o_Status}" /></td>
+											<td class="px-6 py-4"><c:out value="${o.o_Status}" /></td>
 										</tr>
 									</c:forEach>
 								</c:if>
