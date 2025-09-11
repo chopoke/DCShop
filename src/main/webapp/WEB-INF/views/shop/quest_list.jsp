@@ -233,7 +233,8 @@
 									<div class="flex justify-end">
 										<button onclick="submitAdminReply()"
 											class="!bg-primary !text-white px-4 py-2 !rounded-button hover:!bg-orange-600 transition-colors">
-											답변 등록</button>
+											답변 등록
+										</button>
 									</div>
 								</div>
 							</div>
@@ -243,7 +244,8 @@
 				<div class="border-t px-6 py-4">
 					<button onclick="closeQuestionDetail()"
 						class="w-full bg-primary text-white py-2 rounded-button hover:bg-orange-600 transition-colors">
-						닫기</button>
+						닫기
+					</button>
 				</div>
 			</div>
 		</div>
@@ -333,15 +335,24 @@
             } else if (isAdmin) { // 답변이 없지만, 관리자일 경우
                 adminReplyForm.style.display = 'block';
             }
-
+			
             // 모달 데이터 채우기
             elTitle.textContent = dto.q_title || '(제목 없음)';
-            elWriter.textContent = (dto.u_member_id != null) ? `작성자: ${dto.u_member_id}` : '';
-            elDate.textContent = dto.q_regDate || '';
+            elWriter.textContent = (dto.u_id != null) ? ('작성자:' + dto.u_id) : '';
             elContent.textContent = dto.q_content || '';
             const cat = (dto.q_category && dto.q_category.trim()) || '기타';
-            elCategoryBadge.textContent = cat;
+            elCategoryBadge.textContent = '분류 : ' + cat;
             document.getElementById("modalqNum").value = qNum; // DTO에서 가져온 qNum을 hidden 필드에 저장
+            
+            if (dto.q_regDate) {	//타임스탬프로 값이 변형된 날짜 데이터를 사람이 알아볼 수 있도록 포매팅
+                const date = new Date(dto.q_regDate);
+                const formattedDate = date.getFullYear() + '-' +
+                                     String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                                     String(date.getDate()).padStart(2, '0');
+                elDate.textContent = formattedDate;
+            } else {
+                elDate.textContent = '';
+            }
             
         } catch (e) {
             console.error(e);
