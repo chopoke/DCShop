@@ -52,6 +52,43 @@ $(function(){
   });
 });
 </script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: "#ff6b35",
+          secondary: "#ffa726",
+        },
+        borderRadius: {
+          none: "0px",
+          sm: "4px",
+          DEFAULT: "8px",
+          md: "12px",
+          lg: "16px",
+          xl: "20px",
+          "2xl": "24px",
+          "3xl": "32px",
+          full: "9999px",
+          button: "8px",
+        },
+      },
+    },
+  };
+</script>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+  rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+  rel="stylesheet" />
+<style>
+:where([class^="ri-"])::before {
+  content: "\f3c2";
+}
+</style>
 </head>
 
 <body class="page-shop">
@@ -67,68 +104,75 @@ $(function(){
 
       <div id="section2">
         <div id="right">
-          <div class="table_div">
-            <form id="insertForm" name="insertForm"
-                  method="post"
-                  enctype="multipart/form-data"
-                  action="<c:url value='/review_insertAction.bc?pd_id=${pdId}'/>"> 
+          <div class="bg-white rounded-lg shadow-sm border p-6 max-w-3xl mx-auto">
+  <form id="insertForm" class="space-y-6"
+        method="post" enctype="multipart/form-data"
+        action="<c:url value='/review_insertAction.bc?pd_id=${pdId}'/>"> 
 
-              <input type="hidden" name="pd_id" id="pd_id" value="${pdId}"/>
-              <input type="hidden" name="u_member_id" id="u_member_id" value="${memberId}"/>
+    <input type="hidden" name="pd_id" id="pd_id" value="${pdId}"/>
+    <input type="hidden" name="u_member_id" id="u_member_id" value="${memberId}"/>
 
-              <table>
-                <tr>
-                  <th style="width:200px">작성자</th>
-                  <td style="width:200px; text-align:center">
-                    <c:out value="${sessionScope.session_u_nickname}"/>
-                  </td>
+    <!-- 상품 이미지 + 상품명 -->
+    <div class="flex items-center space-x-6">
+      <img src="${pd_image_url}" alt="${pd_name}"
+           class="w-24 h-24 object-cover rounded-lg border" />
+      <div>
+        <h2 class="text-xl font-semibold text-gray-900">${pd_name}</h2>
+        <p class="text-sm text-gray-500">상품명: ${pd_name}</p>
+      </div>
+    </div>
 
-                  <th style="width:200px">상품번호</th>
-                  <td style="width:200px; text-align:center">
-                    <c:out value="${pdId}"/>
-                  </td>
-                </tr>
+    <!-- 작성자 + 평점 -->
+    <div class="grid grid-cols-2 gap-6">
+      <!-- 작성자 -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">작성자</label>
+        <p class="mt-1 text-gray-900">${sessionScope.session_u_nickname}</p>
+      </div>
 
-                <tr>
-                  <th>평점</th>
-                  <td colspan="3" style="text-align:center">
-                    <select name="r_score" id="r_score">
-                      <option value="">-- 평점 선택 --</option>
-                      <option value="5">★★★★★ (5)</option>
-                      <option value="4">★★★★☆ (4)</option>
-                      <option value="3">★★★☆☆ (3)</option>
-                      <option value="2">★★☆☆☆ (2)</option>
-                      <option value="1">★☆☆☆☆ (1)</option>
-                    </select>
-                  </td>
-                </tr>
+      <!-- 평점 -->
+      <div>
+        <label for="r_score" class="block text-sm font-medium text-gray-700">평점</label>
+        <select id="r_score" name="r_score"
+                class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:ring-primary focus:border-primary">
+          <option value="">-- 평점 선택 --</option>
+          <option value="5">★★★★★ (5)</option>
+          <option value="4">★★★★☆ (4)</option>
+          <option value="3">★★★☆☆ (3)</option>
+          <option value="2">★★☆☆☆ (2)</option>
+          <option value="1">★☆☆☆☆ (1)</option>
+        </select>
+      </div>
+    </div>
 
-                <tr>
-                  <th>리뷰 내용</th>
-                  <td colspan="3" style="text-align:center">
-                    <textarea rows="6" cols="80" name="r_content" id="r_content"
-                              placeholder="상품 사용 후기를 입력해주세요."></textarea>
-                  </td>
-                </tr>
+    <!-- 리뷰 내용 -->
+    <div>
+      <label for="r_content" class="block text-sm font-medium text-gray-700">리뷰 내용</label>
+      <textarea id="r_content" name="r_content" rows="6"
+        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:ring-primary focus:border-primary"
+        placeholder="상품 사용 후기를 입력해주세요."></textarea>
+    </div>
 
-                <tr>
-                  <th>이미지</th>
-                  <td colspan="3" style="text-align:center">
-                    <input type="file" name="r_imgFile" id="r_imgFile" accept="image/*" />
-                  </td>
-                </tr>
+    <!-- 리뷰 이미지 업로드 -->
+    <div>
+      <label for="r_imgFile" class="block text-sm font-medium text-gray-700">이미지</label>
+      <input type="file" id="r_imgFile" name="r_imgFile" accept="image/*"
+        class="mt-1 block w-full text-sm text-gray-600 border border-gray-300 rounded-lg shadow-sm focus:ring-primary focus:border-primary"/>
+    </div>
 
-                <tr>
-                  <td colspan="4" style="text-align:center">
-                    <br>
-                    <input type="button" class="btn btn-dark" value="작성" id="btnSave">
-                    <input type="button" class="btn btn-dark" value="초기화" id="btnReset">
-                  </td>
-                </tr>
-              </table>
-            </form>
-            <!-- /form -->
-          </div>
+    <!-- 버튼 영역 -->
+    <div class="flex justify-end space-x-3">
+      <button type="button" id="btnSave"
+        class="bg-primary text-white px-4 py-2 rounded-button hover:bg-orange-600 transition-colors">
+        작성
+      </button>
+      <button type="button" id="btnReset"
+        class="border border-gray-300 px-4 py-2 rounded-button hover:bg-gray-50">
+        초기화
+      </button>
+    </div>
+  </form>
+</div>
         </div>
       </div>
     </div>
