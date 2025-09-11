@@ -261,18 +261,15 @@
 			    </div>
 			
 			  <!-- 푸터 버튼 -->
-				  <div class="flex flex-wrap px-6 sm:px-8 py-5 bg-gray-50 rounded-b-2xl p-5 gap-3">
-				  		<button type="button" onclick="location.href='${pageContext.request.contextPath}/mypage_quit.do'"
-				  				class="rounded-lg text-red-500 hover:bg-gray-100 px-3 active:scale-[.99] transition">
-				  				회원탈퇴</button>
-				  		 <button type="button" onclick="location.href='${pageContext.request.contextPath}/mypage_main.do'"
-				            class="flex-1 h-12 border border-gray-500 rounded-xl bg-white-600 text-blue font-semiboldshadow-sm hover:bg-gray-100 active:scale-[.99] transition">
-				            취소 </button>
-				    	<button type="submit"
-				            class="flex-1 h-12 rounded-xl bg-blue-600 text-white font-semiboldshadow-sm hover:bg-blue-700 active:scale-[.99] transition">
-				            완료 </button>
-				  </div>
-		  	</div>
+			  <div class="flex flex-wrap px-6 sm:px-8 py-5 bg-gray-50 rounded-b-2xl p-5 gap-3">
+			  		 <button type="button" onclick="location.href='${pageContext.request.contextPath}/mypage_main.do'"
+			            class="flex-1 h-12 border border-gray-500 rounded-xl bg-white-600 text-blue font-semiboldshadow-sm hover:bg-gray-100 active:scale-[.99] transition">
+			            취소 </button>
+			    	<button type="submit"
+			            class="flex-1 h-12 rounded-xl bg-blue-600 text-white font-semiboldshadow-sm hover:bg-blue-700 active:scale-[.99] transition">
+			            완료 </button>
+			  </div>
+		  </div>
 			</form>
                
             </section>

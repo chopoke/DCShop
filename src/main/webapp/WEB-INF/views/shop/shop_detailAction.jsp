@@ -57,10 +57,29 @@
     location.href = '${path}/cartTOPay.do?pdId=' + pdId + '&qty=' + qty;
   }
 </script>
+
+<style>
+  .btn-write-review{
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding:.55rem .9rem; border:1px solid #2563eb;
+    border-radius:8px; color:#2563eb; background:#fff;
+    font-weight:600; font-size:14px; text-decoration:none;
+  }
+  .btn-write-review:hover{ background:#2563eb; color:#fff; }
+</style>
+
 </head>
 <body class="product-detail-page">
   <div class="wrap">
     <%@ include file="/WEB-INF/views/setting/header.jsp" %>
+    
+    <!-- 플래시 메시지(alert) -->
+    <c:if test="${not empty sessionScope.msg}">
+      <script>
+        alert('${fn:escapeXml(sessionScope.msg)}');
+      </script>
+      <c:remove var="msg" scope="session" />
+    </c:if>
 	<div id="header-spacer" style="height: var(--header-height, 96px)"></div>
 
     <div id="container">
@@ -279,12 +298,17 @@
 				    <c:choose>
 					  <c:when test="${empty recentReviews}">
 					    <p class="empty">아직 등록된 리뷰가 없습니다.</p>
-					    <c:url var="revLink1" value="/review_insert.bc">
-		                    <c:param name="pd_id"         value="${dto.pd_id}" />
-		                    <c:param name="pd_name"       value="${dto.pd_name}" />
-		                    <c:param name="pd_image_url"  value="${dto.pd_image_url}" />
-		                  </c:url>
-		                  <a class="link" href="${revLink1}">리뷰 작성하기</a>
+
+						<c:url var="revLink1" value="/review_insert.bc">
+						  <c:param name="pd_id"        value="${dto.pd_id}" />
+						  <c:param name="pd_name"      value="${dto.pd_name}" />
+						  <c:param name="pd_image_url" value="${dto.pd_image_url}" />
+						</c:url>
+						
+						<a href="${revLink1}" class="btn-write-review">
+						  <i class="fa-regular fa-pen-to-square"></i>
+						  리뷰 작성하기
+						</a>
 					  </c:when>
 				      <c:otherwise>
 					    <%-- 최신 리뷰 5개 --%>

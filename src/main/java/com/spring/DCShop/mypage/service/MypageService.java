@@ -15,6 +15,10 @@ public interface MypageService {
 
 	public void getCartAndOrderList(HttpServletRequest request, HttpServletResponse response, Model model);
 	
+	//mypage qna리스트.
+	public void myQnaList(HttpServletRequest request, HttpServletResponse response, Model model)
+ 			throws ServletException, IOException;
+	
 	// 정보수정 진입 전, 비밀번호 체크
 	public int passwordCheck(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;

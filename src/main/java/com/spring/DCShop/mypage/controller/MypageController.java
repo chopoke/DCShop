@@ -20,12 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.service.MypageService;
-
-
+import com.spring.DCShop.shop.service.ReviewService;
 
 @Controller
 public class MypageController {
@@ -33,6 +31,9 @@ public class MypageController {
 	
 	@Autowired
 	private MypageService myService;
+	
+	@Autowired
+	private ReviewService reviewService;
 	
 	@RequestMapping("mypage_main.do")
 	public String mypage_main(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -161,6 +162,16 @@ public class MypageController {
 	    return "redirect:/mypage_editPet.do"; // 목록 페이지로
 	}
 
+	@RequestMapping("mypage_qna.do")
+	public String admin_qna(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_qna ===");
+		
+		myService.myQnaList(request, response, model);
+		
+		return "mypage/mypage_qna";
+	}
+	
 	// 장바구니 페이지 이동
 	@RequestMapping("cartList")
 	public String cartList(HttpServletRequest req, HttpServletResponse res, Model model)
@@ -218,7 +229,6 @@ public class MypageController {
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("ok", cnt == 1);
 	    return result;
-
 	}
 	
 	// 탈퇴 확인 페이지
@@ -248,4 +258,14 @@ public class MypageController {
             return "redirect:mypage_quit.do?err=1";
         }
 	}
+
+	
+	// 내가 쓴 리뷰 리스트
+    @RequestMapping("/mypage/my_reviews.do")
+    public String myReviews(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws Exception {
+        reviewService.myReviewList(request, response, model);
+        
+        return "mypage/my_reviews";
+    }
 }

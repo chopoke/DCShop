@@ -33,4 +33,15 @@ public interface ReviewDAO {
 	// 리뷰 작성 처리
 	public void insertReview(ReviewDTO dto);
 	
+	// 구매 여부 체크 
+	public int hasPurchased(Map<String,Object> param);
+	
+	// 중복 리뷰 체크
+	public int alreadyReviewed(Map<String,Object> param);
+	
+	
+	public int myReviewCount(int uMemberId);
+	
+	public List<Map<String,Object>> myReviewList(Map<String,Object> param);
+	
 }

@@ -158,7 +158,7 @@
 										</c:forEach>
 									</div>
 									<span class="text-sm text-gray-600">${dto.review_count}</span>
-								</div>
+								</div> 
 								<div class="mt-auto flex justify-end">  
 							    <span 
 							    class="inline-flex items-center h-10 px-4 rounded-lg bg-blue-300 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 active:scale-[.99] transition"
