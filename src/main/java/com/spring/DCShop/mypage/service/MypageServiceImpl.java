@@ -3,6 +3,8 @@ package com.spring.DCShop.mypage.service;
 import java.io.IOException;
 import java.io.File;
 import java.sql.Date;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +25,17 @@ import com.spring.DCShop.mypage.dto.CartDTO;
 import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.dto.MypageDTO;
 import com.spring.DCShop.mypage.dto.OrderDTO;
-import com.spring.DCShop.shop.dto.QuestDTO;
+import com.spring.DCShop.mypage.dto.ProductDTO;
+
 
 @Service
 public class MypageServiceImpl implements MypageService {
 
 	@Autowired
 	private MypageDAO myDao;
+	
+	private int cat = 0;
+	private int dog = 0;
 	
 	private int productCountSum;
 	private int productTotalPrice;
@@ -370,5 +376,36 @@ public class MypageServiceImpl implements MypageService {
 		map.put("u_password", pwd);
 		int deleteCtn = myDao.userInfoDelete(map);
 		return deleteCtn;
+	}
+
+
+	@Override
+	public void chooseRandomProduct(HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		Integer memberId = (Integer) request.getSession().getAttribute("session_u_member_id");
+		List<MyPetDTO> petInfo = myDao.userOfPets(memberId);
+		
+		System.out.println("petInfo" + petInfo);
+		
+		Map<String, Object> map = new HashMap<>();
+
+		// 주인이 타입 등록한 종류에 따른
+		petInfo.forEach(i -> {
+			if(i.getP_type().equals("고양이")) {
+				cat = 2;
+			}
+			if(i.getP_type().equals("강아지")) {
+				dog = 1;
+			}
+		});
+		
+		map.put("cat", cat);
+		map.put("dog", dog);
+		
+		List<ProductDTO> productList = myDao.productInfo(map);
+		Collections.shuffle(productList);
+		model.addAttribute("productList", productList);
+		
+		
 	}
 }

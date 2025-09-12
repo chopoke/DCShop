@@ -21,10 +21,6 @@
 	
 	<%-- 배송비 0원이 있으면 플래그 true --%>
 	<c:if test="${pdShip == 0}">
-<<<<<<< HEAD
-=======
-		
->>>>>>> 503ca6d7f737867d1baf372de51fb55162effa0d
 		<c:set var="hasFreeShipping" value="true" />
 	</c:if>
 	
@@ -148,52 +144,58 @@ tailwind.config = {
    
    // 수량 증가
    function plusFunction(pdId) {
-      console.log(pdId);
-      let obj = new Object();
-      obj.pdId = pdId;
-         
-      let jsonData = JSON.stringify(obj);
-       $.ajax({
-          url : CTX + '/incQty.do',
-          type : 'POST',
-          data : jsonData,
-          contentType: 'application/json;charset=UTF-8',
-          success : function(res) {
-             if (res.result === 'ok') {
-                  // 해당 카드의 수량 텍스트 교체
-                //document.getElementById(qtyId).textContent = res.qty;
-                window.location.href = CTX + '/cartList';
-             }
-          },
-          error : function(request, status, error) {
-          },
-       });
+	   const qtyId = "qty-" + pdId;  
+		const qtyPdId = "qty-input-" + pdId;
+	    const pd_stock = document.getElementById("pd_stock-"+pdId);
+	   
+	    const input = document.getElementById(qtyPdId);
+
+	    if(input.value == pd_stock.value) {
+		   alert(input.value + "갯수는 현 재고의 수량을 초과합니다.");
+		   return false;
+	    }
+	    
+		let obj = new Object();
+		obj.pdId = pdId;
+		
+		let jsonData = JSON.stringify(obj);
+	    $.ajax({
+	    	url : CTX + '/incQty.do',
+	    	type : 'POST',
+	    	data : jsonData,
+	    	contentType: 'application/json;charset=UTF-8',
+	    	success : function(res) {
+	    		if (res.result === 'ok') {
+	    			window.location.href = CTX + '/cartList';
+	    		}
+	    	},
+	    	error : function(request, status, error) {
+	    	},
+	    });
    
    }
     // 수량 감소
    function decFunction(pdId) {
-
-      let obj = new Object();
-      obj.pdId = pdId;
-         
-      let jsonData = JSON.stringify(obj);
-       $.ajax({
-          url : CTX + '/dicQty.do',
-          type : 'POST',
-          data : jsonData,
-          contentType: 'application/json;charset=UTF-8',
-          success : function(res) {
-             if (res.result === 'ok') {
-                  // 해당 카드의 수량 텍스트 교체
-                //document.getElementById(qtyId).textContent = res.qty;
-                window.location.href = CTX + '/cartList';
-             }
-          },
-          error : function(request, status, error) {
-          },
-       });
-      
-   }
+	    const qtyId = "qty-" + pdId;  
+		let obj = new Object();
+		obj.pdId = pdId;
+		   
+		let jsonData = JSON.stringify(obj);
+	    $.ajax({
+	    	url : CTX + '/dicQty.do',
+	    	type : 'POST',
+	    	data : jsonData,
+	    	contentType: 'application/json;charset=UTF-8',
+	    	success : function(res) {
+	    		if (res.result === 'ok') {
+	    			window.location.href = CTX + '/cartList';
+	    		}
+	    	},
+	    	error : function(request, status, error) {
+	    	},
+	    });
+	   
+	}
    
    // 상품 제거
    function removeFunction(pdId, button) {
@@ -265,8 +267,7 @@ tailwind.config = {
             form.appendChild(input);
      }
    }
-     
-
+   
 </script>
 <style type="text/css">
 
@@ -276,6 +277,16 @@ tailwind.config = {
 	background: white;
 	padding: .5rem 0;
 	padding-top: 5rem;
+}
+
+.qty-input::-webkit-inner-spin-button,
+.qty-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.qty-input {
+  -moz-appearance: textfield;
 }
 </style>
 </head>
@@ -359,7 +370,8 @@ tailwind.config = {
 				<!-- 장바구니 상품 목록 -->
 				<div class="card shadow-sm mb-4">
 					<div class="card-body p-0">
-						<div class="table-responsive">
+						<div class="table-responsive"
+							style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc;">
 							<table class="table align-middle mb-0">
 								<thead class="table-light">
 									<tr>
@@ -373,46 +385,81 @@ tailwind.config = {
 									</tr>
 								</thead>
 								<tbody class="border-top" id="cartItems">
-										<c:forEach var="item" items="${cart}">
-											
-											<div id="cart-item" data-id="${item.pdId}"></div>
-											<c:set var="pd" value="${item.productDto[0]}" />
-											<c:set var="rate" value="${pd.pdDiscountRate}" />
-											<c:set var="hasDiscount" value="${rate gt 0 and rate lt 100}" />
-											<c:set var="discPriceInt" value="${ (pd.pdPrice * (100 - rate)) div 100 }" />
-											<tr class="cart-row" data-pd-id="${item.pdId}" data-ct-id="${item.ctNum}">
-												<td class="ps-3">
-													<input class="form-check-input cart-item-checkbox" type="checkbox"
-														value="${item.pdId}" data-ct-id="${item.ctNum}" />
-												</td>
-												<td>
-													<div class="d-flex align-items-center gap-3">
-														<input type="hidden" class="pd-img" value="<c:out value="${pd.pdImageUrl}"/>">
-														<input type="hidden" class="pd-discount" value="<c:out value="${pd.pdDiscountRate}"/>">
-														<img src="<c:url value="${pd.pdImageUrl}"/>" alt="상품 이미지"
-															class="rounded w-16 h-16 object-cover" width="64" height="64" />
-														<div>
-															<div class="fw-semibold pd-name">
-																<c:out value="${pd.pdName}" />
-															</div>
 
-															<div class="text-secondary small mt-1">
-																<c:if test="${pd.pdOption != ''}">
+									<c:forEach var="item" items="${cart}">
+
+										<div id="cart-item" data-id="${item.pdId}"></div>
+										<c:set var="pd" value="${item.productDto[0]}" />
+										<c:set var="rate" value="${pd.pdDiscountRate}" />
+										<c:set var="hasDiscount" value="${rate gt 0 and rate lt 100}" />
+										<c:set var="discPriceInt"
+											value="${ (pd.pdPrice * (100 - rate)) div 100 }" />
+										<tr class="cart-row" data-pd-id="${item.pdId}"
+											data-ct-id="${item.ctNum}">
+											<td class="ps-3"><input
+												class="form-check-input cart-item-checkbox" type="checkbox"
+												value="${item.pdId}" data-ct-id="${item.ctNum}" /></td>
+											<td>
+												<div class="d-flex align-items-center gap-3">
+													<input type="hidden" id="pd_stock-${pd.pdId}"
+														value="${pd.pdStock}" /> <input type="hidden"
+														class="pd-img" value="<c:out value="${pd.pdImageUrl}"/>">
+													<input type="hidden" class="pd-discount"
+														value="<c:out value="${pd.pdDiscountRate}"/>"> <img
+														src="<c:url value="${pd.pdImageUrl}"/>" alt="상품 이미지"
+														class="rounded w-16 h-16 object-cover" width="64"
+														height="64" />
+													<div>
+														<div class="fw-semibold pd-name">
+															<c:out value="${pd.pdName}" />
+														</div>
+
+														<div class="text-secondary small mt-1">
+															<c:if test="${pd.pdOption != ''}">
 																${pd.pdOption}
 															</c:if>
 															</div>
 														</div>
-													</div>
-												</td>
-												<td class="text-center">
-													<div class="d-inline-flex align-items-center gap-2">
-														<button class="btn btn-outline-secondary btn-sm"
-															onclick="decFunction(${item.pdId})" aria-label="수량 감소">
-															<i class="bi bi-dash"></i>
-														</button>
 
-														<span class="quantity-display fw-semibold pd-qty"> 
-															<c:out value="${item.ctQuantity}" />
+
+														<c:if test="${pd.pdStock < 5}">
+															<div id="stockArea"
+																class="flex items-center text-red-500 text-[10px] font-semibold space-x-2">
+																<i class="ri-alarm-warning-line text-[10px]"></i> <span>품절임박
+																	| </span> <span id="stockText"><c:out
+																		value="${pd.pdStock}" />개 남았습니다</span>
+															</div>
+														</c:if>
+													</div>
+												</div>
+											</td>
+
+
+											<!-- 수량 조절 -->
+											<td class="text-center">
+												<div class="d-inline-flex align-items-center gap-2">
+													<button class="btn btn-outline-secondary btn-sm"
+														onclick="decFunction(${item.pdId})" aria-label="수량 감소">
+														<i class="bi bi-dash"></i>
+													</button>
+
+													<span id="qty-${item.pdId}" class="quantity-display fw-semibold pd-qty">
+														<input type="number" class="form-control text-center qty-input" id="qty-input-${item.pdId}" style="width: 6rem;" inputmode="numeric" value="<c:out value="${item.ctQuantity}"/>"/>
+													</span>
+
+													<button class="btn btn-outline-secondary btn-sm"
+														onclick="plusFunction(${item.pdId})" aria-label="수량 증가">
+														<i class="bi bi-plus"></i>
+													</button>
+												</div>
+											</td>
+
+											<td class="text-end fw-semibold "><c:choose>
+													<c:when test="${hasDiscount}">
+														<span class="price-now money"> <fmt:formatNumber
+																value="${discPriceInt}" type="currency"
+																currencySymbol="₩" minFractionDigits="0"
+																maxFractionDigits="0" />
 														</span>
 
 														<button class="btn btn-outline-secondary btn-sm"
