@@ -393,9 +393,9 @@
 						<a href="${path}/notice_detail?b_num=${n.b_num}&listClick=1"
 							style="text-decoration: none; color: #333;">${n.b_title}</a>
 					</div>
-					<div style="font-size: 12px; color: #9a9a9a; margin-top: 2px;">
+						 <div style="font-size: 12px; color: #9a9a9a; margin-top: 2px; text-align: right;">
 						<fmt:formatDate value="${n.b_dateposted}" pattern="yyyy.MM.dd" />
-						· 조회 ${n.b_views}
+						
 					</div>
 				</div>
 			</c:if>
@@ -409,9 +409,9 @@
 						<a href="${path}/notice_detail?b_num=${e.b_num}&listClick=1"
 							style="text-decoration: none; color: #333;">${e.b_title}</a>
 					</div>
-					<div style="font-size: 12px; color: #9a9a9a; margin-top: 2px;">
+					<div style="font-size: 12px; color: #9a9a9a; margin-top: 2px; text-align: right;">
 						<fmt:formatDate value="${e.b_dateposted}" pattern="yyyy.MM.dd" />
-						· 조회 ${e.b_views}
+						
 					</div>
 				</div>
 			</c:if>
