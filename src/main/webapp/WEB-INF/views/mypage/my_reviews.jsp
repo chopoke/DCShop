@@ -37,32 +37,23 @@
       <!-- 사이드바 -->
       <aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
         <!-- 프로필 -->
-        <form id="avatarForm" action="<c:url value='/mypage_imgUpload.do'/>"
-              method="post" enctype="multipart/form-data">
-          <input type="hidden" name="u_id" value="${sessionScope.sessionid}">
-          <input type="file" id="u_image" name="u_image" accept="image/*" style="display:none;">
-        </form>
-
-        <c:choose>
-          <c:when test="${empty dto.u_image}">
-            <c:url var="imgUrl" value="/resources/img_main/mypage_default.png" />
-          </c:when>
-          <c:otherwise>
-            <c:url var="imgUrl" value="/resources/image/profile/${dto.u_image}" />
-          </c:otherwise>
-        </c:choose>
-
-        <div class="relative inline-block">
-          <img id="profileImg" src="${imgUrl}" alt="Profile"
-               class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
-          <label for="u_image"
-                 class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-white border shadow
-                        flex items-center justify-center cursor-pointer hover:shadow-md"
-                 title="프로필 사진 변경">
-            <i class="ri-pencil-fill text-gray-700 text-base"></i>
-            <span class="sr-only">프로필 사진 변경</span>
-          </label>
-        </div>
+        <form id="avatarForm" action="${path}/mypage_imgUpload.do" method="post" enctype="multipart/form-data">
+			  	<input type="hidden" name="u_id" value="${sessionScope.sessionid}">
+			  	<input type="file" id="u_image" name="u_image" accept="image/*" style="display:none;">
+			</form>
+			<c:choose>
+				  <c:when test="${empty dto.u_image}">
+				    <c:url var="imgUrl" value="/resources/img_main/mypage_default.png" />
+				  </c:when>
+				  <c:otherwise>
+				    <c:url var="imgUrl" value="/resources/image/profile/${dto.u_image}" />
+				  </c:otherwise>
+			</c:choose>
+			
+			<img id="profileImg"
+			     src="${imgUrl}"
+			     alt="Profile"
+			     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
 
         <h2 class="text-lg font-semibold">${sessionScope.sessionid}</h2>
         <h2 class="text-lg font-semibold">${sessionScope.session_u_nickname}</h2>
@@ -157,19 +148,5 @@
 
   <%@ include file="/WEB-INF/views/setting/footer.jsp" %>
 
-  <script>
-    // 프로필 이미지 업로드 트리거
-    document.addEventListener('DOMContentLoaded', function(){
-      const img  = document.getElementById('profileImg');
-      const file = document.getElementById('u_image');
-      const form = document.getElementById('avatarForm');
-      if (!img || !file || !form) return;
-      img.addEventListener('click', () => file.click());
-      file.addEventListener('change', () => {
-        if(!file.files || !file.files[0]) return;
-        form.submit();
-      });
-    });
-  </script>
 </body>
 </html>

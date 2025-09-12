@@ -414,9 +414,9 @@
 										<c:forEach var="item" items="${cateList}">
 											<c:if test="${ item >= 1100 and item < 1600 }">
 												<a href="#" 
-												class="js-subcat text-sm text-gray-500 hover:text-primary no-underline transition-colors whitespace-nowrap px-1"
-												data-pet-type="1"
-												data-subcategory="${item}">
+													class="js-subcat text-sm text-gray-500 hover:text-primary no-underline transition-colors whitespace-nowrap px-1"
+													data-pet-type="1"
+													data-subcategory="${item}">
 													${dogcategoryNames[item]}</a> 
 											</c:if>
 										</c:forEach>
@@ -425,7 +425,7 @@
 										<c:forEach var="item" items="${cateList}">
 											<c:if test="${ item >= 2100 and item < 2600 }">
 												<a href="#" 
-												class="js-subcat text-sm text-gray-500 hover:text-primary no-underline transition-colors  whitespace-nowrap px-1"
+												class="js-subcat text-sm text-gray-500 hover:text-primary no-underline transition-colors  whitespace-nowrap px-1" 
 												data-pet-type="2"
 												data-subcategory="${item}">
 													${catcategoryNames[item]}</a> 

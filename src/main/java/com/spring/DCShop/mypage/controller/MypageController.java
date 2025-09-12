@@ -148,8 +148,14 @@ public class MypageController {
 		logger.info("=== url -> mypage_editPet ===");
 		
 		HttpSession session = req.getSession(false);
-	    if (session == null || session.getAttribute("sessionid") == null) {
-	        return "redirect:login_main.do";
+	    if (session != null) {
+	        String loginId = (String) session.getAttribute("sessionid");
+	        if (loginId != null) {
+	            myService.findById(loginId, model);
+	        }
+	    }
+	    else {
+	    	return "login_main.do";
 	    }
         String loginId = (String) session.getAttribute("sessionid");
         myService.findById(loginId, model);
@@ -170,6 +176,19 @@ public class MypageController {
 			throws ServletException, IOException {
 		logger.info("=== url -> admin_qna ===");
 		
+		HttpSession session = request.getSession(false);
+	    if (session != null) {
+	        String loginId = (String) session.getAttribute("sessionid");
+	        if (loginId != null) {
+	            myService.findById(loginId, model);
+	        }
+	    }
+	    else {
+	    	return "login_main.do";
+	    }
+        String loginId = (String) session.getAttribute("sessionid");
+        myService.findById(loginId, model);
+        
 		myService.myQnaList(request, response, model);
 		
 		return "mypage/mypage_qna";
@@ -182,6 +201,7 @@ public class MypageController {
 		logger.info("=== url -> cartList ===");
 		
 		String sessionid = (String)req.getSession().getAttribute("sessionid");
+		myService.findById(sessionid, model);
 		
 		if(sessionid == null) {
 			return "user/login/login_main";
@@ -218,8 +238,9 @@ public class MypageController {
 		if(sessionid == null) {
 			return "user/login/login_main";
 		}
-		
-		myService.orderListById(req, res, model);
+        myService.findById(sessionid, model);
+        
+		myService.orderListInfo(req, res, model);
 		
 		return "mypage/orderList";
 	}
@@ -254,10 +275,14 @@ public class MypageController {
 	// 탈퇴 확인 페이지
 	@RequestMapping("mypage_quit.do")
 	public String mypage_quit(HttpServletRequest req, HttpServletResponse res, Model model) {
-		HttpSession session = req.getSession(false);
-	    if (session == null || session.getAttribute("sessionid") == null) {
-	        return "redirect:login_main.do";
-	    }
+		
+		String sessionid = (String)req.getSession().getAttribute("sessionid");
+		myService.findById(sessionid, model);
+		
+		if(sessionid == null) {
+			return "user/login/login_main";
+		}
+	    
 		return "mypage/mypage_quit";
 	}
 	
@@ -284,6 +309,14 @@ public class MypageController {
     @RequestMapping("/mypage/my_reviews.do")
     public String myReviews(HttpServletRequest request, HttpServletResponse response, Model model)
             throws Exception {
+    	
+    	String sessionid = (String)request.getSession().getAttribute("sessionid");
+		myService.findById(sessionid, model);
+		
+		if(sessionid == null) {
+			return "user/login/login_main";
+		}
+		
         reviewService.myReviewList(request, response, model);
         
         return "mypage/my_reviews";

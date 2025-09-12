@@ -85,23 +85,27 @@ tailwind.config = {
 			class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
 
 			<!-- 사이드바 -->
-         	<aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
-	            <!-- 프로필 -->
-	            <form id="avatarForm" action="${path}/mypage_imgUpload.do"
-	               method="post" enctype="multipart/form-data">
-	               <input type="hidden" name="u_id" value="${sessionScope.sessionid}">
-	               <input type="file" id="u_image" name="u_image" accept="image/*"
-	                  style="display: none;">
-	            </form>
-	            <c:choose>
-	               <c:when test="${empty dto.u_image}">
-	                  <c:url var="imgUrl" value="/resources/img_main/mypage_default.png" />
-	               </c:when>
-	               <c:otherwise>
-	                  <c:url var="imgUrl"
-	                     value="/resources/image/profile/${dto.u_image}" />
-	               </c:otherwise>
-	            </c:choose>
+			<aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
+				<!-- 프로필 -->
+				<form id="avatarForm" action="${path}/mypage_imgUpload.do" method="post" enctype="multipart/form-data">
+			  	<input type="hidden" name="u_id" value="${sessionScope.sessionid}">
+			  	<input type="file" id="u_image" name="u_image" accept="image/*" style="display:none;">
+				</form>
+				<c:choose>
+					  <c:when test="${empty dto.u_image}">
+					    <c:url var="imgUrl" value="/resources/img_main/mypage_default.png" />
+					  </c:when>
+					  <c:otherwise>
+					    <c:url var="imgUrl" value="/resources/image/profile/${dto.u_image}" />
+					  </c:otherwise>
+				</c:choose>
+				
+				<img id="profileImg"
+				     src="${imgUrl}"
+				     alt="Profile"
+				     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
+					<button
+						class="px-4 py-2 bg-stone-950 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
 
 	            <div class="relative inline-block">
 	               <img id="profileImg" src="${imgUrl}" alt="Profile"

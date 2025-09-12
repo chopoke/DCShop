@@ -259,5 +259,23 @@ tailwind.config = {
 	<%@ include file="../setting/footer.jsp"%>
 	<!-- 푸터 끝 -->
 	
+
+<!-- 이미지 변경용 -->
+<script>
+   document.addEventListener('DOMContentLoaded', function(){
+      const img = document.getElementById('profileImg');		// 이미지 input
+      const file = document.getElementById('u_image');			// 이미지 file
+      const form = document.getElementById('avatarForm');		// 히든값 전송용 폼
+      
+      if (!img || !file || !form) return;
+      
+      img.addEventListener('click', () => file.click());
+      
+      file.addEventListener('change', () => {
+         if(!file.files || !file.files[0]) return;
+         form.submit();
+      });
+   });
+</script>	
 </body>
 </html>
