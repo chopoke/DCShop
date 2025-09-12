@@ -12,6 +12,7 @@ import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.dto.MypageDTO;
 import com.spring.DCShop.mypage.dto.OrderDTO;
 import com.spring.DCShop.mypage.dto.ProductDTO;
+import com.spring.DCShop.shop.dto.QuestDTO;
 
 
 @Repository
