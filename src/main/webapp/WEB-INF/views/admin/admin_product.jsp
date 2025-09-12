@@ -52,38 +52,43 @@
           <div class="p-4">
 			<p class="text-gray-500 mb-6">상품을 검색하고 상태를 일괄 변경하거나 등록/수정/삭제할 수 있습니다.</p>
             <!-- 검색줄 -->
-            <form action="${path}/admin_product" method="get" class="flex gap-2 w-full mb-3 flex-wrap">
-              <!-- 상태 필터 -->
-              <select name="status" class="w-36 border rounded-lg px-3 py-2">
-                <option value="">상태 전체</option>
-                <option value="ON"   ${param_status == 'ON'   ? 'selected' : ''}>판매중</option>
-                <option value="OFF"  ${param_status == 'OFF'  ? 'selected' : ''}>품절</option>
-                <option value="WAIT" ${param_status == 'WAIT' ? 'selected' : ''}>재입고대기</option>
-              </select>
-
-              <!-- 카테고리 필터 -->
-              <select name="category" class="w-72 border rounded-lg px-3 py-2">
-                <option value="">카테고리 전체</option>
-                <optgroup label="강아지">
-                  <option value="1100" ${param_category=='1100'?'selected':''}>의류</option>
-                  <option value="1200" ${param_category=='1200'?'selected':''}>미용/위생</option>
-                  <option value="1300" ${param_category=='1300'?'selected':''}>화장실</option>
-                  <option value="1400" ${param_category=='1400'?'selected':''}>장난감</option>
-                  <option value="1500" ${param_category=='1500'?'selected':''}>목줄/리드줄</option>
-                </optgroup>
-                <optgroup label="고양이">
-                  <option value="2100" ${param_category=='2100'?'selected':''}>의류</option>
-                  <option value="2200" ${param_category=='2200'?'selected':''}>미용/위생</option>
-                  <option value="2300" ${param_category=='2300'?'selected':''}>모래</option>
-                  <option value="2400" ${param_category=='2400'?'selected':''}>장난감</option>
-                  <option value="2500" ${param_category=='2500'?'selected':''}>스크래쳐</option>
-                </optgroup>
-              </select>
-
-              <!-- 검색창 -->
-              <input type="text" name="q" value="${fn:escapeXml(param_q)}" placeholder="상품명/브랜드 검색" class="flex-1 md:w-72 border rounded-lg px-3 py-2" />
-              <button type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-black">검색</button>
-            </form>
+            <form action="${path}/admin_product" method="get" class="flex items-center gap-2 w-full mb-3 flex-nowrap whitespace-nowrap overflow-x-auto">
+			
+			  <!-- 상태 필터 -->
+			  <select name="status" class="w-28 border rounded-lg px-3 py-2 shrink-0">
+			    <option value="">상태 전체</option>
+			    <option value="ON"   ${param_status == 'ON'   ? 'selected' : ''}>판매중</option>
+			    <option value="OFF"  ${param_status == 'OFF'  ? 'selected' : ''}>품절</option>
+			    <option value="WAIT" ${param_status == 'WAIT' ? 'selected' : ''}>재입고대기</option>
+			  </select>
+			
+			  <!-- 카테고리 필터 (폭 축소) -->
+			  <select name="category" class="w-48 border rounded-lg px-3 py-2 shrink-0">
+			    <option value="">카테고리 전체</option>
+			    <optgroup label="강아지">
+			      <option value="1100" ${param_category=='1100'?'selected':''}>의류</option>
+			      <option value="1200" ${param_category=='1200'?'selected':''}>미용/위생</option>
+			      <option value="1300" ${param_category=='1300'?'selected':''}>화장실</option>
+			      <option value="1400" ${param_category=='1400'?'selected':''}>장난감</option>
+			      <option value="1500" ${param_category=='1500'?'selected':''}>목줄/리드줄</option>
+			    </optgroup>
+			    <optgroup label="고양이">
+			      <option value="2100" ${param_category=='2100'?'selected':''}>의류</option>
+			      <option value="2200" ${param_category=='2200'?'selected':''}>미용/위생</option>
+			      <option value="2300" ${param_category=='2300'?'selected':''}>모래</option>
+			      <option value="2400" ${param_category=='2400'?'selected':''}>장난감</option>
+			      <option value="2500" ${param_category=='2500'?'selected':''}>스크래쳐</option>
+			    </optgroup>
+			  </select>
+			
+			  <!-- 검색창 (고정폭) -->
+			  <input type="text" name="q" value="${fn:escapeXml(param_q)}"
+			         placeholder="상품명/브랜드 검색"
+			         class="w-64 md:w-72 border rounded-lg px-3 py-2 shrink-0" />
+			
+			  <!-- 검색 버튼 -->
+			  <button type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-black shrink-0">검색</button>
+			</form>
 
             <!-- 버튼 줄 -->
             <div class="flex flex-wrap gap-2 mb-3">
