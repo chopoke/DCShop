@@ -92,6 +92,12 @@ function singleCheck(e) {
 		document.inputform.u_nickname.focus();
 		return false;
 	}
+	
+	var specialRule = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+    if(!specialRule.test(document.inputform.u_password.value)) {
+        alert("특수문자 포함되어 있지않습니다.");
+        return false;
+    }
 
 	// [필수] - 비밀번호 불일치 => 과제
 	if (document.inputform.u_password.value != document.inputform.re_password.value) {
