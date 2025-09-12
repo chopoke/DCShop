@@ -2,8 +2,9 @@ package com.spring.DCShop.mypage.service;
 
 import java.io.IOException;
 import java.io.File;
-import java.io.IOException;
 import java.sql.Date;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,13 +25,18 @@ import com.spring.DCShop.mypage.dto.CartDTO;
 import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.dto.MypageDTO;
 import com.spring.DCShop.mypage.dto.OrderDTO;
+import com.spring.DCShop.mypage.dto.ProductDTO;
 import com.spring.DCShop.shop.dto.QuestDTO;
+
 
 @Service
 public class MypageServiceImpl implements MypageService {
 
 	@Autowired
 	private MypageDAO myDao;
+	
+	private int cat = 0;
+	private int dog = 0;
 	
 	private int productCountSum;
 	private int productTotalPrice;
@@ -228,11 +234,10 @@ public class MypageServiceImpl implements MypageService {
 	    }
 		
 		// input경로 정의
-		String saveDir = request.getSession()
-                .getServletContext()
-                .getRealPath("/resources/image/profile/");
-		File dir = new File(saveDir);
-		if (!dir.exists()) dir.mkdirs();
+//		String saveDir = request.getSession().getServletContext().getRealPath("/resources/image/profile/");		// -> tomcat 배포 war폴더
+		String saveDir = "D:\\ICT_Project\\workspace_check\\DCShop\\src\\main\\webapp\\resources\\image\\profile\\";
+		File dir = new File(saveDir);				
+		if (!dir.exists()) dir.mkdirs();			// 폴더 없으면 생성
 		
 	    String savedName = file.getOriginalFilename();		// 원본파일명 그대로 저장
 		file.transferTo(new File(saveDir, savedName));		// 저장!
@@ -372,5 +377,36 @@ public class MypageServiceImpl implements MypageService {
 		map.put("u_password", pwd);
 		int deleteCtn = myDao.userInfoDelete(map);
 		return deleteCtn;
+	}
+
+
+	@Override
+	public void chooseRandomProduct(HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		Integer memberId = (Integer) request.getSession().getAttribute("session_u_member_id");
+		List<MyPetDTO> petInfo = myDao.userOfPets(memberId);
+		
+		System.out.println("petInfo" + petInfo);
+		
+		Map<String, Object> map = new HashMap<>();
+
+		// 주인이 타입 등록한 종류에 따른
+		petInfo.forEach(i -> {
+			if(i.getP_type().equals("고양이")) {
+				cat = 2;
+			}
+			if(i.getP_type().equals("강아지")) {
+				dog = 1;
+			}
+		});
+		
+		map.put("cat", cat);
+		map.put("dog", dog);
+		
+		List<ProductDTO> productList = myDao.productInfo(map);
+		Collections.shuffle(productList);
+		model.addAttribute("productList", productList);
+		
+		
 	}
 }

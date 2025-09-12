@@ -10,6 +10,19 @@ import com.spring.DCShop.user.dto.UserDTO;
 
 public interface AdminDAO {
 
+	// 관리자메인 - 게시판건수
+	public int countBoard();
+	// 관리자메인 - 주문건수
+	public int countOrder();
+	// 관리자메인 - 상품건수
+	public int countProduct();
+	// 관리자메인 - 문의건수
+	public int countQna();
+	// 관리자메인 - 리뷰건수
+	public int countReview();
+	// 관리자메인 - 회원건수
+	public int countUser();
+	
 	// 회원목록-최신가입자5건조회
 	public List<UserDTO> adminUserList1();
 	
@@ -56,6 +69,22 @@ public interface AdminDAO {
 	// 상품관리 - 수정처리
 	public int adminProductUpdate(ShopDTO dto);
 	
+	// 주문관리 - 목록검색
+	public List<Map<String, Object>> findOrder(Map<String, Object> sc);
+	
+	// 주문관리 - 건수
+	public int adminCountOrder(Map<String,  Object> sc);
+	
+	// 주문관리 - 상세_정보
+	public Map<String, Object> adminOrderInfo(String oNum);
+	// 주문관리 - 상세_상품목록
+	public List<Map<String, Object>> adminOrderProductList(String oNum);
+	
+	// 주문관리 - 주문상태변경
+	public int adminOrderStatus(String oNum, String newStatus);
+	
+	// 주문관리 - 배송상태변경
+	public int adminOrderDelivery(String oNum, String newStatus);
 	
 	// 문의관리 - 갯수
 	public int adminQnaCnt(Map<String, Object> map);
@@ -68,4 +97,16 @@ public interface AdminDAO {
 	
 	// 문의관리 - 답변
 	public void updateAnswer(QuestDTO dto);
+	
+	// 리뷰관리 - 총 개수
+	public int adminReviewCount(Map<String, Object> param);
+	
+	// 리뷰관리 - 목록 조회
+	public List<Map<String, Object>> adminReviewList(Map<String, Object> param);
+	
+	// 리뷰관리 - 상세 조회
+	public Map<String, Object> adminReviewDetail(int rNum);
+	
+	// 리뷰관리 - 선택 삭제
+	public int adminReviewDelete(List<Integer> ids);
 }

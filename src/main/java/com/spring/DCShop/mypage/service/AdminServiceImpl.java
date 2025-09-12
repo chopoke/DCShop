@@ -1,6 +1,8 @@
 package com.spring.DCShop.mypage.service;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +30,26 @@ public class AdminServiceImpl implements AdminService{
 	@Autowired
 	private AdminDAO dao;
 
+	// 관리자메인
+	@Override
+	public void adminMain(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		System.out.println("AdminServiceImpl - adminMain()");
+		int boardCount = dao.countBoard();
+		int orderCount = dao.countOrder();
+		int productCount = dao.countProduct();
+		int qnaCount = dao.countQna();
+		int reviewCount = dao.countReview();
+		int userCount = dao.countUser();
+		
+		model.addAttribute("boardCount", boardCount);
+		model.addAttribute("orderCount", orderCount);
+		model.addAttribute("productCount", productCount);
+		model.addAttribute("qnaCount", qnaCount);
+		model.addAttribute("reviewCount", reviewCount);
+		model.addAttribute("userCount", userCount);
+	}
+	
 	// 회원목록-최신가입자5건
 	@Override
 	public void adminUser(HttpServletRequest request, HttpServletResponse response, Model model)
@@ -288,6 +310,112 @@ public class AdminServiceImpl implements AdminService{
     }
     // ---------------------------------
 
+    // 리뷰관리 - 목록/검색/필터
+	@Override
+	public void adminReviewList(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		System.out.println("AdminServiceImpl - adminReviewList()");
+
+        // 1) 파라미터
+        String category = trimOrNull(request.getParameter("category"));  // dog / cat / null
+        String rate     = trimOrNull(request.getParameter("rate"));      // "1"~"5" or null
+        String from     = trimOrNull(request.getParameter("from"));      // YYYY-MM-DD or null
+        String to       = trimOrNull(request.getParameter("to"));        // YYYY-MM-DD or null
+        String q        = trimOrNull(request.getParameter("q"));         // 검색어 or null
+
+        String pageNum  = request.getParameter("pageNum");               // 페이징 (문자)
+        Paging paging   = new Paging(pageNum);
+
+        // 2) 총 건수 조회용 파라미터
+        Map<String, Object> countParam = new HashMap<>();
+        countParam.put("category", category);
+        countParam.put("rate",rate);
+        countParam.put("from", from);
+        countParam.put("to",to);
+        countParam.put("q",q);
+
+        int totalCount = dao.adminReviewCount(countParam);
+        paging.setTotalCount(totalCount); // 내부에서 startRow/endRow 계산됨
+
+        // 3) 목록 조회용 파라미터
+        Map<String, Object> listParam = new HashMap<>();
+        listParam.put("category", category);
+        listParam.put("rate", rate);
+        listParam.put("from", from);
+        listParam.put("to", to);
+        listParam.put("q", q);
+        listParam.put("startRow", paging.getStartRow());
+        listParam.put("endRow", paging.getEndRow());
+
+        // 4) 목록 조회
+        List<Map<String, Object>> reviewList = dao.adminReviewList(listParam);
+
+        // 5) 모델 바인딩
+        model.addAttribute("reviewList", reviewList);
+        model.addAttribute("paging",     paging);
+		
+	}
+
+	// 리뷰관리 - 상세
+	@Override
+	public void adminReviewDetail(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		
+		 // 목록에서 상세로 이동 시 r_num을 파라미터로 넘긴다고 가정
+        // (현재 컨트롤러는 /admin_review_detail 로 매핑되어 있으니 ?r_num= 형태)
+        String rnumStr = request.getParameter("r_num");
+        if (rnumStr == null || rnumStr.trim().isEmpty()) {
+            model.addAttribute("error", "리뷰 번호가 없습니다.");
+            return;
+        }
+
+        int rNum;
+        try {
+            rNum = Integer.parseInt(rnumStr.trim());
+        } catch (NumberFormatException e) {
+            model.addAttribute("error", "리뷰 번호 형식이 올바르지 않습니다.");
+            return;
+        }
+
+        Map<String, Object> detail = dao.adminReviewDetail(rNum); // Map으로 받으면 JSP에서 키만 맞추면 됨
+        model.addAttribute("detail", detail);
+		
+	}
+
+	// 리뷰관리 - 선택 일괄 삭제
+	@Override
+	public void adminReviewDelete(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		 System.out.println("AdminServiceImpl - adminReviewDelete()");
+
+	        // admin_review.jsp의 hidden(name="ids") CSV 를 받는다고 가정
+	        String idsCsv = request.getParameter("ids");
+	        if (idsCsv == null || idsCsv.trim().isEmpty()) {
+	            model.addAttribute("deletedCount", 0);
+	            model.addAttribute("error", "선택된 항목이 없습니다.");
+	            return;
+	        }
+
+	        // CSV → List<Integer>
+	        List<Integer> idList = new ArrayList<>();
+	        for (String s : idsCsv.split(",")) {
+	            if (s == null) continue;
+	            String t = s.trim();
+	            if (t.isEmpty()) continue;
+	            try {
+	                idList.add(Integer.parseInt(t));
+	            } catch (NumberFormatException ignore) {}
+	        }
+	        if (idList.isEmpty()) {
+	            model.addAttribute("deletedCount", 0);
+	            model.addAttribute("error", "선택된 항목이 없습니다.");
+	            return;
+	        }
+
+	        int deleted = dao.adminReviewDelete(idList);
+	        model.addAttribute("deletedCount", deleted);
+	}
+	
     // 상품관리 - 상품수정폼
     @Override
 	public void adminProductUpdateForm(HttpServletRequest request, HttpServletResponse response, Model model)
@@ -351,6 +479,136 @@ public class AdminServiceImpl implements AdminService{
         model.addAttribute("result", updated);
 	}
 
+	// 주문관리 - 목록
+	@Override
+	public void adminOrderList(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		String from = request.getParameter("from");
+		String to = request.getParameter("to");
+		String oStatus = request.getParameter("o_status");
+		String oPayment = request.getParameter("o_payment");
+		String field = request.getParameter("field");
+		String keyword = request.getParameter("keyword");
+		
+		String pageNum = request.getParameter("pageNum");
+		
+		// 숫자 검색(o_num, pd_id) 대비: 숫자일 때만 equal 조건을 적용
+	    Long keywordNum = null;
+	    if (("o_num".equals(field) || "pd_id".equals(field)) && keyword != null && keyword.matches("\\d+")) {
+	        keywordNum = Long.valueOf(keyword);
+	    }
+		
+		Map<String, Object> sc = new HashMap<>();
+		sc.put("from", from);
+		sc.put("to", to);
+		sc.put("oStatus", oStatus);
+		sc.put("oPayment", oPayment);
+		sc.put("keywordText", keyword); // LIKE 등에 사용
+	    sc.put("keywordNum", keywordNum); // 숫자 equal에만 사용
+		
+		Paging paging = new Paging(pageNum);
+		int totalCount = dao.adminCountOrder(sc);
+		paging.setTotalCount(totalCount);
+		
+		sc.put("startRow", paging.getStartRow());
+		sc.put("endRow", paging.getEndRow());
+		List<Map<String, Object>> list = dao.findOrder(sc);
+		
+		model.addAttribute("list", list);
+		
+		Map<String, Object> pagingMap = new HashMap<>();
+		pagingMap.put("pageNum",    paging.getPageNum());
+        pagingMap.put("pageSize",   paging.getPageSize());
+        pagingMap.put("totalCount", paging.getCount());
+        pagingMap.put("startPage",  paging.getStartPage());
+        pagingMap.put("endPage",    paging.getEndPage());
+        pagingMap.put("prev",       paging.getPrev());
+        pagingMap.put("next",       paging.getNext());
+        model.addAttribute("paging", pagingMap);
+		
+        // 페이지 링크 보존 쿼리
+        model.addAttribute("pageQuery", buildPageQuery(from, to, oStatus, oPayment, field, keyword));
+	}
+	
+	private String enc(String s) {
+        if (s == null) return "";
+        return URLEncoder.encode(s, StandardCharsets.UTF_8);
+    }
+
+    private String buildPageQuery(String from, String to, String oStatus, String oPayment, String field, String keyword) {
+        List<String> parts = new ArrayList<>();
+        if (from     != null && !from.isEmpty())     parts.add("from="     + enc(from));
+        if (to       != null && !to.isEmpty())       parts.add("to="       + enc(to));
+        if (oStatus  != null && !oStatus.isEmpty())  parts.add("o_status=" + enc(oStatus));
+        if (oPayment != null && !oPayment.isEmpty()) parts.add("o_payment="+ enc(oPayment));
+        if (field    != null && !field.isEmpty())    parts.add("field="    + enc(field));
+        if (keyword  != null && !keyword.isEmpty())  parts.add("keyword="  + enc(keyword));
+        return String.join("&", parts);
+    }
+
+    // -----------------------------------------------------------------------
+	
+
+	// 주문관리 - 상세
+	@Override
+	public void adminOrderDetail(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		String oNum = request.getParameter("o_num");
+		if (oNum == null || oNum.trim().isEmpty()) {
+	        oNum = (String) request.getSession().getAttribute("last_o_num"); // ★ 보정
+	    }
+
+	    if (oNum == null || oNum.trim().isEmpty()) {
+	        model.addAttribute("info", null);
+	        model.addAttribute("items", java.util.Collections.emptyList());
+	        model.addAttribute("detailError", "주문번호가 없습니다.");
+	        return;
+	    }
+		
+		Map<String, Object> info = dao.adminOrderInfo(oNum);
+		List<Map<String, Object>> items = dao.adminOrderProductList(oNum);
+		
+		String pdId = request.getParameter("pd_id");
+		request.getSession().setAttribute("last_o_num", oNum);
+		model.addAttribute("info", info);
+		model.addAttribute("items", items);
+		model.addAttribute("o_num", oNum);
+		model.addAttribute("pd_id", pdId);
+		
+	}
+
+	// 주문관리 - 주문상태변경
+	@Override
+	public void adminOrderStatus(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+        String newStatus = request.getParameter("new_status");
+        String oNum = request.getParameter("o_num");
+        
+        int updated = dao.adminOrderStatus(oNum, newStatus);
+        model.addAttribute("updatedCount", updated);
+        request.getSession().setAttribute("last_o_num", oNum);
+	}
+
+	// 주문관리 - 배송상태변경
+	@Override
+	public void adminOrderDelivery(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		String oNum  = request.getParameter("o_num");
+	    String state = request.getParameter("new_state");
+	    
+	    int updated = dao.adminOrderDelivery(oNum, state);
+	    model.addAttribute("updatedShipCount", updated);
+	    request.getSession().setAttribute("last_o_num", oNum);
+		
+	}
+	
+
+	
+
+	
+
+	
+	
     // 문의관리 - 문의 리스트 
  	@Override
  	public void adminQnaList(HttpServletRequest request, HttpServletResponse response, Model model)

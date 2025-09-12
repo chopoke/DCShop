@@ -64,10 +64,9 @@ public class EmailValidationServiceImpl implements EmailValidationService, Initi
 	private String writeTimeout;
 	@Value("${mail.debug}")
 	private String debug;
+
 	@Value("${email.code.ttl.millis}")
 	private long codeTtlMillis;
-
-
 	/**
 	 * 
 	 * @purpose 초기값설정 
@@ -123,6 +122,8 @@ public class EmailValidationServiceImpl implements EmailValidationService, Initi
 
 		if(code.equals("0")) {
 			code = generate6Digits();
+		} else {
+			return code;
 		}
 		String subject = "[인증번호] " + code;
 		String body = new StringBuilder().append("인증번호는 ").append(code).append(" 입니다.\n").append("유효시간: ")

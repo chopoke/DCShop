@@ -34,6 +34,8 @@ public interface NoticeDAO {
 	// 공지/이벤트 추천 여부
 	public int noticeIsRecommended(Map<String, Object> map);
 	
+	
+	
 	// 공지/이벤트 추천 추가
 	public void noticeRecommendAddAction(Map<String, Object> map);
 	

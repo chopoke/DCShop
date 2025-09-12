@@ -9,6 +9,7 @@
 <title>슬라이더 카드</title>
 
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" />
 <link
@@ -18,19 +19,7 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
 	rel="stylesheet" />
 
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: { primary: "#57B5E7", secondary: "#8DD3C7" },
-        borderRadius: {
-          none: "0px", sm: "4px", DEFAULT: "8px", md: "12px", lg: "16px",
-          xl: "20px", "2xl": "24px", "3xl": "32px", full: "9999px", button: "8px",
-        },
-      },
-    },
-  };
-</script>
+
 
 <style>
 :where([class^="ri-"])::before {
@@ -124,36 +113,19 @@
 			<div class="flex-1 flex items-center justify-center">
 				<div id="cardContainer"
 					class="flex items-center gap-2 transition-all duration-500 ease-in-out select-none">
-					<!-- 카드들: data-desc(선택) 없으면 img.alt로 대체 -->
-					<div
-						class="card w-32 h-48 flex items-center justify-center rounded-lg overflow-hidden bg-white"
-						data-desc="상품명 : ${p.name}&#10;상품 가격 : <fmt:formatNumber value='${100000}' pattern='#,###'/>원&#10;상품 할인된 가격 : <fmt:formatNumber value='${33444}' pattern='#,###'/>원">
-						<img src="${path}/resources/shop/product/cat_ball01.jpg"
-							alt="Cat ball (장난감)" class="w-full h-full object-cover" />
-					</div>
-					<div
-						class="card w-32 h-48 flex items-center justify-center rounded-lg overflow-hidden bg-white"
-						data-desc="고양이 이발기">
-						<img src="${path}/resources/shop/product/cat_clipper01.jpg"
-							alt="Cat clipper (이발기)" class="w-full h-full object-cover" />
-					</div>
-					<div
-						class="card w-40 h-56 flex items-center justify-center rounded-lg overflow-hidden bg-white"
-						data-desc="반려견 미용 가위">
-						<img src="${path}/resources/shop/product/dog_scissors01.jpg"
-							alt="Dog scissors (미용 가위)" class="w-full h-full object-cover" />
-					</div>
-					<div
-						class="card w-32 h-48 flex items-center justify-center rounded-lg overflow-hidden bg-white"
-						data-desc="강아지 인형">
-						<img src="${path}/resources/shop/product/dog_doll01.jpg"
-							alt="Dog doll (인형)" class="w-full h-full object-cover" />
-					</div>
-					<div
-						class="card w-32 h-48 flex items-center justify-center rounded-lg overflow-hidden bg-white">
-						<img src="${path}/resources/shop/product/cat_ball01.jpg"
-							alt="Cat ball (예비)" class="w-full h-full object-cover" />
-					</div>
+					<c:forEach var="p" items="${productList}" varStatus="st">
+						<c:if test="${st.index < 5}">
+							<a href="${path}/ad_shop_detailAction.pd?pdId=${p.pdId}"
+								class="no-underline">
+								<div
+									class="card w-32 h-48 flex items-center justify-center rounded-lg overflow-hidden bg-white"
+									data-desc="상품명 : ${p.pdName}&#10;상품 가격 : <fmt:formatNumber value='${p.pdPrice}' pattern='#,###'/>원&#10;상품 할인된 가격 : <fmt:formatNumber value='${p.pdPrice * (1 - p.pdDiscountRate/100)}' pattern='#,###'/>원">
+									<img src="${path}/${p.pdImageUrl}" alt="${p.pdName}"
+										class="w-auto h-auto max-w-full max-h-full object-contain" />
+								</div>
+							</a>
+						</c:if>
+					</c:forEach>
 				</div>
 			</div>
 
@@ -220,7 +192,7 @@
       clearInterval(timer);
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (reduce) { playing = false; updateIcon(); return; }
-      timer = setInterval(next, 3000);
+      timer = setInterval(next, 1000);
       playing = true;
       updateIcon();
     }
@@ -232,7 +204,7 @@
     }
 
     /* 사용자 조작 후 잠시 뒤 자동 재시작(단, 사용자 일시정지거나 호버 중이면 재시작 안 함) */
-    function scheduleRestart(delay=3000){
+    function scheduleRestart(delay=1000){
       clearTimeout(restartTimer);
       stopAuto();
       restartTimer = setTimeout(()=>{

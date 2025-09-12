@@ -10,12 +10,12 @@
   html, body { height: 100%; margin: 0; }
   .wrap {
     min-height: 100vh;
-    display: flex;            /* 가운데 정렬 */
+    display: flex;
     align-items: center;
     justify-content: center;
   }
   #successImg {
-    display: none;            /* 알럿 후에 보여줌 */
+    display: none;
     max-width: 60vw;
     max-height: 60vh;
     object-fit: contain;
@@ -26,24 +26,21 @@
   <div class="wrap">
     <c:if test="${joinSuccess}">
       <script type="text/javascript">
-        //alert("반려동물 등록 성공!!");
         // 이미지 보여주기
-        (function(){
-          var img = document.getElementById('successImg');
-          if (img) img.style.display = 'block';
-          // 3초 뒤 이동
-          setTimeout(function(){ window.location = CTX + "/joinFin.do"; }, 3000);
-        })();
+        var img = document.getElementById('successImg');
+        if (img) img.style.display = 'block';
+        // 즉시 이동
+        window.location = CTX + "/joinFin.do";
       </script>
     </c:if>
 
     <c:if test="${!joinSuccess}">
       <script type="text/javascript">
         alert("반려동물 등록 실패!!");
-        setTimeout(function(){ window.location = CTX + "/termsAgreement.do" }, 3000);
+        // 즉시 이동
+        window.location = CTX + "/termsAgreement.do";
       </script>
     </c:if>
-    <!-- 컨텐츠 끝 -->
   </div>
 </body>
 </html>

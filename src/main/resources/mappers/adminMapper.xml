@@ -6,6 +6,15 @@
   
  <mapper namespace="com.spring.DCShop.mypage.dao.AdminDAO">
 	
+	<!-- 관리자메인-건수 -->
+	<select id="countBoard"   resultType="int">SELECT COUNT(*) FROM board_tbl</select>
+	<select id="countOrder"   resultType="int">SELECT COUNT(*) FROM order_tbl</select>
+	<select id="countProduct" resultType="int">SELECT COUNT(*) FROM product_tbl</select>
+	<select id="countQna"     resultType="int">SELECT COUNT(*) FROM qna_tbl</select>
+	<select id="countReview"  resultType="int">SELECT COUNT(*) FROM review_tbl</select>
+	<select id="countUser"    resultType="int">SELECT COUNT(*) FROM user_tbl</select>
+	
+	
 	<!-- 회원가입자 최신 5건 조회 -->
 	<select id="adminUserList1" resultType="com.spring.DCShop.user.dto.UserDTO">
 		<![CDATA[
@@ -333,6 +342,300 @@
 	           pd_updated       = SYSDATE
 	     WHERE pd_id = #{pd_id}
 	  </update>
+	  
+	  <!-- 주문관리 - 목록 -->
+	  <select id="findOrder" parameterType="map" resultType="map">
+	  	SELECT *
+		  FROM (
+		    SELECT ROWNUM AS "rn", x.*
+		    FROM (
+		      SELECT
+		        o.o_num            AS "o_num",
+		        o.pd_id            AS "pd_id",
+		        o.o_date           AS "o_date",
+		        o.o_name           AS "o_name",
+		        o.u_member_id      AS "u_member_id",
+		        o.o_payment        AS "o_payment",
+		        o.o_price          AS "o_price",
+		        o.o_delivery_state AS "o_delivery_state",
+		        o.o_status         AS "o_status"
+		      FROM order_tbl o
+		      WHERE 1=1
+		        <!-- 날짜 범위 -->
+		        <if test="from != null and from != ''">
+		          <![CDATA[ AND o.o_date >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
+		        </if>
+		        <if test="to != null and to != ''">
+		          <![CDATA[ AND o.o_date <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
+		        </if>
+		
+		        <!-- 상태/결제수단 -->
+		        <if test="oStatus != null and oStatus != ''">
+		          AND o.o_status = #{oStatus}
+		        </if>
+		        <if test="oPayment != null and oPayment != ''">
+		          AND o.o_payment = #{oPayment}
+		        </if>
+		
+		        <!-- 키워드: 이름 LIKE -->
+		        <if test="field == 'o_name' and keywordText != null and keywordText != ''">
+		          AND o.o_name LIKE '%' || #{keywordText} || '%'
+		        </if>
+		
+		        <!-- 키워드: 숫자(equal). 숫자 아닐 경우 0건 처리 -->
+		        <if test="field == 'o_num'">
+		          <choose>
+		            <when test="keywordNum != null">
+		              AND o.o_num = #{keywordNum}
+		            </when>
+		            <when test="keywordText != null and keywordText != ''">
+		              AND 1 = 0
+		            </when>
+		          </choose>
+		        </if>
+		
+		        <if test="field == 'pd_id'">
+		          <choose>
+		            <when test="keywordNum != null">
+		              AND o.pd_id = #{keywordNum}
+		            </when>
+		            <when test="keywordText != null and keywordText != ''">
+		              AND 1 = 0
+		            </when>
+		          </choose>
+		        </if>
+		
+		      ORDER BY o.o_date DESC, o.o_num DESC, o.pd_id DESC
+		    ) x
+		    <![CDATA[ WHERE ROWNUM <= #{endRow} ]]>
+		  )
+		  <![CDATA[ WHERE "rn" >= #{startRow} ]]>
+	  </select>
+	  
+	  <!-- 주문관리 - 건수 -->
+	  <select id="adminCountOrder" parameterType="map" resultType="int">
+	  	SELECT COUNT(*)
+		  FROM order_tbl o
+		  WHERE 1=1
+		    <if test="from != null and from != ''">
+		      <![CDATA[ AND o.o_date >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
+		    </if>
+		    <if test="to != null and to != ''">
+		      <![CDATA[ AND o.o_date <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
+		    </if>
+		    <if test="oStatus != null and oStatus != ''">
+		      AND o.o_status = #{oStatus}
+		    </if>
+		    <if test="oPayment != null and oPayment != ''">
+		      AND o.o_payment = #{oPayment}
+		    </if>
+		    <if test="field == 'o_name' and keywordText != null and keywordText != ''">
+		      AND o.o_name LIKE '%' || #{keywordText} || '%'
+		    </if>
+		    <if test="field == 'o_num'">
+		      <choose>
+		        <when test="keywordNum != null">
+		          AND o.o_num = #{keywordNum}
+		        </when>
+		        <when test="keywordText != null and keywordText != ''">
+		          AND 1 = 0
+		        </when>
+		      </choose>
+		    </if>
+		    <if test="field == 'pd_id'">
+		      <choose>
+		        <when test="keywordNum != null">
+		          AND o.pd_id = #{keywordNum}
+		        </when>
+		        <when test="keywordText != null and keywordText != ''">
+		          AND 1 = 0
+		        </when>
+		      </choose>
+		    </if>
+	  </select>
+	  
+	  <!-- 주문관리 - 상세_정보 -->
+	  <select id="adminOrderInfo" parameterType="String" resultType="map">
+	  	SELECT
+		    o.o_num                       AS "o_num",
+		    MIN(o.u_member_id)            AS "u_member_id",
+		    MIN(o.o_name)                 AS "o_name",
+		    MIN(o.o_phone)                AS "o_phone",
+		    MIN(o.o_date)                 AS "o_date",
+		    MIN(o.o_status)               AS "o_status",
+		    MIN(o.o_delivery_state)       AS "o_delivery_state",
+		    MIN(o.o_delivery_date)        AS "o_delivery_date",
+		    MIN(o.o_payment)              AS "o_payment",
+		    SUM(o.o_price)                AS "o_price",
+		    MIN(o.o_address)              AS "recv_addr",   
+		    MIN(o.o_request)              AS "recv_request",
+		    MIN(o.o_zip_code)             AS "o_zip_code",
+		    MIN(o.o_payment_key)          AS "o_pay_no",      
+		    CAST(NULL AS DATE)            AS "o_pay_datetime" 
+		  FROM order_tbl o
+		  WHERE o.o_num = #{oNum}
+		  GROUP BY o.o_num
+	  </select>
+	  <!-- 주문관리 - 상세_상품목록 -->
+	  <select id="adminOrderProductList" parameterType="String" resultType="map">
+	  	SELECT
+		    o.o_num                 AS "o_num",
+		    o.pd_id                 AS "pd_id",
+		    o.o_count               AS "qty",
+		    o.o_price               AS "price",
+		    p.pd_name               AS "pd_name",
+		    p.pd_image_url          AS "pd_image_url"
+		  FROM order_tbl o
+		  JOIN product_tbl p ON p.pd_id = o.pd_id
+		  WHERE o.o_num = #{oNum}
+		  ORDER BY o.pd_id
+	  </select>
+	  
+	  <!-- 주문관리 - 주문상태변경 -->
+	  <update id="adminOrderStatus" parameterType="map">
+	  	UPDATE order_tbl
+	       SET o_status = #{newStatus}
+	     WHERE o_num = #{oNum}
+	  </update>
+	  
+	  <!-- 주문관리 - 배송상태변경 -->
+	  <update id="adminOrderDelivery" parameterType="map">
+	  	UPDATE order_tbl
+	       SET o_delivery_state = #{newStatus}
+	     WHERE o_num = #{oNum}
+	  </update>
+	  
+	  <!-- 리뷰 총 개수 -->
+	  <select id="adminReviewCount" parameterType="map" resultType="int">
+	    <![CDATA[
+	    SELECT COUNT(*)
+	      FROM review_tbl r
+	      JOIN product_tbl p ON p.pd_id = r.pd_id
+	      JOIN user_tbl    u ON u.u_member_id = r.u_member_id
+	     WHERE 1=1
+	    ]]>
+	    <!-- 카테고리: JSP는 'dog'/'cat' → DB는 1/2 이므로 여기서 매핑 -->
+	    <if test="category != null and category != ''">
+	      AND p.pd_pet_category =
+	      <choose>
+	        <when test="category == 'dog'">1</when>
+	        <when test="category == 'cat'">2</when>
+	        <otherwise>p.pd_pet_category</otherwise>
+	      </choose>
+	    </if>
+	
+	    <!-- 평점 -->
+	    <if test="rate != null and rate != ''">
+	      <![CDATA[ AND r.r_score = TO_NUMBER(#{rate}) ]]>
+	    </if>
+	
+	    <!-- 기간 -->
+	    <if test="from != null and from != ''">
+	      <![CDATA[ AND r.r_regDate >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
+	    </if>
+	    <if test="to != null and to != ''">
+	      <![CDATA[ AND r.r_regDate <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
+	    </if>
+	
+	    <!-- 검색어: 상품명/닉네임/내용 -->
+		<if test="q != null and q != ''">
+		  <![CDATA[
+		  AND (
+		        LOWER(p.pd_name)    LIKE '%'||LOWER(#{q})||'%'
+		     OR LOWER(u.u_nickname) LIKE '%'||LOWER(#{q})||'%'
+		     OR LOWER(r.r_content)  LIKE '%'||LOWER(#{q})||'%'
+		  )
+		  ]]>
+		</if>
+
+	  </select>
+	
+	  <!-- 리뷰 목록 (페이징) -->
+		<select id="adminReviewList" parameterType="map" resultType="map">
+		  <![CDATA[
+		  SELECT *
+		    FROM (
+		          SELECT t.*, ROWNUM rn
+		            FROM (
+		                  SELECT
+		                    r.r_num 	  AS "r_num", 
+		                    r.pd_id 	  AS "pd_id", 
+		                    r.r_content   AS "r_content",
+		                    r.r_score     AS "r_rate",   
+		                    r.r_regDate   AS "r_regdate",  
+		                    u.u_member_id AS "u_id",       
+		                    u.u_nickname  AS "u_nickname",
+		                    p.pd_name     AS "pd_name"
+		                  FROM review_tbl r
+		                  JOIN product_tbl p ON p.pd_id = r.pd_id
+		                  JOIN user_tbl    u ON u.u_member_id = r.u_member_id
+		                  WHERE 1=1
+		  ]]>
+		                  <if test="category != null and category != ''">
+		                    AND p.pd_pet_category =
+		                    <choose>
+		                      <when test="category == 'dog'">1</when>
+		                      <when test="category == 'cat'">2</when>
+		                      <otherwise>p.pd_pet_category</otherwise>
+		                    </choose>
+		                  </if>
+		                  <if test="rate != null and rate != ''">
+		                    <![CDATA[ AND r.r_score = TO_NUMBER(#{rate}) ]]>
+		                  </if>
+		                  <if test="from != null and from != ''">
+		                    <![CDATA[ AND r.r_regDate >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
+		                  </if>
+		                  <if test="to != null and to != ''">
+		                    <![CDATA[ AND r.r_regDate <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
+		                  </if>
+		                  <if test="q != null and q != ''">
+		                    <![CDATA[
+		                    AND (
+		                          LOWER(p.pd_name)    LIKE '%'||LOWER(#{q})||'%'
+		                       OR LOWER(u.u_nickname) LIKE '%'||LOWER(#{q})||'%'
+		                       OR LOWER(r.r_content)  LIKE '%'||LOWER(#{q})||'%'
+		                    )
+		                    ]]>
+		                  </if>
+		  <![CDATA[
+		                  ORDER BY r.r_num DESC
+		                ) t
+		         )
+		   WHERE rn BETWEEN #{startRow} AND #{endRow}
+		  ]]>
+		</select>
+		
+		<!-- 리뷰 상세 -->
+		<select id="adminReviewDetail" parameterType="int" resultType="map">
+		  <![CDATA[
+		  SELECT
+		    r.r_num       AS "r_num",
+		    r.pd_id		  AS "pd_id",
+		    r.r_content	  AS "r_content",
+		    r.r_score     AS "r_rate",
+		    r.r_regDate   AS "r_regdate",
+		    r.r_img		  AS "r_img",
+		    u.u_member_id AS "u_id",
+		    u.u_nickname  AS "u_nickname",
+		    p.pd_name     AS "pd_name"
+		  FROM review_tbl r
+		  JOIN product_tbl p ON p.pd_id = r.pd_id
+		  JOIN user_tbl    u ON u.u_member_id = r.u_member_id
+		  WHERE r.r_num = #{rNum}
+		  ]]>
+		</select>
+
+	
+	  <!-- 4) 리뷰 선택 삭제 -->
+	  <delete id="adminReviewDelete" parameterType="list">
+	    <![CDATA[
+	    DELETE FROM review_tbl
+	     WHERE r_num IN
+	    ]]>
+	    <foreach collection="list" item="id" open="(" separator="," close=")">
+	      #{id}
+	    </foreach>
+	  </delete>
 	  
 	  
 	  <select id="adminQnaCnt" parameterType="java.util.Map" resultType="int">
