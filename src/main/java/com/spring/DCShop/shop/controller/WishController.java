@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.spring.DCShop.mypage.service.MypageServiceImpl;
 import com.spring.DCShop.shop.service.WishServiceImpl;
 
 @Controller
@@ -25,11 +27,27 @@ public class WishController {
 	
 	@Autowired
 	private WishServiceImpl service;
+	@Autowired
+	private MypageServiceImpl myService;
+	
 	
 	// 찜 목록 페이지
 	@RequestMapping("wishList.do")
 	public String wishList(HttpServletRequest req, HttpServletResponse res, Model model)
 			throws ServletException, IOException{
+		
+		HttpSession session = req.getSession(false);
+	    if (session != null) {
+	        String loginId = (String) session.getAttribute("sessionid");
+	        if (loginId != null) {
+	            myService.findById(loginId, model);
+	        }
+	    }
+	    else {
+	    	return "login_main.do";
+	    }
+        String loginId = (String) session.getAttribute("sessionid");
+        myService.findById(loginId, model);
 		
 		service.getWishList(req, res, model);
 		

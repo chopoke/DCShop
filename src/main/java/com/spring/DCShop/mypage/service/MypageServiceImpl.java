@@ -169,7 +169,6 @@ public class MypageServiceImpl implements MypageService {
 	// 정보수정 페이지 user정보 get
 	@Override
 	public void findById(String loginId, Model model) {
-
 		MypageDTO dto = myDao.getUserInfo(loginId);
 		model.addAttribute("dto", dto);
 	}
