@@ -260,6 +260,7 @@ public class NoticeServiceImpl implements NoticeService {
 			throw new ServletException("권한이 없습니다.");
 		}
 
+
 		// 추천(자식) 데이터 선삭제
 		noticeDAO.deleteRecommendsByNotice(b_num);
 

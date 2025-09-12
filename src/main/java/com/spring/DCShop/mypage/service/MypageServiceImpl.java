@@ -1,7 +1,7 @@
 package com.spring.DCShop.mypage.service;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.File;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,12 +19,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.spring.DCShop.board.page.Paging;
 import com.spring.DCShop.mypage.dao.MypageDAO;
 import com.spring.DCShop.mypage.dto.CartDTO;
 import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.dto.MypageDTO;
 import com.spring.DCShop.mypage.dto.OrderDTO;
 import com.spring.DCShop.mypage.dto.ProductDTO;
+import com.spring.DCShop.shop.dto.QuestDTO;
+
 
 @Service
 public class MypageServiceImpl implements MypageService {
@@ -95,6 +98,59 @@ public class MypageServiceImpl implements MypageService {
 	}
 	
 	
+	// 문의관리 - 문의 리스트 
+ 	@Override
+ 	public void myQnaList(HttpServletRequest request, HttpServletResponse response, Model model)
+ 			throws ServletException, IOException {
+ 		
+ 		//검색조건, user권한, paging에 대한 데이터를 담을 map.
+ 		Map<String, Object> map = new HashMap<String, Object>();
+ 		
+ 		//검색을 위한 검색 조건 체크.
+ 		String q_answer = request.getParameter("q_answer");
+		String q_category = request.getParameter("q_category");
+		String from = request.getParameter("from");
+		String to = request.getParameter("to");
+		
+		// 문의목록 띄우기 전 조건의 null값을 체크. null이라면 map에 넣지 않음.
+		if(q_answer != null){ map.put("q_answer", q_answer); }
+		if(q_category != null){ map.put("q_category", q_category); }
+		if(q_answer != null){ map.put("from", from); }
+		if(q_answer != null){ map.put("to", to); }
+		
+		
+		//페이지 요청 시 요청자의 권한 체크
+		String u_role = (String)request.getSession().getAttribute(("session_u_role"));
+		Integer sessionId = (Integer)(request.getSession().getAttribute(("session_u_member_id")));
+		
+		if(sessionId != null && u_role != null && ("USER"== u_role || "USER".equals(u_role))) {
+			//페이지를 요청한 사람이 로그인을 하였고, 일반 회원이맞다면 타인의 문의를 조회하지 않기 위해 map에 담기.
+			map.put("sessionId", sessionId);
+		}
+		else {	//로그인을 안했다면 그냥 리턴
+			return;
+		}
+		
+		//페이징
+		String pageNum = request.getParameter("pageNum");
+		
+		Paging paging = new Paging(pageNum);
+		
+		int total = myDao.myQnaCnt(map);			// paging을 위한 갯수 호출
+		
+		paging.setTotalCount(total);
+		
+		map.put("start", paging.getStartRow());
+		map.put("end", paging.getEndRow());
+		
+		List<QuestDTO> list = myDao.myQnaList(map);//list 호출
+		
+		System.out.println("list => "+list);
+		
+ 		model.addAttribute("list", list);
+ 		model.addAttribute("paging", paging);
+ 	}
+ 	
 	// 정보수정 진입 전, 비밀번호체크
 	@Override
 	public int passwordCheck(HttpServletRequest request, HttpServletResponse response, Model model)
@@ -178,11 +234,10 @@ public class MypageServiceImpl implements MypageService {
 	    }
 		
 		// input경로 정의
-		String saveDir = request.getSession()
-                .getServletContext()
-                .getRealPath("/resources/image/profile/");
-		File dir = new File(saveDir);
-		if (!dir.exists()) dir.mkdirs();
+//		String saveDir = request.getSession().getServletContext().getRealPath("/resources/image/profile/");		// -> tomcat 배포 war폴더
+		String saveDir = "D:\\ICT_Project\\workspace_check\\DCShop\\src\\main\\webapp\\resources\\image\\profile\\";
+		File dir = new File(saveDir);				
+		if (!dir.exists()) dir.mkdirs();			// 폴더 없으면 생성
 		
 	    String savedName = file.getOriginalFilename();		// 원본파일명 그대로 저장
 		file.transferTo(new File(saveDir, savedName));		// 저장!

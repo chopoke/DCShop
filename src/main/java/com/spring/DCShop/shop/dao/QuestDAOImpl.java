@@ -36,7 +36,17 @@ public class QuestDAOImpl implements QuestDAO{
 	}
 	
 	@Override
-	public QuestDTO qusetDetail(int q_num) {
-		return sqlSession.selectOne("com.spring.DCShop.shop.dao.QuestDAO.qusetDetail", q_num);
+	public QuestDTO questDetail(int q_num) {
+		return sqlSession.selectOne("com.spring.DCShop.shop.dao.QuestDAO.questDetail", q_num);
+	}
+	
+	public void updateQuest(QuestDTO dto) {
+		System.out.println("QusetDAO - updateQuest");
+		sqlSession.update("com.spring.DCShop.shop.dao.QuestDAO.updateQuest", dto);
+	}
+	
+	public void deleteQuest(int q_num) {
+		System.out.println("QusetDAO - deleteQuest");
+		sqlSession.delete("com.spring.DCShop.shop.dao.QuestDAO.deleteQuest", q_num);
 	}
 }

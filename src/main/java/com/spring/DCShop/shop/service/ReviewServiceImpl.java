@@ -78,7 +78,7 @@ public class ReviewServiceImpl implements ReviewService {
         model.addAttribute("paging", paging);
         model.addAttribute("pd_id", pdId);
 
-        return "/shop/review_list";
+        return "shop/review_list";
     }
 
     // 리뷰 상세
@@ -128,7 +128,7 @@ public class ReviewServiceImpl implements ReviewService {
         HttpSession session = request.getSession(false);
         
         // 로그인 여부 확인. 세션에 u_id가 없으면 로그인 안 된 것이므로 실패(0)
-        String u_id = (session == null) ? null : (String) session.getAttribute("u_id");
+        String u_id = (session == null) ? null : (String) session.getAttribute("sessionid");
         if (u_id == null || u_id.isEmpty()) return 0;
 
         // 그 리뷰가 실제 DB에 있는지 확인. 없으면 실패(0)
@@ -270,24 +270,56 @@ public class ReviewServiceImpl implements ReviewService {
     	// 1) pd_id 필수
         String pdIdParam = request.getParameter("pd_id");
         if (pdIdParam == null || !pdIdParam.matches("\\d+")) {
-            // 적절한 곳으로 보냄 (원하면 상품목록/상세로)
             return "redirect:/ad_product_list.pd";
         }
         int pdId = Integer.parseInt(pdIdParam);
 
-        // 2) 상품 기본정보 조회 (이미 있는 DAO 메서드 재사용)
+        // 2) 상품 확인
         ProductDTO pd = pdao.productDetail(pdId);
         if (pd == null) {
             return "redirect:/ad_product_list.pd";
         }
+        
+        // 3) 로그인 확인
+        HttpSession sess = request.getSession(false);
+        Integer uMemberId = null;
+        if (sess != null) {
+            Object v = sess.getAttribute("session_u_member_id");
+            if (v == null) v = sess.getAttribute("sessionid");
+            if (v instanceof Integer) uMemberId = (Integer) v;
+            else if (v instanceof String) {
+                try { uMemberId = Integer.parseInt((String) v); } catch (Exception ignore) {}
+            }
+        }
+        if (uMemberId == null) {
+            request.getSession().setAttribute("msg", "로그인이 필요합니다.");
+            return "redirect:/login_main.do";
+        }
 
-        // 3) JSP에서 바로 쓰도록 올려주기
+        // 4) 구매 여부 체크 
+        Map<String,Object> p = new java.util.HashMap<>();
+        p.put("uId", uMemberId);
+        p.put("pdId", pdId);
+        int purchased = dao.hasPurchased(p);     
+        if (purchased == 0) {
+            request.getSession().setAttribute("msg", "해당 상품을 구매한 회원만 리뷰를 작성할 수 있어요.");
+            return "redirect:/ad_shop_detailAction.pd?pdId=" + pdId;
+        }
+
+        // 5) 중복 리뷰 체크
+        int dup = dao.alreadyReviewed(p);
+        if (dup > 0) {
+            request.getSession().setAttribute("msg", "이미 이 상품에 리뷰를 작성하셨습니다.");
+            return "redirect:/ad_shop_detailAction.pd?pdId=" + pdId;
+        }
+
+        // 6) JSP에서 바로 쓰도록 올려주기
         request.setAttribute("pd_id",        pd.getPd_id());
         request.setAttribute("pd_name",      pd.getPd_name());
         request.setAttribute("pd_image_url", pd.getPd_image_url());
 
-        // 4) 작성 폼 JSP로 forward
-        return "/shop/review_insert"; 
+        // 7) 작성 폼으로
+        return "shop/review_insert"; 
 	}
 
     // 리뷰 작성 
@@ -331,7 +363,7 @@ public class ReviewServiceImpl implements ReviewService {
                 try { uMemberId = Integer.parseInt((String) v); } catch (Exception ignore) {}
             }
         }
-        if (uMemberId == null) return "redirect:/login.do";
+        if (uMemberId == null) return "redirect:/login_main.do";
 
         // ===== 파일 저장 (배포 경로 + 소스 폴더 모두 저장) =====
         String rImgPath = null; // DB에 저장할 전체경로(/resources/...)
@@ -385,6 +417,49 @@ public class ReviewServiceImpl implements ReviewService {
         // 등록 후 상품 상세로
         return "redirect:/ad_shop_detailAction.pd?pdId=" + pdId;
     }
+
+    // 내가 쓴 리뷰 리스트
+	@Override
+	public String myReviewList(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		// 1) 로그인 체크 (세션에서 회원키 꺼내기)
+	    HttpSession sess = request.getSession(false);
+	    Integer uMemberId = null;
+	    if (sess != null) {
+	        Object v = sess.getAttribute("session_u_member_id");
+	        if (v == null) v = sess.getAttribute("sessionid"); // 팀 프로젝트 세션키 혼용 대응
+	        if (v instanceof Integer) uMemberId = (Integer) v;
+	        else if (v instanceof String) try { uMemberId = Integer.parseInt((String)v); } catch (Exception ignore){}
+	    }
+	    if (uMemberId == null) {
+	        // 비로그인 → 로그인으로
+	        request.getSession(true).setAttribute("msg", "로그인 후 이용해주세요.");
+	        return "redirect:/login_main.do";
+	    }
+
+	    // 2) 페이징 파라미터
+	    int page = 1, pageSize = 10;
+	    try { page = Integer.parseInt( request.getParameter("page") ); } catch(Exception ignore){}
+	    int start = (page - 1) * pageSize + 1; // Oracle ROWNUM 시작
+	    int end   = page * pageSize;
+
+	    // 3) 목록/개수 조회
+	    Map<String,Object> param = new java.util.HashMap<>();
+	    param.put("uMemberId", uMemberId);
+	    param.put("start", start);
+	    param.put("end", end);
+
+	    int total = dao.myReviewCount(uMemberId);
+	    List<Map<String,Object>> list = dao.myReviewList(param);
+
+	    // 4) 모델
+	    model.addAttribute("list", list);
+	    model.addAttribute("total", total);
+	    model.addAttribute("page", page);
+	    model.addAttribute("pageSize", pageSize);
+
+	    return "mypage/my_reviews";
+	}
 
 	
 
