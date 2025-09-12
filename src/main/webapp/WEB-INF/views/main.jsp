@@ -195,7 +195,7 @@
 								<a class="click_card"
 									href="${path}/ad_shop_detailAction.pd?pdId=${product.pd_id}">
 									<div class="product-image">
-										<img src="${path}${product.pd_image_url}"
+										<img src=" ${product.pd_image_url}"
 											alt="${product.pd_name}" class="d-block w-100">
 									</div>
 									<h3 class="product-card-title">${product.pd_name}</h3>
@@ -251,7 +251,7 @@
 							</div>
 							<div style="font-size: 12px; color: #9a9a9a; margin-top: 2px;">
 								<fmt:formatDate value="${n.b_dateposted}" pattern="yyyy.MM.dd" />
-								· 조회 ${n.b_views}
+								
 							</div>
 						</div>
 					</c:if>
@@ -269,7 +269,7 @@
 							</div>
 							<div style="font-size: 12px; color: #9a9a9a; margin-top: 2px;">
 								<fmt:formatDate value="${e.b_dateposted}" pattern="yyyy.MM.dd" />
-								· 조회 ${e.b_views}
+								
 							</div>
 						</div>
 					</c:if>
@@ -472,7 +472,7 @@
 								<a class="click_card"
 									href="${path}/ad_shop_detailAction.pd?pdId=${product.pd_id}">
 									<div class="product-image">
-										<img src="${path}${product.pd_image_url}"
+										<img src=" ${product.pd_image_url}"
 											alt="${product.pd_name}" class="d-block w-100">
 									</div>
 									<h3 class="product-card-title">${product.pd_name}</h3>
@@ -532,7 +532,7 @@
 				</div>
 
 				<div class="product-card">
-					<div class="product-image">
+<!-- 					<div class="product-image"> -->
 						<img
 							src="https://readdy.ai/api/search-image?query=Professional veterinarian caring for cute puppy and kitten, modern veterinary clinic interior, gentle healthcare atmosphere, clean medical environment, caring professional service&width=300&height=200&seq=care1&orientation=landscape"
 							alt="케어 서비스">
