@@ -442,7 +442,7 @@
 			<div class="flex items-center space-x-4">
 				<div class="relative h-10">
 					<form id="sortform" method="get" 
-					action="${pageContext.request.contextPath}/shop_main.do" >
+					action="${path}/shop_main.do" >
 						<input type="hidden" name="searchKeyword" id="searchKeyword" value="${keyword}">
 						<input type="hidden" name="subcategory" id="subcategory" value="${subcategory}">
 						<select id="sortOrder" name="sortOrder" onchange="return false;"
@@ -507,6 +507,8 @@
 			    const searchKeyword = $("#searchKeyword").val() || ""; 		// 동일
 			    const subcategory = $(this).data("subcategory");
 			    const petType = $(this).data("pet-type");
+			    const ca = new URLSearchParams(location.search);
+			    const category = ca.get("category") || "${category}";		// 카테고리 없으면 넣어주기
 			    const EVENT = new URLSearchParams(location.search).get('event') === '1' ? '1' : '0';
 			    
 			    $("#subcategory").val(subcategory); 	// 클릭시 값 업뎃해서 hidden적용
@@ -516,6 +518,7 @@
 			        type: "GET",
 			        data: {
 			          petType: petType,
+			          category : category,
 			          subcategory: subcategory,
 			          sortOrder: sortOrder,
 			          searchKeyword: searchKeyword,
@@ -525,10 +528,18 @@
 			        	$("#product-grid").html(res);
 			        	// 뒤로가기 및 새로고침
 			        	const params = new URLSearchParams(window.location.search);
+			        	if (category) params.set("category", category); // 카테고리 있으면 넣어주기
+			        	else params.delete("category");		// 카테고리 없음 제거
 			            params.set("petType", petType);
 			            params.set("subcategory", subcategory);
 			            params.set("sortOrder", sortOrder);
-			            if (searchKeyword) params.set("searchKeyword", searchKeyword); else params.delete("searchKeyword");
+			            
+			            if (searchKeyword) params.set("searchKeyword", searchKeyword); // 검색어있으면 넣어주기
+			            else params.delete("searchKeyword");	// 없으면 제거
+			            
+			            if (EVENT === "1") params.set("event", "1"); // 이벤트 페이지라면 할당
+			            else params.delete("event");		// 아니라면 제거
+			            
 			            history.pushState(null, "", location.pathname + "?" + params.toString());	
 			        },
 			        error: function () {
@@ -539,31 +550,6 @@
 		});
 			
 		</script>
-		
-		<!-- 페이징 처리 부분 -->
-		<div class="paging">
-			<div class="flex items-center justify-center gap-2 mt-8">
-				<ul class="flex items-center justify-center gap-2">
-					<!-- 이전 버튼 처리 -->
-					<c:if test="${paging.startPage > 10}">
-						<li> <a href="${path}/shop_main.do?pageNum=${paging.prev}&sortOrder=${sortOrder}&searchKeyword=${keyword}&petType=${petType}<c:if test='${param.event==1}'>&event=1</c:if>" class="page-btn"
-						aria-label="Previous">이전</a></li>
-					</c:if>
-					
-					<!-- 페이지 번호 처리 -->
-					<c:forEach var="num" begin="${paging.startPage}" end="${paging.endPage}">
-						<li><a href="${path}/shop_main.do?pageNum=${num}&sortOrder=${sortOrder}&searchKeyword=${keyword}&petType=${petType}" class="page-btn <c:if test='${num == paging.currentPage}'> active</c:if><c:if test='${param.event==1}'>&event=1</c:if>">${num}</a></li>
-					</c:forEach>
-					
-					<c:if test="${paging.endPage < paging.pageCount}">
-						<li>
-							<a href="${path}/shop_main.do?pageNum=${paging.next}&sortOrder=${sortOrder}&searchKeyword=${keyword}&petType=${petType}<c:if test='${param.event==1}'>&event=1</c:if>" class="page-btn"
-							aria-label="Previous"> 다음 </a>
-						</li>
-					</c:if>
-				</ul>
-			</div>
-		</div>
 	</div>
 	<script id="mobile-menu">
 	const mobileMenuButton = document.getElementById("mobile-menu-button");

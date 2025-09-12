@@ -50,33 +50,6 @@ public class AdminServiceImpl implements AdminService{
 		model.addAttribute("userCount", userCount);
 	}
 	
-	// 회원목록-최신가입자5건
-	@Override
-	public void adminUser(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-		System.out.println("AdminServiceImpl - adminUser()");
-		List<UserDTO> list = dao.adminUserList1();
-		model.addAttribute("list", list);
-	}
-	
-	// 회원목록 - 펫통계
-	@Override
-	public void adminUserPet(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-		Map<String, Object> stats = dao.adminUserPet();
-		int dogCount = ((Number)stats.getOrDefault("dog_count",0)).intValue();
-		int catCount = ((Number)stats.getOrDefault("cat_count",0)).intValue();
-		int maleCount = ((Number)stats.getOrDefault("male_count",0)).intValue();
-		int femaleCount = ((Number)stats.getOrDefault("female_count",0)).intValue();
-		int neuteredCount = ((Number)stats.getOrDefault("neutered_count",0)).intValue();
-		
-		model.addAttribute("dogCount", dogCount);
-		model.addAttribute("catCount", catCount);
-		model.addAttribute("maleCount", maleCount);
-		model.addAttribute("femaleCount", femaleCount);
-		model.addAttribute("neuteredCount", neuteredCount);
-	}
-
 	// 게시판목록
 	@Override
 	public void adminBoardList(HttpServletRequest request, HttpServletResponse response, Model model)
@@ -664,4 +637,39 @@ public class AdminServiceImpl implements AdminService{
  		model.addAttribute("list", list);
  		model.addAttribute("paging", paging);
  	}
+
+ 	// 회원목록-최신가입자5건
+ 	@Override
+ 	public void adminUser(HttpServletRequest request, HttpServletResponse response, Model model)
+ 			throws ServletException, IOException {
+ 		System.out.println("AdminServiceImpl - adminUser()");
+ 		List<UserDTO> list = dao.adminUserList1();
+ 		model.addAttribute("list", list);
+ 	}
+ 	
+ 	// 회원목록 - 펫통계
+ 	@Override
+ 	public void adminUserPet(HttpServletRequest request, HttpServletResponse response, Model model)
+ 			throws ServletException, IOException {
+ 		Map<String, Object> stats = dao.adminUserPet();
+ 		int dogCount = ((Number)stats.getOrDefault("dog_count",0)).intValue();
+ 		int catCount = ((Number)stats.getOrDefault("cat_count",0)).intValue();
+ 		int maleCount = ((Number)stats.getOrDefault("male_count",0)).intValue();
+ 		int femaleCount = ((Number)stats.getOrDefault("female_count",0)).intValue();
+ 		int neuteredCount = ((Number)stats.getOrDefault("neutered_count",0)).intValue();
+ 		
+ 		model.addAttribute("dogCount", dogCount);
+ 		model.addAttribute("catCount", catCount);
+ 		model.addAttribute("maleCount", maleCount);
+ 		model.addAttribute("femaleCount", femaleCount);
+ 		model.addAttribute("neuteredCount", neuteredCount);
+ 	}
+ 	
+ 	// 회원목록 - 탈퇴회원5건
+	@Override
+	public void adminUserDelete(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		List<UserDTO> list2 = dao.adminUserList2();
+		model.addAttribute("list2", list2);
+	}
 }

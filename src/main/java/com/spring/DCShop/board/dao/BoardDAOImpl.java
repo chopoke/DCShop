@@ -107,9 +107,9 @@ public class BoardDAOImpl implements BoardDAO{
 	public int boardInsertAction(BoardDTO dto) {
 		System.out.println("BoardDAOImpl - boardInsertAction()");
 		
-		sqlSession.insert("com.spring.DCShop.board.dao.BoardDAO.boardInsertAction", dto);
 		
-		return 0;
+		
+		return sqlSession.insert("com.spring.DCShop.board.dao.BoardDAO.boardInsertAction", dto);
 	}
 	
 	// 회원 번호 

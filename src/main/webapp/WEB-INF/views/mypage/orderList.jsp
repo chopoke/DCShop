@@ -1,44 +1,47 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	<%@ include file="/WEB-INF/views/setting/setting.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>주문관리 & 장바구니</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
+<!-- <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com/3.4.16"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" /> -->
 <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: "#3b82f6",
-              secondary: "#64748b",
-            },
-            borderRadius: {
-              none: "0px",
-              sm: "4px",
-              DEFAULT: "8px",
-              md: "12px",
-              lg: "16px",
-              xl: "20px",
-              "2xl": "24px",
-              "3xl": "32px",
-              full: "9999px",
-              button: "8px",
-            },
-          },
-        },
-      };
-    </script>
+tailwind.config = {
+		important: true,
+  theme: {
+    extend: {
+      colors: {
+        primary: "#0066FF",
+        secondary: "#6B7280",
+      },
+      borderRadius: {
+        none: "0px",
+        sm: "4px",
+        DEFAULT: "8px",
+        md: "12px",
+        lg: "0.5rem",
+        xl: "20px",
+        "2xl": "24px",
+        "3xl": "32px",
+        full: "9999px",
+        button: "8px",
+      },
+    },
+  },
+};
+
+
+</script>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <style type="text/css">
-:where([class^="ri-"])::before {
-	content: "\f3c2";
-}
+
 
 .hero-section1 {
 	width: 100%;
@@ -56,10 +59,9 @@
 	<section class="hero-section1"></section>
 
 	<!-- 전체 컨테이너 -->
-	<div class="min-h-screen flex justify-center py-8">
+	<div class="min-h-[1200px] flex justify-center py-8">
 		<!-- 메인 래퍼 -->
-		<div
-			class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
+		<div class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
 
 			<!-- 사이드바 -->
 			<aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
@@ -98,15 +100,16 @@
 				<h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
 				<p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
 				<button
-					class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600"
+					class="px-4 py-2 bg-black text-white !rounded-lg mb-6 hover:bg-blue-600"
 					onclick="window.location='${path}/mypage_pwdcheck.do'">정보수정</button>
 
 				<!-- 네비게이션 -->
 				<nav class="w-full space-y-2 text-sm">
+
                   <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> 
                   <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
                   <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
-                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
+                  <a href="./mypage_qna.do" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
                   <a href="./mypage/my_reviews.do" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a>
                   <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
                </nav>

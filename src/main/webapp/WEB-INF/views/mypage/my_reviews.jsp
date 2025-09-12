@@ -11,12 +11,23 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<style type="text/css">
+
+.hero-section1 {
+	width: 100%;
+	background: white;
+	padding: .5rem 0;
+	padding-top: 5rem;
+}
+</style>
 </head>
 <body class="bg-gray-100">
   <%@ include file="/WEB-INF/views/setting/header.jsp" %>
 
-  <!-- 헤더 높이만큼 간격 (헤더 수정 못하니 여기에 스페이서) -->
-  <div style="height:96px"></div>
+	<!-- 헤더 높이만큼 간격 (헤더 수정 못하니 여기에 스페이서) -->
+ <!--  <div style="height:96px"></div> -->
+
+	<section class="hero-section1"></section>
 
   <!-- 전체 컨테이너 -->
   <div class="min-h-screen flex justify-center py-8">
@@ -48,7 +59,7 @@
                  class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-white border shadow
                         flex items-center justify-center cursor-pointer hover:shadow-md"
                  title="프로필 사진 변경">
-            <i class="bi bi-pencil-fill text-gray-700 text-base"></i>
+            <i class="ri-pencil-fill text-gray-700 text-base"></i>
             <span class="sr-only">프로필 사진 변경</span>
           </label>
         </div>
@@ -56,7 +67,7 @@
         <h2 class="text-lg font-semibold">${sessionScope.sessionid}</h2>
         <h2 class="text-lg font-semibold">${sessionScope.session_u_nickname}</h2>
         <p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
-        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600"
+        <button class="px-4 py-2 bg-black text-white rounded-lg mb-6 hover:bg-blue-600"
                 onclick="window.location='<c:url value="/mypage_pwdcheck.do"/>'">정보수정</button>
 
        <!-- 네비게이션 -->
@@ -64,7 +75,7 @@
                <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> 
                <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
                <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
-               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
+               <a href="./mypage_qna.do" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
                <a href="./mypage/my_reviews.do" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a>
                <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
         </nav>
