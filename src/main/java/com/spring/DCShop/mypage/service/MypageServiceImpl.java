@@ -233,13 +233,13 @@ public class MypageServiceImpl implements MypageService {
 	    }
 		
 		// input경로 정의
-//		String warDir = request.getSession().getServletContext().getRealPath("/resources/image/profile/");		// -> tomcat 배포 war폴더
+		String warDir = request.getSession().getServletContext().getRealPath("/resources/image/profile/");		// -> tomcat 배포 war폴더
 		String saveDir = "D:\\DEV05\\middleProject_ict05\\DCShop\\src\\main\\webapp\\resources\\image\\profile\\";
-		File dir = new File(saveDir);				
+		File dir = new File(warDir);				
 		if (!dir.exists()) dir.mkdirs();			// 폴더 없으면 생성
 		
 	    String savedName = file.getOriginalFilename();		// 원본파일명 그대로 저장
-		file.transferTo(new File(saveDir, savedName));		// 저장!
+		file.transferTo(new File(warDir, savedName));		// 저장!
 			
 		Map<String, Object> map = new HashMap<>();
 		map.put("u_image", savedName);
