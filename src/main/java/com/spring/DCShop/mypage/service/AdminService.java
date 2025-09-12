@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.ui.Model;
 
+import com.spring.DCShop.shop.dto.QuestDTO;
+
 public interface AdminService {
 	
 	// 회원관리 - 회원목록-가입자5건조회
@@ -42,15 +44,22 @@ public interface AdminService {
 	public void adminProductInsert(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
 	
-	// 문의관리 - 문의 리스트
-	public void adminQnaList(HttpServletRequest request, HttpServletResponse response, Model model)
- 			throws ServletException, IOException;
-
 	// 상품관리 - 상품수정폼
 	public void adminProductUpdateForm(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
 		
 	// 상품관리 - 상품수정처리
 	public void adminProductUpdate(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException;
+	
+	// 문의관리 - 문의 리스트
+	public void adminQnaList(HttpServletRequest request, HttpServletResponse response, Model model)
+ 			throws ServletException, IOException;
+	
+	// qna 답변 페이지
+	public QuestDTO adminQnaDetail(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException;
+	
+	public void answerSubmitAction(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException;
 }

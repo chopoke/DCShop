@@ -17,7 +17,7 @@
 						  WHERE p.pd_id = q.pd_id 
 							AND p.pd_id = #{pd_id}
 					   ORDER BY q.q_regdate DESC) A 
-					)
+				)
 		</select>
 	
 	<!-- 문의 조회 - paging 처리 -->

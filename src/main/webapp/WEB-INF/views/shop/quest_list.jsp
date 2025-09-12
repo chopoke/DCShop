@@ -205,13 +205,13 @@
 							</div>
 						</div>
 						<div class="bg-gray-50 rounded-lg p-4">
-							<p id="modalContent" class="text-gray-700 whitespace-pre-line"></p>
+							<p id="modalContent" class="text-gray-700 whitespace-pre-line !break-all"></p>
 						</div>
 						<!-- Admin Reply - 관리자 답변 -->
 						<div class="mt-8">
 							<div class="flex items-center space-x-2 mb-4">
 								<i class="ri-customer-service-2-line text-primary"></i> 
-								<span class="font-medium text-gray-900">관리자 답변</span>
+								<span class="font-medium text-gray-900 !break-all">관리자 답변</span>
 							</div>
 							<div id="adminReplyContent" class="bg-orange-50 rounded-lg p-4">
 								<div class="flex justify-between items-start mb-2">
@@ -324,14 +324,24 @@
 			
             // 답변 상태에 따라 관리자 답변 영역 표시
             // ++ 어드민
-            if (dto.q_answer === 'N') {
+            if (dto.q_answer === 'Y') {
                 adminReplyContent.style.display = 'block';
                 // dto에 a_regDate와 a_content 필드가 있다는 가정 하에 작성
                 // dto.a_regDate와 dto.a_content가 DTO에 없으면 백엔드 DTO에 추가 필요
+                if (dto.a_regdate) {	//타임스탬프로 값이 변형된 날짜 데이터를 사람이 알아볼 수 있도록 포매팅
+	                const date = new Date(dto.a_regdate);
+	                const formatted = date.getFullYear() + '-' +
+                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(date.getDate()).padStart(2, '0');
+	                adminReplyDate.textContent = formatted;
+	            } else {
+	            	adminReplyDate.textContent = '';
+	            }
                 
                 // 관리자의 답변에 대한 컬럼이 추가 되었을 경우 아래 코드 주석 해제.
-                //adminReplyDate.textContent = formatKoreanDate(dto.a_regDate);	//답변
-                //adminReplyMessage.textContent = dto.a_content;	//답변
+                adminReplyMessage.textContent = dto.a_answer;	//답변 내용
+                
+                
             } else if (isAdmin) { // 답변이 없지만, 관리자일 경우
                 adminReplyForm.style.display = 'block';
             }
@@ -353,6 +363,8 @@
             } else {
                 elDate.textContent = '';
             }
+            
+            
             
         } catch (e) {
             console.error(e);

@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.spring.DCShop.mypage.service.AdminServiceImpl;
+import com.spring.DCShop.shop.dto.QuestDTO;
 
 @Controller
 public class AdminController {
@@ -130,6 +131,32 @@ public class AdminController {
 		return "admin/admin_qna";
 	}
 	
+	// 답변페이지로 이동
+	@RequestMapping("qna_answer")
+	public String qna_answer(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_qna ===");
+		
+		QuestDTO dto = service.adminQnaDetail(request, response, model);
+		
+		model.addAttribute("dto", dto);
+		
+		return "admin/qna_answer";
+	}
+	
+	//adminAnswer
+	//답변 작성
+	@RequestMapping("qna_answerSubmitAction")
+	public String qna_answerAction(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_qna ===");
+		
+		service.answerSubmitAction(request, response, model);
+		
+		return "admin/admin_qna";
+	}
+		
+	
 	@RequestMapping("admin_review")
 	public String admin_review() {
 		logger.info("=== url -> admin_review ===");
@@ -147,4 +174,6 @@ public class AdminController {
 		service.adminUserPet(request, response, model);
 		return "admin/admin_user";
 	}
+	
+	
 }

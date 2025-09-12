@@ -63,4 +63,9 @@ public interface AdminDAO {
 	// 문의관리 - 리스트 
 	public List<QuestDTO> adminQnaList(Map<String, Object> param);
 	
+	// 문의관리 - 답변 페이지
+	public QuestDTO questDetail(int q_num);
+	
+	// 문의관리 - 답변
+	public void updateAnswer(QuestDTO dto);
 }
