@@ -198,11 +198,11 @@ public class MypageController {
 			throws ServletException, IOException{
 		logger.info("=== url -> recommendProduct ===");
 		
-//		String sessionid = (String)req.getSession().getAttribute("sessionid");
-//		
-//		if(sessionid == null) {
-//			return "user/login/login_main";
-//		}
+		String sessionid = (String)req.getSession().getAttribute("sessionid");
+		
+		if(sessionid == null) {
+			return "user/login/login_main";
+		}
 
 		return "mypage/recommanedProduct";
 	}
@@ -219,9 +219,26 @@ public class MypageController {
 			return "user/login/login_main";
 		}
 		
-		myService.orderListInfo(req, res, model);
+		myService.orderListById(req, res, model);
 		
 		return "mypage/orderList";
+	}
+	
+	// 주문상세내역 페이지 이동
+	@RequestMapping("orderDetail")
+	public String orderDetail(HttpServletRequest req, HttpServletResponse res, Model model)
+			throws ServletException, IOException {
+		logger.info("=== url -> orderDetail ===");
+		
+		String sessionid = (String)req.getSession().getAttribute("sessionid");
+		
+		if(sessionid == null) {
+			return "user/login/login_main";
+		}
+		
+		myService.orderDetailAction(req, res, model);
+		
+		return "mypage/order_detail";
 	}
 
 	// 반려동물 정보 삭제
