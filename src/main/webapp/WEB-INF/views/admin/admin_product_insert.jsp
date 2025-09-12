@@ -61,17 +61,17 @@
 
           <div>
             <label class="form-label">재고 수량</label>
-            <input type="number" name="pd_stock" min="0" step="1" value="0" class="form-input" placeholder="예) 100" />
+            <input type="number" name="pd_stock" min="0" step="1" value="" class="form-input" placeholder="예) 100" />
           </div>
 
           <div>
             <label class="form-label">배송비</label>
-            <input type="number" name="pd_shipping_fee" min="0" step="1" value="0" class="form-input" placeholder="예) 3000" />
+            <input type="number" name="pd_shipping_fee" min="0" step="1" value="" class="form-input" placeholder="예) 3000" />
           </div>
 
           <div>
             <label class="form-label">할인율(%)</label>
-            <input type="number" name="pd_discount_rate" min="0" max="100" step="1" value="0" class="form-input" placeholder="예) 10" />
+            <input type="number" name="pd_discount_rate" min="0" max="100" step="1" value="" class="form-input" placeholder="예) 10" />
           </div>
 
           <div>

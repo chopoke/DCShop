@@ -346,4 +346,44 @@ th.th-date, td.date-cell { white-space: nowrap; width: 120px; }
 .qty-hint{ color:#6b7280; font-size:12px; }
 .qty-hint.soldout{ color:#dc2626; font-weight:600; }
 
+/* ------찜버튼------- */
+.btn-wish{
+  width: 44px;             
+  height: 44px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid #e5e7eb;   /* 은은한 테두리 */
+  cursor: pointer;
+}
 
+/* 사이즈 */
+.btn-wish i{
+  font-size: 22px;          /* ← 아이콘 크기 포인트 */
+  line-height: 1;
+  color: #9ca3af;           /* 비활성화 기본색상 */
+}
+
+/* 찜 상태 색상 */
+.btn-wish.active i{
+  color: #ef4444;           /* 레드 하트 */
+}
+
+/* 하트 아래 숫자 스택형 정렬*/
+.wish-wrap.stack{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;                  /* 하트와 숫자 간격 */
+}
+
+.wish-wrap.stack .wish-count{
+  font-size:12px;
+  line-height:1;
+  color:#6b7280;
+}
+
+/* 메인 버튼들과의 기본 간격 */
+.actions-main .wish-wrap.stack{ margin-right:12px; }

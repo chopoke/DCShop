@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/setting/setting.jsp"%>
 <fmt:setLocale value="ko_KR" />
 <c:set var="shippingFeeSum" value="0" />
@@ -21,7 +22,6 @@
 
 	<%-- 배송비 0원이 있으면 플래그 true --%>
 	<c:if test="${pdShip == 0}">
-
 		<c:set var="hasFreeShipping" value="true" />
 	</c:if>
 
@@ -31,13 +31,8 @@
 	</c:if>
 </c:forEach>
 
-
-
-
-
 <%-- 플래그에 따라 최종 배송비 확정 --%>
 <c:choose>
-
 	<c:when test="${hasFreeShipping}">
 		<c:set var="shippingFee" value="0" />
 	</c:when>
@@ -47,83 +42,111 @@
 	<c:otherwise>
 		<c:set var="shippingFee" value="${shippingFeeSum}" />
 	</c:otherwise>
-
 </c:choose>
 
 <c:set var="dissubtotalSum" value="${dissubtotal + shippingFee}" />
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Page - 독캣배송</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>주문관리 & 장바구니</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" />
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 	rel="stylesheet">
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+<script>
+tailwind.config = {
+		important: true,
+  theme: {
+    extend: {
+      colors: {
+        primary: "#0066FF",
+        secondary: "#6B7280",
+      },
+      borderRadius: {
+        none: "0px",
+        sm: "4px",
+        DEFAULT: "8px",
+        md: "12px",
+        lg: "0.5rem",
+        xl: "20px",
+        "2xl": "24px",
+        "3xl": "32px",
+        full: "9999px",
+        button: "8px",
+      },
+    },
+  },
+};
+
+
+</script>
 <script src="https://cdn.tailwindcss.com/3.4.16"></script>
 <script type="text/javascript">
 
-	// 선택한 제품 삭제하기
-	function deleteSelected() {
-	  const selected = document.querySelectorAll(".cart-item-checkbox:checked");
-	  if (selected.length === 0) {
-	    alert("삭제할 상품을 선택해주세요.");
-	    return;
-	  }
-	  
-	  // 체크된 항목의 pd_id / ct_num 수집
-	  const items = Array.from(selected, cb => ({
-	    pdId: Number(cb.value),
-	    ctId: Number(cb.dataset.ctId)
-	  }));
-	  console.log(items);
-	  
-	  if (!confirm(`선택한 ${selected.length}개 상품을 삭제하시겠습니까?`)) return;
-	 
-	  $.ajax({
-	    	url : CTX + '/decsQty.do',
-	    	type : 'POST',
-	    	data: JSON.stringify({ items }),
-	    	contentType: 'application/json;charset=UTF-8',
-	    	success : function(res) {
-	    		if (res.result === 'ok') {
-	    			window.location.href = CTX + '/cartList';
-	    		}
-	    	},
-	    	error : function(request, status, error) {
-	    	},
-	   });
-	}
-	
-	document.addEventListener('DOMContentLoaded', () => {
-		  const selectAll = document.getElementById('selectAll');
-		  const items = document.querySelectorAll('.cart-item-checkbox');
+   // 선택한 제품 삭제하기
+   function deleteSelected() {
+     const selected = document.querySelectorAll(".cart-item-checkbox:checked");
+     if (selected.length === 0) {
+       alert("삭제할 상품을 선택해주세요.");
+       return;
+     }
+     
+     // 체크된 항목의 pd_id / ct_num 수집
+     const items = Array.from(selected, cb => ({
+       pdId: Number(cb.value),
+       ctId: Number(cb.dataset.ctId)
+     }));
+     console.log(items);
+     
+     if (!confirm(`선택한 ${selected.length}개 상품을 삭제하시겠습니까?`)) return;
+    
+     $.ajax({
+          url : CTX + '/decsQty.do',
+          type : 'POST',
+          data: JSON.stringify({ items }),
+          contentType: 'application/json;charset=UTF-8',
+          success : function(res) {
+             if (res.result === 'ok') {
+                window.location.href = CTX + '/cartList';
+             }
+          },
+          error : function(request, status, error) {
+          },
+      });
+   }
+   
+   document.addEventListener('DOMContentLoaded', () => {
+        const selectAll = document.getElementById('selectAll');
+        const items = document.querySelectorAll('.cart-item-checkbox');
 
-		  // 1) 전체 체크 → 모두 토글
-		  selectAll.addEventListener('change', () => {
-		    items.forEach(cb => cb.checked = selectAll.checked);
-		    selectAll.indeterminate = false; // 부분 체크 상태 해제
-		  });
+        // 1) 전체 체크 → 모두 토글
+        selectAll.addEventListener('change', () => {
+          items.forEach(cb => cb.checked = selectAll.checked);
+          selectAll.indeterminate = false; // 부분 체크 상태 해제
+        });
 
-		  // 2) 개별 체크 → 전체 체크/부분 체크 상태 갱신
-		  items.forEach(cb => {
-		    cb.addEventListener('change', () => {
-		      const total = items.length;
-		      const checked = document.querySelectorAll('.cart-item-checkbox:checked').length;
+        // 2) 개별 체크 → 전체 체크/부분 체크 상태 갱신
+        items.forEach(cb => {
+          cb.addEventListener('change', () => {
+            const total = items.length;
+            const checked = document.querySelectorAll('.cart-item-checkbox:checked').length;
 
-		      selectAll.checked = (checked == total);
-		      if(checked == total) {
-		      	selectAll.indeterminate = (checked > 0 && checked < total);
-		      }
-		    });
-		 });
-	});
-	
-	
-	// 수량 증가
+            selectAll.checked = (checked == total);
+            if(checked == total) {
+               selectAll.indeterminate = (checked > 0 && checked < total);
+            }
+          });
+       });
+   });
+   
+   
+   // 수량 증가
    function plusFunction(pdId) {
 	   const qtyId = "qty-" + pdId;  
 		const qtyPdId = "qty-input-" + pdId;
@@ -153,7 +176,6 @@
 	    	error : function(request, status, error) {
 	    	},
 	    });
-   
    }
     // 수량 감소
    function decFunction(pdId) {
@@ -180,73 +202,73 @@
    
    // 상품 제거
    function removeFunction(pdId, button) {
-	   
-	   if (confirm("상품을 삭제하시겠습니까?")) {
-		  
+      
+      if (confirm("상품을 삭제하시겠습니까?")) {
+        
        } else {
-    	   return false;
+          return false;
        }
-	   
-		let obj = new Object();
-		obj.pdId = pdId;
-		   
-		let jsonData = JSON.stringify(obj);
-	    $.ajax({
-	    	url : CTX + '/decQty.do',
-	    	type : 'POST',
-	    	data : jsonData,
-	    	contentType: 'application/json;charset=UTF-8',
-	    	success : function(res) {
-	    		if (res.result === 'ok') {
-	    			button.closest("tr").remove();
-	    			window.location.href = CTX + '/cartList';
-	    		}
-	    	},
-	    	error : function(request, status, error) {
-	    	},
-	    });
-	   
-	}
+      
+      let obj = new Object();
+      obj.pdId = pdId;
+         
+      let jsonData = JSON.stringify(obj);
+       $.ajax({
+          url : CTX + '/decQty.do',
+          type : 'POST',
+          data : jsonData,
+          contentType: 'application/json;charset=UTF-8',
+          success : function(res) {
+             if (res.result === 'ok') {
+                button.closest("tr").remove();
+                window.location.href = CTX + '/cartList';
+             }
+          },
+          error : function(request, status, error) {
+          },
+       });
+      
+   }
    
    
    function checkout() {
-	   const form = document.querySelector('form[name="payMent"]');
-	   
-	   const totalText = (document.getElementById("finalAmount").textContent).trim();
-	   const totalClient = Number(totalText.replace(/[^\d]/g, '') || 0);
+      const form = document.querySelector('form[name="payMent"]');
+      
+      const totalText = (document.getElementById("finalAmount").textContent).trim();
+      const totalClient = Number(totalText.replace(/[^\d]/g, '') || 0);
 
-	   
-	   const summaryShipping = (document.getElementById("shippingFee").textContent).trim();
-	   const pdShippingFee = Number(summaryShipping.replace(/[^\d]/g, '') || 0);
-	   
-	   const rows = document.querySelectorAll("#cartItems tr.cart-row");
-	   
-	   const items = [];
-	   rows.forEach(row => {
-		   const pdId = (row.dataset.pdId);
-		   const pdName = (row.querySelector(".pd-name").textContent).trim();
-		   const pdPriceValue = (row.querySelector(".order-amount").textContent).trim();
-		   const pdPrice = Number(pdPriceValue.replace(/[^\d]/g, '') || 0);
-		   const qty = (row.querySelector(".pd-qty").textContent).trim();
-		   const pdImg  = (row.querySelector(".pd-img").value);
-		   const pdDiscountRate = (row.querySelector(".pd-discount").value);
-		   items.push({ pdId, pdName, pdPrice, qty, pdImg, pdDiscountRate });
-	   });
-	   
-	  add('_payload', JSON.stringify({ items, pdShippingFee, totalClient }));
+      
+      const summaryShipping = (document.getElementById("shippingFee").textContent).trim();
+      const pdShippingFee = Number(summaryShipping.replace(/[^\d]/g, '') || 0);
+      
+      const rows = document.querySelectorAll("#cartItems tr.cart-row");
+      
+      const items = [];
+      rows.forEach(row => {
+         const pdId = (row.dataset.pdId);
+         const pdName = (row.querySelector(".pd-name").textContent).trim();
+         const pdPriceValue = (row.querySelector(".order-amount").textContent).trim();
+         const pdPrice = Number(pdPriceValue.replace(/[^\d]/g, '') || 0);
+         const qty = (row.querySelector(".pd-qty").textContent).trim();
+         const pdImg  = (row.querySelector(".pd-img").value);
+         const pdDiscountRate = (row.querySelector(".pd-discount").value);
+         items.push({ pdId, pdName, pdPrice, qty, pdImg, pdDiscountRate });
+      });
+      
+     add('_payload', JSON.stringify({ items, pdShippingFee, totalClient }));
 
-  	  form.method = 'post';
-  	  form.action = CTX + '/payQty.do';
-  	  form.submit();
+       form.method = 'post';
+       form.action = CTX + '/payQty.do';
+       form.submit();
 
-	  function add(name, value) {
-	  	    const input = document.createElement('input');
-	  	    input.type = 'hidden';
-	  	    input.name = name;
-	  	    input.value = value;
-	  	    input.setAttribute('data-dyn','1');
-	  	    form.appendChild(input);
-	  }
+     function add(name, value) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            input.setAttribute('data-dyn','1');
+            form.appendChild(input);
+     }
    }
    
 </script>
@@ -258,14 +280,14 @@
 	padding-top: 5rem;
 }
 
-.qty-input::-webkit-inner-spin-button,
-.qty-input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.qty-input::-webkit-inner-spin-button, .qty-input::-webkit-outer-spin-button
+	{
+	-webkit-appearance: none;
+	margin: 0;
 }
 
 .qty-input {
-  -moz-appearance: textfield;
+	-moz-appearance: textfield;
 }
 </style>
 </head>
@@ -277,7 +299,7 @@
 	<section class="hero-section1"></section>
 
 	<!-- 전체 컨테이너 -->
-	<div class="min-h-screen flex justify-center py-8">
+	<div class="min-h-[1200px] flex justify-center py-8">
 		<!-- 메인 래퍼 -->
 		<div
 			class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
@@ -300,7 +322,6 @@
 							value="/resources/image/profile/${dto.u_image}" />
 					</c:otherwise>
 				</c:choose>
-
 				<div class="relative inline-block">
 					<img id="profileImg" src="${imgUrl}" alt="Profile"
 						class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
@@ -319,27 +340,31 @@
 				<h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
 				<p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
 				<button
-					class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600"
+					class="px-4 py-2 bg-black text-white !rounded-lg mb-6 hover:bg-blue-600"
 					onclick="window.location='${path}/mypage_pwdcheck.do'">정보수정</button>
-
 				<!-- 네비게이션 -->
 				<nav class="w-full space-y-2 text-sm">
-					<a href="./orderList"
+
+					<a href="${pageContext.request.contextPath}/mypage_editPet.do"
+						class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> <a
+						href="./orderList"
 						class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> <a
-						href="#" class="block py-2 px-3 rounded hover:bg-gray-100">위시리스트</a>
-					<a href="./cartList"
+						href="./cartList"
 						class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> <a
-						href="#" class="block py-2 px-3 rounded hover:bg-gray-100">1:1
-						문의</a> <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a>
-					<a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a>
-					<a href="#"
+						href="./mypage_qna.do"
+						class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> <a
+						href="./mypage/my_reviews.do"
+						class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> <a
+						href="#"
 						class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
 				</nav>
 			</aside>
 
-			<!-- 메인 콘텐츠 -->
+			<!-- 페이지 헤더 -->
 			<main class="flex-1 p-8 bg-gray-50">
+
 				<h1 class="text-3xl font-bold text-gray-900 mb-2">장바구니</h1>
+				<c:out value="${hasFreeShipping}">dd</c:out>
 				<div class="d-flex justify-content-between align-items-center mb-3">
 					<div class="text-secondary small">
 						주문한 상품 총: <strong id="totalItemsCount">${cartCountSum}</strong>개
@@ -368,9 +393,7 @@
 									</tr>
 								</thead>
 								<tbody class="border-top" id="cartItems">
-
 									<c:forEach var="item" items="${cart}">
-
 										<div id="cart-item" data-id="${item.pdId}"></div>
 										<c:set var="pd" value="${item.productDto[0]}" />
 										<c:set var="rate" value="${pd.pdDiscountRate}" />
@@ -402,8 +425,6 @@
 																${pd.pdOption}
 															</c:if>
 														</div>
-
-
 														<c:if test="${pd.pdStock < 5}">
 															<div id="stockArea"
 																class="flex items-center text-red-500 text-[10px] font-semibold space-x-2">
@@ -425,8 +446,12 @@
 														<i class="bi bi-dash"></i>
 													</button>
 
-													<span id="qty-${item.pdId}" class="quantity-display fw-semibold pd-qty">
-														<input type="number" class="form-control text-center qty-input" id="qty-input-${item.pdId}" style="width: 6rem;" inputmode="numeric" value="<c:out value="${item.ctQuantity}"/>"/>
+													<span id="qty-${item.pdId}"
+														class="quantity-display fw-semibold pd-qty"> <input
+														type="number" class="form-control text-center qty-input"
+														id="qty-input-${item.pdId}" style="width: 6rem;"
+														inputmode="numeric"
+														value="<c:out value="${item.ctQuantity}"/>" />
 													</span>
 
 													<button class="btn btn-outline-secondary btn-sm"
@@ -435,6 +460,7 @@
 													</button>
 												</div>
 											</td>
+
 
 											<td class="text-end fw-semibold "><c:choose>
 													<c:when test="${hasDiscount}">
@@ -470,7 +496,6 @@
 											</td>
 										</tr>
 									</c:forEach>
-
 								</tbody>
 							</table>
 						</div>
@@ -481,7 +506,6 @@
 				<div class="card shadow-sm rounded-3">
 					<div class="card-body">
 						<div class="d-flex flex-wrap align-items-center gap-3">
-
 
 							<div
 								class="ms-auto d-flex align-items-center gap-3 flex-wrap justify-content-end">
@@ -538,25 +562,24 @@
 		</div>
 	</div>
 
-
 	<!-- 푸터 시작 -->
 	<%@ include file="../setting/footer.jsp"%>
 	<!-- 푸터 끝 -->
 	<script>
-		document.addEventListener('DOMContentLoaded', function(){
-			const img = document.getElementById('profileImg');
-			const file = document.getElementById('u_image');
-			const form = document.getElementById('avatarForm');
-			
-			if (!img || !file || !form) return;
-			
-			img.addEventListener('click', () => file.click());
-			
-			file.addEventListener('change', () => {
-				if(!file.files || !file.files[0]) return;
-				form.submit();
-			});
-		});
-	</script>
+      document.addEventListener('DOMContentLoaded', function(){
+         const img = document.getElementById('profileImg');
+         const file = document.getElementById('u_image');
+         const form = document.getElementById('avatarForm');
+         
+         if (!img || !file || !form) return;
+         
+         img.addEventListener('click', () => file.click());
+         
+         file.addEventListener('change', () => {
+            if(!file.files || !file.files[0]) return;
+            form.submit();
+         });
+      });
+   </script>
 </body>
 </html>

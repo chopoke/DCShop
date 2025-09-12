@@ -90,6 +90,7 @@
             $('#q_title').val("");
             $('#q_content').val("");
             question_list();   // 문의목록 새로고침(7)
+            window.location.reload();
          },
          error: function() {
             alert('문의가 등록되지 않았습니다.');
@@ -186,7 +187,7 @@
                       <button
                         type="button"
                         id="SaveQuestion"
-                        class="bg-primary text-white px-6 py-2 !rounded-button font-medium hover:bg-orange-600 transition-colors whitespace-nowrap">
+                        class="btn-primary">
                         작성
                       </button>
                     </td>

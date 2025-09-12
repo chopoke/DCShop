@@ -57,10 +57,85 @@
     location.href = '${path}/cartTOPay.do?pdId=' + pdId + '&qty=' + qty;
   }
 </script>
+<<<<<<< HEAD
+<script type="text/javascript">
+$(function(){
+	  // 로그인 여부  true:로구인 false:비로그인
+	  const LOGGED_IN = ${not empty sessionScope.sessionid};
+
+	  // 버튼 가져오기
+	  var $wishbtn = $("#wishbtn");
+
+	  $wishbtn.on("click", function(){		// 버튼 클릭 이벤트
+	    const pdId = $wishbtn.data("wish");           //data-wish 값 읽어오기 (pd_id)
+	    if (!pdId) { alert("상품 정보가 없습니다."); return; }
+
+	    // 로그인 정보가 없을시
+	    if (!LOGGED_IN) {
+	      if (confirm("로그인 후 사용 가능합니다.")) {
+	        location.href = "${path}/login_main.do";	// 로그인 하면으로 전송
+	      }
+	      return;
+	    }
+
+	    // 클릭에 따라 동작 (현재상태에서): active 없으면 추가(1), 있으면 취소(0)
+	    const click = $wishbtn.hasClass("active") ? 0 : 1;
+		
+	    $wishbtn.prop("disabled", true); // 중복 클릭 방지
+
+	    $.ajax({
+	      url: "${path}/addWish.do",
+	      type: "POST",
+	      dataType: "json",
+	      data: { pdId: pdId, click: click },       
+	      success: function(res){
+	        // success가 1이나 true나 문자열1 모든 경우 감지
+	        const ok = res && (res.success === 1 || res.success === true || res.success === '1');
+	        if (ok) {
+	        	// 클릭이 1(찜추가)라면 active 속성 부여
+	        	if (click === 1) {
+  					$wishbtn.addClass("active").attr("aria-pressed","true").attr("title","찜 취소");
+  					var $icon = $wishbtn.find('i');
+  					$icon.removeClass('fa-regular').addClass('fa-solid');
+	        	}// 아니라면 active 속성 제거
+	        	else {
+	        		$wishbtn.removeClass("active").attr("aria-pressed","false").attr("title","찜하기");
+	        		var $icon = $wishbtn.find('i');
+	        		$icon.removeClass('fa-solid').addClass('fa-regular');
+	        	}
+	        if (typeof res.wishCnt !== "undefined") $("#wishCnt").text(res.wishCnt);
+	        } else {
+	          alert((res && res.message) || "처리 중 오류가 발생했습니다.");
+	        }
+	      },
+	      error: function(){ alert("네트워크 오류가 발생했습니다."); },
+	      complete: function(){ $wishbtn.prop("disabled", false); }
+	    });
+	  });
+	});
+</script>
+<style>
+  .btn-write-review{
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding:.55rem .9rem; border:1px solid #2563eb;
+    border-radius:8px; color:#2563eb; background:#fff;
+    font-weight:600; font-size:14px; text-decoration:none;
+  }
+  .btn-write-review:hover{ background:#2563eb; color:#fff; }
+</style>
+
 </head>
 <body class="product-detail-page">
   <div class="wrap">
     <%@ include file="/WEB-INF/views/setting/header.jsp" %>
+    
+    <!-- 플래시 메시지(alert) -->
+    <c:if test="${not empty sessionScope.msg}">
+      <script>
+        alert('${fn:escapeXml(sessionScope.msg)}');
+      </script>
+      <c:remove var="msg" scope="session" />
+    </c:if>
 	<div id="header-spacer" style="height: var(--header-height, 96px)"></div>
 
     <div id="container">
@@ -231,6 +306,29 @@
 				      </table>
 				
 				      <div class="actions actions-main">
+				      		<!-- 상품 찜 -->
+				      		<div class="wish-wrap stack">
+						  	<c:choose>
+						    	<c:when test="${isWish == 1}">
+						      		<button type="button" 
+						      			id="wishbtn" 
+						      			class="btn-wish active" aria-pressed="true" data-wish="${dto.pd_id}">
+						      			<i class="fa-solid fa-heart" aria-hidden="true"></i>
+						      		</button>
+						    	</c:when>
+						    	<c:otherwise>
+						      	<!-- 비로그인 시 클릭하면 로그인 유도하고 끝내고 싶으면 onclick 추가 -->
+						      	<button 
+						            id="wishbtn"
+						            class="btn-wish"
+						            data-wish="${dto.pd_id}"
+						            aria-pressed="false" title="찜하기">
+						      <i class="fa-regular fa-heart" aria-hidden="true"></i>
+						      	</button>
+						    </c:otherwise>
+						  </c:choose>
+						  <span id="wishCnt" class="wish-count">${productWishCnt}</span>
+						  </div>
 						 <button type="button" class="btn-primary" onclick="addToCart(${dto.pd_id})"
        						 <c:if test="${!hasStock}">disabled</c:if>>
 						 	 장바구니 담기
@@ -279,12 +377,17 @@
 				    <c:choose>
 					  <c:when test="${empty recentReviews}">
 					    <p class="empty">아직 등록된 리뷰가 없습니다.</p>
-					    <c:url var="revLink1" value="/review_insert.bc">
-		                    <c:param name="pd_id"         value="${dto.pd_id}" />
-		                    <c:param name="pd_name"       value="${dto.pd_name}" />
-		                    <c:param name="pd_image_url"  value="${dto.pd_image_url}" />
-		                  </c:url>
-		                  <a class="link" href="${revLink1}">리뷰 작성하기</a>
+
+						<c:url var="revLink1" value="/review_insert.bc">
+						  <c:param name="pd_id"        value="${dto.pd_id}" />
+						  <c:param name="pd_name"      value="${dto.pd_name}" />
+						  <c:param name="pd_image_url" value="${dto.pd_image_url}" />
+						</c:url>
+						
+						<a href="${revLink1}" class="btn-write-review">
+						  <i class="fa-regular fa-pen-to-square"></i>
+						  리뷰 작성하기
+						</a>
 					  </c:when>
 				      <c:otherwise>
 					    <%-- 최신 리뷰 5개 --%>
