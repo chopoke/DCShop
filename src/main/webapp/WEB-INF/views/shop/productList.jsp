@@ -120,7 +120,7 @@
 							</div>
 							<div class="p-3">
 								<div class="text-sm text-gray-600 mb-1 p-4 flex flex-col flex-1"></div>
-								<h3 class="font-medium text-gray-900 mb-2" id="pd_name">${dto.pd_name}</h3>
+								<h4 class="font-medium text-gray-900 mb-2" id="pd_name">${dto.pd_name}</h4>
 								
 								<!-- 비교표현 gt a gt b = a > b -->
 								<c:set var="hasDiscount" value="${dto.pd_discount_rate gt 0}" />	
@@ -148,7 +148,7 @@
 									</c:choose>
 								</div>
 								<div class="flex items-center">
-									<div class="flex items-center text-yellow-400 mr-2"
+									<div class="flex items-center text-blue-500 mr-2"
 										aria-label="별점 ${dto.review_score}점">
 										<c:forEach begin="1" end="${dto.review_score}">
 											<i class="ri-star-fill text-sm"></i>
@@ -158,12 +158,12 @@
 										</c:forEach>
 									</div>
 									<span class="text-sm text-gray-600">${dto.review_count}</span>
-								</div>
+								</div> 
 								<div class="mt-auto flex justify-end">  
 							    <span 
-							    class="inline-flex items-center h-10 px-4 rounded-lg bg-blue-600 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 active:scale-[.99] transition"
+							    class="inline-flex items-center h-10 px-4 rounded-lg bg-blue-300 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 active:scale-[.99] transition"
 							    data-pd-id="${dto.pd_id}" role="button" onclick="return addToCart(event, ${dto.pd_id})" tabindex="0">
-							      장바구니담기
+							      담기
 							    </span>
 							  </div>
 							</div>
@@ -181,3 +181,78 @@
 			</div>
 		</c:otherwise>
 	</c:choose>
+	
+			<div class="paging">
+			  <div class="flex items-center justify-center gap-2 mt-8">
+			    <ul class="flex items-center justify-center gap-2">
+			
+			      <!-- 이전 -->
+			      <c:if test="${paging.startPage > 10}">
+			        <c:url var="prevUrl" value="/shop_main.do">
+			          <c:param name="pageNum" value="${paging.prev}"/>
+			          <c:param name="sortOrder" value="${sortOrder}"/>
+			          <c:param name="searchKeyword" value="${keyword}"/>
+			          <c:param name="petType" value="${petType}"/>
+			          <c:param name="cateList" value="${cateList}"/>
+			          <c:if test="${not empty category}">
+			            <c:param name="category" value="${category}"/>
+			          </c:if>
+			          <c:if test="${not empty subcategory}">
+			            <c:param name="subcategory" value="${subcategory}"/>
+			          </c:if>
+			          <c:if test="${param.event==1}">
+			            <c:param name="event" value="1"/>
+			          </c:if>
+			        </c:url>
+			        <li><a href="${prevUrl}" class="page-btn">이전</a></li>
+			      </c:if>
+			
+			      <!-- 번호 -->
+			      <c:forEach var="num" begin="${paging.startPage}" end="${paging.endPage}">
+			        <c:url var="numUrl" value="/shop_main.do">
+			          <c:param name="pageNum" value="${num}"/>
+			          <c:param name="sortOrder" value="${sortOrder}"/>
+			          <c:param name="searchKeyword" value="${keyword}"/>
+			          <c:param name="petType" value="${petType}"/>
+			          <c:param name="cateList" value="${cateList}"/>
+			          <c:if test="${not empty category}">
+			            <c:param name="category" value="${category}"/>
+			          </c:if>
+			          <c:if test="${not empty subcategory}">
+			            <c:param name="subcategory" value="${subcategory}"/>
+			          </c:if>
+			          <c:if test="${param.event==1}">
+			            <c:param name="event" value="1"/>
+			          </c:if>
+			        </c:url>
+			        <li>
+			          <a href="${numUrl}" class="page-btn ${num == paging.currentPage ? 'active' : ''}">
+			            ${num}
+			          </a>
+			        </li>
+			      </c:forEach>
+			
+			      <!-- 다음 -->
+			      <c:if test="${paging.endPage < paging.pageCount}">
+			        <c:url var="nextUrl" value="/shop_main.do">
+			          <c:param name="pageNum" value="${paging.next}"/>
+			          <c:param name="sortOrder" value="${sortOrder}"/>
+			          <c:param name="searchKeyword" value="${keyword}"/>
+			          <c:param name="petType" value="${petType}"/>
+			          <c:param name="cateList" value="${cateList}"/>
+			          <c:if test="${not empty category}">
+			            <c:param name="category" value="${category}"/>
+			          </c:if>
+			          <c:if test="${not empty subcategory}">
+			            <c:param name="subcategory" value="${subcategory}"/>
+			          </c:if>
+			          <c:if test="${param.event==1}">
+			            <c:param name="event" value="1"/>
+			          </c:if>
+			        </c:url>
+			        <li><a href="${nextUrl}" class="page-btn">다음</a></li>
+			      </c:if>
+			
+			    </ul>
+			  </div>
+			</div>

@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:if test="${param.skip == '1'}">
+  <!-- 컨텍스트 루트 기준 절대경로 -->
+  <jsp:forward page="/WEB-INF/views/join/joinFin.jsp"/>
+</c:if>
  <%@ include file="/WEB-INF/views/setting/setting.jsp" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -237,7 +244,10 @@
                       <button type="button" class="inputButton" id="addAnotherBtn">+ 추가 등록</button>
                       
                       <!-- 건너뛰기는 submit 말고 button으로 별도처리 -->
-  					  <button type="button" class="inputButton" id="skipBtn">건너뛰기</button>
+  					  <form method="get" style="display:inline">
+						  <input type="hidden" name="skip" value="1"/>
+						  <button type="submit" class="inputButton">건너뛰기</button>
+						</form>
   					  
                       <input class="inputButton" type="submit" value="등록" id="submitBtn">
                       <input class="inputButton" type="reset" value="초기화">
@@ -496,6 +506,7 @@ $('#submitBtn').on('click', function () {
   }
 });
 </script>
+
 
 </body>
 </html>

@@ -77,10 +77,36 @@
 				  </c:otherwise>
 			</c:choose>
 			
-			<img id="profileImg"
-			     src="${imgUrl}"
-			     alt="Profile"
-			     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
+			<div class="relative inline-block">
+					<img id="profileImg" src="${imgUrl}" alt="Profile"
+						class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
+					<label for="u_image"
+						class="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-white border shadow
+         						flex items-center justify-center cursor-pointer hover:shadow-md"
+						title="프로필 사진 변경"> <i
+						class="ri-pencil-fill text-gray-700 text-base"></i> <span
+						class="sr-only">프로필 사진 변경</span>
+					</label>
+				</div>
+				<!-- <img src="resources/img_main/mypage_default.png" alt="Profile"
+	               class="rounded-full w-28 h-28 object-cover mb-4"> -->
+
+				<h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+				<h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
+				<p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
+				<button
+					class="px-4 py-2 bg-black text-white !rounded-lg mb-6 hover:bg-blue-600"
+					onclick="window.location='${path}/mypage_pwdcheck.do'">정보수정</button>
+
+				<!-- 네비게이션 -->
+				<nav class="w-full space-y-2 text-sm">
+	               <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> 
+	               <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
+	               <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
+	               <a href="./mypage_qna.do" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
+	               <a href="./mypage/my_reviews.do" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
+	               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+	            </nav>
          </aside>
 
          <!-- 메인 콘텐츠 -->
@@ -147,7 +173,7 @@
 				            >수정</button>
 				
 				            <form class="frm-delete" method="post" 
-				            	action="${pageContext.request.contextPath}/mypage/pets/delete" >
+				            	action="${pageContext.request.contextPath}/mypage_deletePet.do" >
 				              <input type="hidden" name="p_num" value="${p.p_num}">
 				              <button type="submit" class="inline-flex items-center justify-center h-9 min-w-[64px] px-3 rounded-md border border-red-200 bg-white text-sm font-medium text-red-600 whitespace-nowrap hover:!bg-red-100 hover:!border-red-300 hover:shadow-sm transition-colors">
 				                삭제
@@ -173,7 +199,7 @@
 				  </div>
 				
 				  	<form id="petForm" class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4"
-				        method="post" action="${pageContext.request.contextPath}/mypage/pets/save">
+				        method="post" action="${pageContext.request.contextPath}/mypage_savePet.do">
 					    <!-- 어떤 모드인지 표시는 JS로만(서버는 p_num 유무로 판단) -->
 					    <input type="hidden" name="p_num" id="p_num">
 					    <!-- u_member_id는 서버 세션에서 설정 권장. 필요시 hidden으로 내려도 됨 -->
