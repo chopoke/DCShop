@@ -20,12 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.service.MypageService;
-
-
+import com.spring.DCShop.shop.service.ReviewService;
 
 @Controller
 public class MypageController {
@@ -33,6 +31,9 @@ public class MypageController {
 	
 	@Autowired
 	private MypageService myService;
+	
+	@Autowired
+	private ReviewService reviewService;
 	
 	@RequestMapping("mypage_main.do")
 	public String mypage_main(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -46,6 +47,9 @@ public class MypageController {
 		
 		// 주문 상품 리스트와 장바구니 리스트 가져와서 뿌려주기
 		myService.getCartAndOrderList(request, response, model);
+		
+		// 랜덤
+		myService.chooseRandomProduct(request, response, model);
 		
 		// 세셔정보 없으면 만들어주고 있으면 가져오기
 		HttpSession session = request.getSession(false);
@@ -144,8 +148,14 @@ public class MypageController {
 		logger.info("=== url -> mypage_editPet ===");
 		
 		HttpSession session = req.getSession(false);
-	    if (session == null || session.getAttribute("sessionid") == null) {
-	        return "redirect:login_main.do";
+	    if (session != null) {
+	        String loginId = (String) session.getAttribute("sessionid");
+	        if (loginId != null) {
+	            myService.findById(loginId, model);
+	        }
+	    }
+	    else {
+	    	return "login_main.do";
 	    }
         String loginId = (String) session.getAttribute("sessionid");
         myService.findById(loginId, model);
@@ -154,13 +164,36 @@ public class MypageController {
 	}
 	
 	// 반려동물 정보 저장
-	@PostMapping("/mypage/pets/save")		// @ModelAttribute로 넘어온 요소들을 받아줌 -> 자동매핑
+	@PostMapping("mypage_savePet.do")		// @ModelAttribute로 넘어온 요소들을 받아줌 -> 자동매핑
 	public String saveOne(@ModelAttribute MyPetDTO pet, HttpServletRequest req, HttpServletResponse res, Model model) {
 	    myService.updatePetInfo(pet, req, res, model);
 	    
 	    return "redirect:/mypage_editPet.do"; // 목록 페이지로
 	}
 
+	@RequestMapping("mypage_qna.do")
+	public String admin_qna(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		logger.info("=== url -> admin_qna ===");
+		
+		HttpSession session = request.getSession(false);
+	    if (session != null) {
+	        String loginId = (String) session.getAttribute("sessionid");
+	        if (loginId != null) {
+	            myService.findById(loginId, model);
+	        }
+	    }
+	    else {
+	    	return "login_main.do";
+	    }
+        String loginId = (String) session.getAttribute("sessionid");
+        myService.findById(loginId, model);
+        
+		myService.myQnaList(request, response, model);
+		
+		return "mypage/mypage_qna";
+	}
+	
 	// 장바구니 페이지 이동
 	@RequestMapping("cartList")
 	public String cartList(HttpServletRequest req, HttpServletResponse res, Model model)
@@ -168,6 +201,7 @@ public class MypageController {
 		logger.info("=== url -> cartList ===");
 		
 		String sessionid = (String)req.getSession().getAttribute("sessionid");
+		myService.findById(sessionid, model);
 		
 		if(sessionid == null) {
 			return "user/login/login_main";
@@ -184,11 +218,11 @@ public class MypageController {
 			throws ServletException, IOException{
 		logger.info("=== url -> recommendProduct ===");
 		
-//		String sessionid = (String)req.getSession().getAttribute("sessionid");
-//		
-//		if(sessionid == null) {
-//			return "user/login/login_main";
-//		}
+		String sessionid = (String)req.getSession().getAttribute("sessionid");
+		
+		if(sessionid == null) {
+			return "user/login/login_main";
+		}
 
 		return "mypage/recommanedProduct";
 	}
@@ -204,30 +238,51 @@ public class MypageController {
 		if(sessionid == null) {
 			return "user/login/login_main";
 		}
-		
+        myService.findById(sessionid, model);
+        
 		myService.orderListInfo(req, res, model);
 		
 		return "mypage/orderList";
 	}
+	
+	// 주문상세내역 페이지 이동
+	@RequestMapping("orderDetail")
+	public String orderDetail(HttpServletRequest req, HttpServletResponse res, Model model)
+			throws ServletException, IOException {
+		logger.info("=== url -> orderDetail ===");
+		
+		String sessionid = (String)req.getSession().getAttribute("sessionid");
+		
+		if(sessionid == null) {
+			return "user/login/login_main";
+		}
+		
+		myService.orderDetailAction(req, res, model);
+		
+		return "mypage/order_detail";
+	}
 
 	// 반려동물 정보 삭제
-	@PostMapping(value = "/mypage/pets/delete", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/mypage_deletePet.do", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public Map<String, Object> delete(@RequestParam String p_num, HttpServletRequest req, HttpServletResponse res, Model model) {
 	    int cnt = myService.deletePetInfo(p_num, req, res, model);
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("ok", cnt == 1);
 	    return result;
-
 	}
 	
 	// 탈퇴 확인 페이지
 	@RequestMapping("mypage_quit.do")
 	public String mypage_quit(HttpServletRequest req, HttpServletResponse res, Model model) {
-		HttpSession session = req.getSession(false);
-	    if (session == null || session.getAttribute("sessionid") == null) {
-	        return "redirect:login_main.do";
-	    }
+		
+		String sessionid = (String)req.getSession().getAttribute("sessionid");
+		myService.findById(sessionid, model);
+		
+		if(sessionid == null) {
+			return "user/login/login_main";
+		}
+	    
 		return "mypage/mypage_quit";
 	}
 	
@@ -248,4 +303,22 @@ public class MypageController {
             return "redirect:mypage_quit.do?err=1";
         }
 	}
+
+	
+	// 내가 쓴 리뷰 리스트
+    @RequestMapping("/mypage/my_reviews.do")
+    public String myReviews(HttpServletRequest request, HttpServletResponse response, Model model)
+            throws Exception {
+    	
+    	String sessionid = (String)request.getSession().getAttribute("sessionid");
+		myService.findById(sessionid, model);
+		
+		if(sessionid == null) {
+			return "user/login/login_main";
+		}
+		
+        reviewService.myReviewList(request, response, model);
+        
+        return "mypage/my_reviews";
+    }
 }

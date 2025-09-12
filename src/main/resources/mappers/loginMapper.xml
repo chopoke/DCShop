@@ -9,7 +9,8 @@
 	
 	<!-- 로그인 처리 / 회원정보인증 -->
 	<select id="idpasswordchk" parameterType="java.util.Map" resultType="com.spring.DCShop.user.dto.UserDTO">
-		SELECT * FROM user_tbl WHERE u_id = #{id} AND u_password = #{pw}
+		SELECT * FROM user_tbl WHERE u_id = #{id} AND u_password = #{pw} AND u_show = 'Y'
+		
 	</select>
 	
 	

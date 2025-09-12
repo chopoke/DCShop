@@ -39,16 +39,17 @@ public class BoardServiceImpl implements BoardService {
 
 		// 화면에서 입력받은 값을 가져오기
 		String pageNum = request.getParameter("pageNum");
-		String sortOrder = request.getParameter("sortOrder");
-		String keyword = request.getParameter("keyword");
-		String category = request.getParameter("category");
-
+		String keyword = request.getParameter("keyword");		// 검색키워드
+		String category = request.getParameter("category");		// 카테고리(전체/자유/꿀팁/리뷰/질문)
+		String sortOrder = request.getParameter("sortOrder");	// 정렬
+		
+		
 		// 전체 게시글 갯수 카운트
 		Paging paging = new Paging(pageNum);
-		Map<String, Object> countP = new HashMap<String, Object>();
+		Map<String, Object> countP = new HashMap<>();
 		countP.put("keyword", keyword);
 		countP.put("category", category);
-		int total = dao.boardListTotal(countP);
+		int total = dao.boardListTotal(countP);	// 검색어+카테고리 까지 합쳐서 총 게시글 갯수 세어주기
 		System.out.println("total : " + total);
 
 		paging.setTotalCount(total);
@@ -60,10 +61,10 @@ public class BoardServiceImpl implements BoardService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("start", start);
 		map.put("end", end);
+		map.put("category", category);
 		map.put("sortOrder", sortOrder);
 		map.put("keyword", keyword);
-		map.put("category", category);
-
+		
 		List<BoardDTO> list = dao.boardListAction(map);
 		System.out.println("list : " + list);
 
@@ -73,7 +74,6 @@ public class BoardServiceImpl implements BoardService {
 		model.addAttribute("category", category);
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("sortOrder", sortOrder);
-
 	}
 
 	// 게시판 상세페이지
@@ -201,7 +201,10 @@ public class BoardServiceImpl implements BoardService {
 				String saveDir = request.getSession().getServletContext().getRealPath("/resources/board_upload/");
 				System.out.println("saveDir : " + saveDir);
 
-				String realDir = "D:\\DEV05\\workspace_DCshop\\DCShop\\src\\main\\webapp\\resources\\board_upload\\";
+				//String realDir = "D:\\DEV05\\workspace_DCshop\\DCShop\\src\\main\\webapp\\resources\\board_upload\\";
+				String realDir = "D:\\DEV05\\workspace_team\\DCShop\\src\\main\\webapp\\resources\\board_upload\\";
+				//String realDir = request.getSession().getServletContext().getRealPath("/resources/board_upload/");
+				//new java.io.File(realDir).mkdirs();
 				System.out.println("realDir : " + realDir);
 
 				file.transferTo(new File(saveDir + file.getOriginalFilename())); // import java.io.File
@@ -262,6 +265,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int boardUpdateAction(MultipartHttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
+		/*
+		 * 커뮤니티(자유게시판 등) 글 수정 처리
+		 * - 필수값 검증 후 파일 업로드가 있으면 저장 및 경로 세팅
+		 * - 수정 완료 후 해당 글 번호 반환 → 컨트롤러에서 상세보기로 이동시 사용
+		 */
 		// 1. 수정할 글 정보 파라미터 가져오기
 		int b_num = Integer.parseInt(request.getParameter("b_num"));
 
@@ -333,6 +341,12 @@ public class BoardServiceImpl implements BoardService {
 	@Transactional
 	public void boardDeleteAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
+		/*
+		 * 커뮤니티(자유/꿀팁/리뷰/질문) 글 삭제
+		 * - 권한 체크: 작성자 본인 또는 관리자만 허용
+		 * - FK 무결성: 부모 삭제 전 자식(댓글, 추천) 선삭제
+		 * - 트랜잭션 보장: @Transactional
+		 */
 		// 1. 삭제할 게시글 번호 가져오기
 		int b_num = Integer.parseInt(request.getParameter("b_num"));
 
@@ -352,9 +366,9 @@ public class BoardServiceImpl implements BoardService {
 		// 5. 자식 데이터(댓글, 추천) 선삭제 → FK 제약조건/데이터 무결성 문제 방지
 		dao.deleteCommentsByBoard(b_num);
 		dao.deleteRecommendsByBoard(b_num);
-		 // 6. 게시글 삭제 실행
+		// 6. 게시글 삭제 실행
 		int deleteCnt = dao.boardDeleteAction(b_num);
-		 // 7. 삭제 결과를 model에 저장 (뷰에서 활용 가능)
+		// 7. 삭제 결과를 model에 저장 (뷰에서 활용 가능)
 		model.addAttribute("deleteCnt", deleteCnt);
 	}
 

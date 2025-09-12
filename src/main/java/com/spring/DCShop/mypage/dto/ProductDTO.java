@@ -19,12 +19,17 @@ public class ProductDTO {
 	private int pdDiscountRate;
 	private String pdStatus;
 	private String pdOption;
+	private int pdSubcategory;
+	private int pdPetCategory;
 	
-	public ProductDTO() {}
+	public ProductDTO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public ProductDTO(int pdId, String pdName, Clob pdDescription, int pdPrice, int pdStock, int category,
 			Date pdCreated, Date pdUpdate, String pdBrand, String pdImageUrl, int pdShippingFee, int pdDiscountRate,
-			String pdStatus, String pdOption) {
+			String pdStatus, String pdOption, int pdSubcategory, int pdPetCategory) {
 		super();
 		this.pdId = pdId;
 		this.pdName = pdName;
@@ -40,6 +45,8 @@ public class ProductDTO {
 		this.pdDiscountRate = pdDiscountRate;
 		this.pdStatus = pdStatus;
 		this.pdOption = pdOption;
+		this.pdSubcategory = pdSubcategory;
+		this.pdPetCategory = pdPetCategory;
 	}
 
 	public int getPdId() {
@@ -154,13 +161,29 @@ public class ProductDTO {
 		this.pdOption = pdOption;
 	}
 
+	public int getPdSubcategory() {
+		return pdSubcategory;
+	}
+
+	public void setPdSubcategory(int pdSubcategory) {
+		this.pdSubcategory = pdSubcategory;
+	}
+
+	public int getPdPetCategory() {
+		return pdPetCategory;
+	}
+
+	public void setPdPetCategory(int pdPetCategory) {
+		this.pdPetCategory = pdPetCategory;
+	}
+
 	@Override
 	public String toString() {
 		return "ProductDTO [pdId=" + pdId + ", pdName=" + pdName + ", pdDescription=" + pdDescription + ", pdPrice="
 				+ pdPrice + ", pdStock=" + pdStock + ", category=" + category + ", pdCreated=" + pdCreated
 				+ ", pdUpdate=" + pdUpdate + ", pdBrand=" + pdBrand + ", pdImageUrl=" + pdImageUrl + ", pdShippingFee="
 				+ pdShippingFee + ", pdDiscountRate=" + pdDiscountRate + ", pdStatus=" + pdStatus + ", pdOption="
-				+ pdOption + "]";
+				+ pdOption + ", pdSubcategory=" + pdSubcategory + ", pdPetCategory=" + pdPetCategory + "]";
 	}
 	
 }

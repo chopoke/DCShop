@@ -8,16 +8,28 @@
  	
 	<!-- OrderList 가져오기 : 주문 리스트 -->
 	<select id="getOrderList" resultMap="orderMap">
-	    <![CDATA[
-			SELECT *
-			FROM (
-			  SELECT t.*,
-			         ROW_NUMBER() OVER (ORDER BY o_date DESC, o_num DESC) AS rn
-			  FROM   order_tbl t
-			  WHERE  u_member_id = #{u_member_id}
-			)
-			WHERE rn <= 5
-		]]>
+		<![CDATA[
+        SELECT *
+        FROM (
+            SELECT 
+                o.o_num,
+                MAX(o.o_delivery_state) AS o_delivery_state,
+                MAX(o.o_status) AS o_status,
+                SUM(o.o_price * o.o_count)
+                + CASE 
+         			WHEN SUM(o.o_price * o.o_count) > 100000 THEN 0 
+         			ELSE MAX(pd.pd_shipping_fee) 
+       			  END AS o_price,
+                COUNT(o.pd_id) AS product_count,          
+                MIN(o.pd_id) AS pd_id               
+            FROM order_tbl o, product_tbl pd
+            WHERE o.u_member_id = #{u_member_id}
+              AND o.pd_id = pd.pd_id
+            GROUP BY o.o_num
+            ORDER BY MAX(o.o_date) DESC, o.o_num DESC
+        ) 
+        WHERE ROWNUM <= 5
+    	]]>
 	</select>
 	
 	<resultMap id="orderMap" type="com.spring.DCShop.mypage.dto.OrderDTO">
@@ -27,6 +39,7 @@
 	  <result property="o_name"	    		column="o_name"/>
 	  <result property="o_phone"	    	column="o_phone"/>
 	  <result property="o_date"	    		column="o_date"/>
+	  <result property="o_date_detail"	    column="o_date"/>
 	  <result property="o_price"	    	column="o_price"/>
 	  <result property="o_Delivery_State"   column="o_delivery_state"/>
 	  <result property="o_Delivery_Date" 	column="o_delivery_date"/>
@@ -37,6 +50,7 @@
 	  <result property="o_Request" 	        column="o_request"/>
 	  <result property="o_Status" 	        column="o_status"/>
 	  <result property="o_payment_key" 	    column="o_payment_key"/>
+	  <result property="productCount"       column="product_count"/>
 	  <collection property="productDto"     column="pd_id"     select="getProductList"/>
 	</resultMap>
 	
@@ -108,6 +122,75 @@
 		 WHERE pd_id = #{pd_id}
 	</select>
 	
+	<select id="myQnaCnt" parameterType="java.util.Map" resultType="int">
+	  	SELECT count(*)
+		  FROM
+			(SELECT A.*
+				  , rownum AS rn
+			   FROM (SELECT q.*
+			   		   FROM product_tbl p
+			   		      , qna_tbl q
+			   		      , user_tbl u
+					  WHERE p.pd_id = q.pd_id
+					  	AND u.u_member_id = q.u_member_id
+				  	<if test="q_category != null and q_category != ''">
+				  		AND q.q_category = #{q_category}
+				  	</if>
+				  	<if test="from != null and from != ''">
+				  	<![CDATA[
+			  			AND q.q_regDate >= #{from}
+		  			]]>
+    				</if>
+    				<if test="to != null and to != ''">
+    				<![CDATA[
+    					AND q.q_regDate <= #{to}
+   					]]>
+    				</if>
+    				<if test="q_answer != null and q_answer != ''">
+    					AND q.q_answer = #{q_answer}
+    				</if>
+    				<if test="sessionId != null and sessionId != ''">
+    					AND q.u_member_id = #{sessionId}
+    				</if>
+    				) A
+			)
+	  </select>
+	  
+	  <select id="myQnaList" parameterType="java.util.Map" resultType="com.spring.DCShop.shop.dto.QuestDTO">
+	  	SELECT *
+		  FROM
+			(SELECT A.*, rownum AS rn
+			   FROM (SELECT q.*,
+			   				u.u_id
+			   		   FROM product_tbl p
+			   		      , qna_tbl q
+			   		      , user_tbl u
+					  WHERE p.pd_id = q.pd_id
+					  	AND u.u_member_id = q.u_member_id
+					  	<if test="q_category != null and q_category != ''">
+					  		AND q.q_category = #{q_category}
+					  	</if>
+					  	<if test="from != null and from != ''">
+					  	<![CDATA[
+				  			AND q.q_regDate >= #{from}
+			  			]]>
+	    				</if>
+	    				<if test="to != null and to != ''">
+	    				<![CDATA[
+	    					AND q.q_regDate <= #{to}
+    					]]>
+	    				</if>
+	    				<if test="q_answer != null and q_answer != ''">
+	    					AND q.q_answer = #{q_answer}
+	    				</if>
+	    				<if test="sessionId != null and sessionId != ''">
+	    					AND q.u_member_id = #{sessionId}
+	    				</if>
+				   ORDER BY q.q_regdate DESC) A 
+			)
+		WHERE rn BETWEEN #{start} AND #{end}
+		ORDER BY rn ASC
+	  </select>
 	
 	<select id="pwdcheck" parameterType="java.util.Map" resultType="int">
 		SELECT COUNT(*)
@@ -191,10 +274,159 @@
 	<!-- 회원탈퇴 -->
 	<update id="userInfoDelete" parameterType="java.util.Map">
 		UPDATE user_tbl
-		   SET u_show = 'N'
+		   SET u_show = 'N',
+		   	   u_regdate = sysdate
 		 WHERE u_member_id = #{u_member_id}
 		   AND u_password = #{u_password}
 	</update>
 	
+
+	<!-- 회원 관련 펫정보 가져오기 -->
+	<select id="userOfPets" parameterType="int" resultType="com.spring.DCShop.mypage.dto.MyPetDTO">
+		SELECT 	p_num, u_member_id, p_name, p_gender, p_type,
+     			p_weight, p_size, p_birth, p_kind, p_neutered
+		  FROM pet_tbl 
+		 WHERE u_member_id = #{u_member_id}
+	</select>
+	
+ 	<select id="productInfo" parameterType="java.util.Map" resultType="com.spring.DCShop.mypage.dto.ProductDTO">
+		SELECT pd_id pdId
+		     , pd_name pdName
+		     , pd_description pdDescription
+		     , pd_price pdPrice
+		     , pd_stock pdStock
+		     , pd_category category
+		     , pd_created pdCreated
+		     , pd_updated pdUpdate
+		     , pd_brand pdBrand
+		     , pd_image_url pdImageUrl
+		     , pd_shipping_fee pdShippingFee
+		     , pd_discount_Rate pdDiscountRate
+		     , pd_status pdStatus
+		     , pd_option pdOption
+		     , pd_subcategory pdSubcategory
+		     , pd_pet_category pdPetCategory
+		  FROM product_tbl
+		  <where>
+	        <!-- cat 또는 dog 값이 0이 아닐 때만 조건 추가 -->
+	        <if test="cat != 0 or dog != 0">
+	            (
+	            <if test="cat != 0">
+	                pd_pet_category = #{cat}
+	            </if>
+	            <if test="dog != 0">
+	                <if test="cat != 0"> OR </if>
+	                pd_pet_category = #{dog}
+	            </if>
+	            )
+	        </if>
+	        <!-- cat=0, dog=0 이면 WHERE 절 자체가 비워짐 → 전체 데이터 -->
+		  </where>
+	</select>
+
+	<!-- 주문내역 페이지 리스트 가져오기 -->
+	<select id="orderListById" parameterType="java.util.Map" resultType="com.spring.DCShop.mypage.dto.OrderDTO">
+		SELECT * 
+		  FROM (SELECT O.*
+		  			 , rownum AS rn
+		  		  FROM (SELECT 
+						    o_num ,
+						    o_date,
+						    u_member_id,
+						    o_payment,
+						    SUM(o_price * o_count) 
+						    + CASE 
+                    			WHEN SUM(o_price * o_count) > 100000 THEN 0 
+                    			ELSE MAX(pd_shipping_fee) 
+                  			  END AS o_price,
+						    o_status,
+						    o_delivery_state
+						FROM order_tbl o, product_tbl pd
+						WHERE u_member_id = #{u_member_id}
+						  AND o.pd_id = pd.pd_id
+						  <if test="start_date != null and end_date != null">
+						  <![CDATA[
+						  	AND o.o_date >= #{start_date, jdbcType=DATE}
+    						AND o.o_date < #{end_date, jdbcType=DATE} + 1
+    						]]>
+						  </if>
+						  <if test="status != null and status != ''">
+						  	AND
+						  		<choose>
+						  			<when test="status == '주문완료'">
+						  				o.o_status = '주문완료'
+						  			</when>
+						  			<when test="status == '배송준비'">
+						  				o.o_delivery_state = '배송준비'
+						  			</when>
+						  			<when test="status == '배송중'">
+						  				o.o_delivery_state = '배송중'
+						  			</when>
+						  			<when test="status == '배송완료'">
+						  				o.o_delivery_state = '배송완료'
+						  			</when>
+						  			<when test="status == '주문취소'">
+						  				o.o_status = '주문취소'
+						  			</when>
+						  			<otherwise>
+						  				(o.o_status IN ('주문완료', '주문취소')
+						  				OR
+						  				o.o_delivery_state IN ('배송준비', '배송중', '배송완료'))
+						  			</otherwise>
+						  		</choose>
+						  </if>
+						GROUP BY o_num, u_member_id, o_date, o_status, o_payment, o_delivery_state
+						ORDER BY o_date desc
+						) O
+				)
+		  WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<!-- 주문리스트 총 개수 -->
+	<select id="orderListTotal" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(*)
+		  FROM (SELECT o_num
+		  		  FROM order_tbl
+		  		 WHERE u_member_id = #{u_member_id}
+		  		 <if test="start_date != null and end_date != null">
+		  		  <![CDATA[
+				  	AND o_date >= #{start_date, jdbcType=DATE}
+					AND o_date < #{end_date, jdbcType=DATE} + 1
+					]]>
+				  </if>
+				  <if test="status != null and status != ''">
+				  	AND
+				  		<choose>
+				  			<when test="status == '주문완료'">
+				  				o_status = '주문완료'
+				  			</when>
+				  			<when test="status == '배송준비'">
+				  				o_delivery_state = '배송준비'
+				  			</when>
+				  			<when test="status == '배송중'">
+				  				o_delivery_state = '배송중'
+				  			</when>
+				  			<when test="status == '배송완료'">
+				  				o_delivery_state = '배송완료'
+				  			</when>
+				  			<when test="status == '주문취소'">
+				  				o_status = '주문취소'
+				  			</when>
+				  			<otherwise>
+				  				(o_status IN ('주문완료', '주문취소')
+				  				OR
+				  				o_delivery_state IN ('배송준비', '배송중', '배송완료'))
+				  			</otherwise>
+				  		</choose>
+				  </if>
+		  		 GROUP BY o_num)
+	</select>
+	
+	<select id="orderDetailAction" parameterType="java.lang.Long" resultMap="orderMap">
+		SELECT *
+		  FROM order_tbl o, product_tbl pd
+		 WHERE o_num = #{o_num}
+		   AND o.pd_id = pd.pd_id
+	</select>
  		
  </mapper>

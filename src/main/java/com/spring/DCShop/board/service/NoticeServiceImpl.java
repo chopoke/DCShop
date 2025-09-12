@@ -34,6 +34,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public void noticeListAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
+		// 목록 조회: 카테고리/페이징 파라미터 수집 → DAO 조회 → Model 담기
 		System.out.println("NoticeServiceImpl - noticeListAction()");
 		
 		// 화면에서 입력받은 값을 가져오기
@@ -70,6 +71,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public void noticeDetailAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
+		// 상세 조회: 목록 클릭 시에만 조회수 증가(listClick=1) → 본문/추천여부 Model 담기
 		System.out.println("NoticeServiceImpl - noticeDetailAction()");
 		// 화면에서 입력받은 값을 가져오기
 		int b_num = Integer.parseInt(request.getParameter("b_num"));
@@ -114,6 +116,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public int noticeInsertAction(MultipartHttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
+		// 등록: 로그인 회원 식별 → 파일 업로드 처리(선택) → DAO insert → 생성 번호 반환
 		System.out.println("NoticeServiceImpl - noticeInsertAction()");
 
 		MultipartFile file = request.getFile("b_image");
@@ -168,6 +171,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public void noticeUpdateDTOAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
+		// 수정 폼 로드: 글 번호로 기존 데이터 조회 → Model 전달
 		System.out.println("NoticeServiceImpl - noticeUpdateDTOAction()");
 		
 		int b_num = Integer.parseInt(request.getParameter("b_num"));
@@ -181,6 +185,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public int noticeUpdateAction(MultipartHttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
+		// 수정: 제목/내용/카테고리 업데이트, 파일 변경 시 재업로드 처리 → DAO update
 		System.out.println("NoticeServiceImpl - noticeUpdateAction()");
 		
 		MultipartFile file = request.getFile("b_image");
@@ -234,6 +239,14 @@ public class NoticeServiceImpl implements NoticeService {
 	@Transactional
 	public void noticeDeleteAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
+		/*
+		 * 공지/이벤트 삭제 처리
+		 * - 권한 체크: 관리자만 삭제 가능
+		 * - FK 무결성: 부모(공지/이벤트) 삭제 전에 자식(추천, 댓글 등) 선삭제 필요
+		 * - 트랜잭션: @Transactional로 전체 작업 단위 보장
+		 *   주의) 체크예외(ServletException)만 던지면 기본설정에서 롤백되지 않을 수 있음
+		 *        필요 시 RuntimeException 사용 또는 @Transactional(rollbackFor=Exception.class) 권장
+		 */
 		int b_num = Integer.parseInt(request.getParameter("b_num"));
 	    
 		// 로그인 사용자 확인
@@ -241,19 +254,21 @@ public class NoticeServiceImpl implements NoticeService {
 		if (loginId == null) {
 			loginId = (String) request.getSession().getAttribute("sessionid");
 		}
-			// 권한 체크: admin만 가능
-		    if (!"admin".equals(loginId)) {
-		        throw new ServletException("권한이 없습니다.");
-		    } 
+		// 권한 체크: admin만 가능
+		if (!"admin".equals(loginId)) {
+			// 실무 팁: 롤백을 확실히 하려면 RuntimeException을 던지는 방식도 고려
+			throw new ServletException("권한이 없습니다.");
+		}
 
-		 // 추천(자식) 데이터 선삭제
-	    noticeDAO.deleteRecommendsByNotice(b_num);
 
-	    // 공지/이벤트 삭제
+		// 추천(자식) 데이터 선삭제
+		noticeDAO.deleteRecommendsByNotice(b_num);
+
+		// 공지/이벤트 삭제(부모)
 
 		int deleteCnt = noticeDAO.noticeDeleteAction(b_num);
 		model.addAttribute("deleteCnt", deleteCnt);
-
+		// 주의: deleteCnt == 0 이면 이미 삭제되었거나 없는 글 → 프론트에서 처리
 	}
 		
 	
@@ -261,36 +276,37 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public Map<String, Object> noticeRecommendClickAction(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException {
+		/*
+		 * 공지/이벤트 추천 클릭 처리
+		 * - click=1: 추천 추가(insert), click=0: 추천 취소(delete)
+		 * - 그 후 게시글의 추천수(b_recommend)를 DB에서 원자적으로 갱신
+		 *   (UPDATE ... SET b_recommend = (SELECT COUNT(*) ...))
+		 * - 동시성: DB에서 COUNT기반 갱신으로 정합성 확보
+		 */
 		System.out.println("NoticeServiceImpl - noticeRecommendClickAction()");
-		// 1. 파라미터 추출
+		// 1) 파라미터 추출
 		int b_num = Integer.parseInt(request.getParameter("b_num"));
 		int click = Integer.parseInt(request.getParameter("click"));
-		
+		// 2) 로그인 사용자 정보
 		String u_id = (String)request.getSession().getAttribute("sessionid");
-		
 		int u_member_id = noticeDAO.selectU_member_id(u_id);
-		
+		// 3) DAO 호출
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("b_num", b_num);
 		map.put("u_member_id", u_member_id);
-		// 2. 추천/취소 처리 (DAO 호출)
 		if(click == 1) {
 			noticeDAO.noticeRecommendAddAction(map);
 		} else {
 			noticeDAO.noticeRecommendRemoveAction(map);
 		}
-		// 3. 추천수 갱신
+		// 4) 추천수 갱신 및 결과 구성
 		int success = noticeDAO.noticeRecommendUpdateAction(b_num);
-		
 		Map<String, Object> result = new HashMap<String, Object>();
-	
 		if(success == 1) {
 			int b_recommend = noticeDAO.noticeSelectB_recommend(b_num);
 			result.put("b_recommend", b_recommend);
 		}
-		
 		result.put("success", success);
-		
 		return result;
 	}
 	

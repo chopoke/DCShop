@@ -7,12 +7,21 @@ import com.spring.DCShop.mypage.dto.CartDTO;
 import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.dto.MypageDTO;
 import com.spring.DCShop.mypage.dto.OrderDTO;
+import com.spring.DCShop.mypage.dto.ProductDTO;
+import com.spring.DCShop.shop.dto.QuestDTO;
+
 
 public interface MypageDAO {
 	
 	public List<OrderDTO> getOrderList(Map<String, Object> productListInfo);
 	
 	public List<CartDTO> getCartList(Map<String, Object> productListInfo);
+	
+	// mypage Qna목록 - 갯수
+	public int myQnaCnt(Map<String, Object> map);
+	
+	// mypage Qna목록 - 리스트 
+	public List<QuestDTO> myQnaList(Map<String, Object> param);
 	
 	public List<CartDTO> getMyCartList(Map<String, Object> productListInfo);
 	
@@ -26,13 +35,17 @@ public interface MypageDAO {
 	// 프로필 수정
 	public int profileupdate(Map<String, Object> map);
 	
-	
 	// 기존 펫정보 가져오기
 	public List<MyPetDTO> getPetList(int u_member_id);
 	
 	// 동물정보 인서트
 	public int petInfoInsert(MyPetDTO dto);
 	
+	// 해당 유저의 펫 정보 가져오기
+	public List<MyPetDTO> userOfPets(int u_member_id);
+	
+	// 상품 정보가져오기
+	public List<ProductDTO> productInfo(Map<String, Object> map);
 	
 	// 동물정보 업데이트
 	public int petInfoUpdate(MyPetDTO dto);
@@ -42,4 +55,13 @@ public interface MypageDAO {
 	
 	// 회원 정보 삭제
 	public int userInfoDelete(Map<String, Object> map);	
+
+	// 주문내역 페이지 주문리스트
+	public List<OrderDTO> orderListById(Map<String, Object> orderListById);
+	
+	// 주문리스트 총 개수
+	public int orderListTotal(Map<String, Object> orderList);
+
+	// 주문 상세 내역
+	public List<OrderDTO> orderDetailAction(Long o_num);
 }

@@ -97,4 +97,24 @@ public class ReviewDAOImpl implements ReviewDAO{
         
 	    }
 
+	@Override
+	public int hasPurchased(Map<String, Object> param) {
+		return sqlSession.selectOne("com.spring.DCShop.shop.dao.ReviewDAO.hasPurchased",param);
+	}
+
+	@Override
+	public int alreadyReviewed(Map<String, Object> param) {
+		return sqlSession.selectOne("com.spring.DCShop.shop.dao.ReviewDAO.alreadyReviewed",param);
+	}
+
+	@Override
+	public int myReviewCount(int uMemberId) {
+		return sqlSession.selectOne("com.spring.DCShop.shop.dao.ReviewDAO.myReviewCount", uMemberId);
+	}
+
+	@Override
+	public List<Map<String, Object>> myReviewList(Map<String, Object> param) {
+		return sqlSession.selectList("com.spring.DCShop.shop.dao.ReviewDAO.myReviewList", param);
+	}
+
 }

@@ -18,5 +18,10 @@ public interface QuestDAO {
 	public int questCnt(@Param("pd_id") int pd_id);
 	
 	//문의 상세 데이터
-	public QuestDTO qusetDetail(int q_num);
+	public QuestDTO questDetail(int q_num);
+	
+	//문의 수정
+	public void updateQuest(QuestDTO dto);
+	
+	public void deleteQuest(int q_num);
 }

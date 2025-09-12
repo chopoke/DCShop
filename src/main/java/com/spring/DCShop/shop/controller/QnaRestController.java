@@ -46,4 +46,5 @@ public class QnaRestController {
 	    // 5. 일반글이거나, 비밀글의 작성자 본인인 경우 DTO 반환
 	    return ResponseEntity.ok(dto);
 	}
+	
 }
