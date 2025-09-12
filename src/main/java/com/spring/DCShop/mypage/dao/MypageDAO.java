@@ -55,4 +55,13 @@ public interface MypageDAO {
 	
 	// 회원 정보 삭제
 	public int userInfoDelete(Map<String, Object> map);	
+
+	// 주문내역 페이지 주문리스트
+	public List<OrderDTO> orderListById(Map<String, Object> orderListById);
+	
+	// 주문리스트 총 개수
+	public int orderListTotal(Map<String, Object> orderList);
+
+	// 주문 상세 내역
+	public List<OrderDTO> orderDetailAction(Long o_num);
 }
