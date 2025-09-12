@@ -186,14 +186,9 @@ tailwind.config = {
 		              </div>
 		              <div class="flex">
 		                <span class="w-24 text-sm text-gray-500">배송요청</span>
-		                <c:choose>
-						    <c:when test="${order[0].o_Request != null}">
-				                <span class="text-sm">${order[0].o_Request}</span>
-						    </c:when>
-						    <c:otherwise>
-						        <span>   </span>
-						    </c:otherwise>
-						</c:choose>
+		                <c:if test="${order[0].o_Request != null}">
+		                	<span class="text-sm">${order[0].o_Request}</span>
+		                </c:if>
 		              </div>
 		            </div>
 		          </div>

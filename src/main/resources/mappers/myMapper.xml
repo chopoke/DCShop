@@ -213,11 +213,43 @@
                     			WHEN SUM(o_price * o_count) > 100000 THEN 0 
                     			ELSE MAX(pd_shipping_fee) 
                   			  END AS o_price,
-						    o_status
+						    o_status,
+						    o_delivery_state
 						FROM order_tbl o, product_tbl pd
 						WHERE u_member_id = #{u_member_id}
 						  AND o.pd_id = pd.pd_id
-						GROUP BY o_num, u_member_id, o_date, o_status, o_payment
+						  <if test="start_date != null and end_date != null">
+						  <![CDATA[
+						  	AND o.o_date >= #{start_date, jdbcType=DATE}
+    						AND o.o_date < #{end_date, jdbcType=DATE} + 1
+    						]]>
+						  </if>
+						  <if test="status != null and status != ''">
+						  	AND
+						  		<choose>
+						  			<when test="status == '주문완료'">
+						  				o.o_status = '주문완료'
+						  			</when>
+						  			<when test="status == '배송준비'">
+						  				o.o_delivery_state = '배송준비'
+						  			</when>
+						  			<when test="status == '배송중'">
+						  				o.o_delivery_state = '배송중'
+						  			</when>
+						  			<when test="status == '배송완료'">
+						  				o.o_delivery_state = '배송완료'
+						  			</when>
+						  			<when test="status == '주문취소'">
+						  				o.o_status = '주문취소'
+						  			</when>
+						  			<otherwise>
+						  				(o.o_status IN ('주문완료', '주문취소')
+						  				OR
+						  				o.o_delivery_state IN ('배송준비', '배송중', '배송완료'))
+						  			</otherwise>
+						  		</choose>
+						  </if>
+						GROUP BY o_num, u_member_id, o_date, o_status, o_payment, o_delivery_state
 						ORDER BY o_date desc
 						) O
 				)
@@ -225,11 +257,42 @@
 	</select>
 	
 	<!-- 주문리스트 총 개수 -->
-	<select id="orderListTotal" parameterType="int" resultType="int">
+	<select id="orderListTotal" parameterType="java.util.Map" resultType="int">
 		SELECT COUNT(*)
 		  FROM (SELECT o_num
 		  		  FROM order_tbl
 		  		 WHERE u_member_id = #{u_member_id}
+		  		 <if test="start_date != null and end_date != null">
+		  		  <![CDATA[
+				  	AND o_date >= #{start_date, jdbcType=DATE}
+					AND o_date < #{end_date, jdbcType=DATE} + 1
+					]]>
+				  </if>
+				  <if test="status != null and status != ''">
+				  	AND
+				  		<choose>
+				  			<when test="status == '주문완료'">
+				  				o_status = '주문완료'
+				  			</when>
+				  			<when test="status == '배송준비'">
+				  				o_delivery_state = '배송준비'
+				  			</when>
+				  			<when test="status == '배송중'">
+				  				o_delivery_state = '배송중'
+				  			</when>
+				  			<when test="status == '배송완료'">
+				  				o_delivery_state = '배송완료'
+				  			</when>
+				  			<when test="status == '주문취소'">
+				  				o_status = '주문취소'
+				  			</when>
+				  			<otherwise>
+				  				(o_status IN ('주문완료', '주문취소')
+				  				OR
+				  				o_delivery_state IN ('배송준비', '배송중', '배송완료'))
+				  			</otherwise>
+				  		</choose>
+				  </if>
 		  		 GROUP BY o_num)
 	</select>
 	

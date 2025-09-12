@@ -1,5 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/setting/setting.jsp"%>
+	
+<%-- 현재 검색 파라미터 유지 --%>
+<c:set var="searchParams" value="" />
+<c:if test="${not empty param.status}">
+    <c:set var="searchParams" value="${searchParams}&status=${param.status}" />
+</c:if>
+<c:if test="${not empty param.start_date}">
+    <c:set var="searchParams" value="${searchParams}&start_date=${param.start_date}" />
+</c:if>
+<c:if test="${not empty param.end_date}">
+    <c:set var="searchParams" value="${searchParams}&end_date=${param.end_date}" />
+</c:if>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -125,9 +139,10 @@
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-2">주문기간</label>
 							<div class="flex items-center space-x-2">
-								<input type="date"
+								<input type="date" id="start_date"
 									class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
-								<span class="text-gray-500">~</span> <input type="date"
+								<span class="text-gray-500">~</span> 
+								<input type="date"	id="end_date"
 									class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
 							</div>
 						</div>
@@ -135,22 +150,21 @@
 						<!-- 주문상태 -->
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-2">주문상태</label>
-							<select
+							<select id="status"
 								class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent pr-8">
-								<option>전체</option>
-								<option>주문완료</option>
-								<option>결제완료</option>
-								<option>배송준비중</option>
-								<option>배송중</option>
-								<option>배송완료</option>
-								<option>주문취소</option>
+								<option value="전체">전체</option>
+								<option value="주문완료">주문완료</option>
+								<option value="배송준비">배송준비</option>
+								<option value="배송중">배송중</option>
+								<option value="배송완료">배송완료</option>
+								<option value="주문취소">주문취소</option>
 							</select>
 						</div>
 						<div></div>
 						<div align="right">
-							<button
-								class="px-6 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-blue-600 transition-colors whitespace-nowrap !rounded-button">
-								검색</button>
+							<button class="px-6 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-blue-600 transition-colors whitespace-nowrap !rounded-button" onclick="searchBtn()">
+								검색
+							</button>
 						</div>
 						
 					</div>
@@ -171,9 +185,9 @@
 						<table class="w-full">
 							<thead class="bg-gray-50">
 								<tr>
-									<th class="px-4 py-3 text-left"><input type="checkbox"
+									<!-- <th class="px-4 py-3 text-left"><input type="checkbox"
 										class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" />
-									</th>
+									</th> -->
 									<th
 										class="px-4 py-3 text-left text-sm font-medium text-gray-700">
 										주문번호</th>
@@ -189,6 +203,9 @@
 									<th
 										class="px-4 py-3 text-left text-sm font-medium text-gray-700">
 										주문상태</th>
+									<th
+										class="px-4 py-3 text-left text-sm font-medium text-gray-700">
+										배송상태</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -196,20 +213,21 @@
 									<c:forEach var="o" items="${order}">
 										<c:set var="pd" value="${o.productDto[0]}" />
 										<tr class="bg-white dark:bg-gray-800">
-											<th class="px-4 py-3 text-left">
+											<!-- <th class="px-4 py-3 text-left">
 												<input type="checkbox" class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" />
-											</th>
+											</th> -->
 											<td >
 												<a href="${path}/orderDetail?o_num=${o.o_Num}" class="px-6 py-4 text-gray-900 no-underline"> 
 													<c:out value="${o.o_Num}" />
 												</a>
 											</td>
-											<td class="px-6 py-4"><c:out value="${o.o_date}" /></td>
-											<td class="px-6 py-4"><c:out value="${o.o_Payment}" /></td>
-											<td class="px-6 py-4">
+											<td class="px-6 py-4 text-sm"><c:out value="${o.o_date}" /></td>
+											<td class="px-6 py-4 text-sm"><c:out value="${o.o_Payment}" /></td>
+											<td class="px-6 py-4 text-sm">
 												<fmt:formatNumber value="${o.o_price}" type="number" maxFractionDigits="0"/>원
 											</td>
-											<td class="px-6 py-4"><c:out value="${o.o_Status}" /></td>
+											<td class="px-6 py-4 text-sm"><c:out value="${o.o_Status}" /></td>
+											<td class="px-6 py-4 text-sm"><c:out value="${o.o_Delivery_State}" /></td>
 										</tr>
 									</c:forEach>
 								</c:if>
@@ -228,18 +246,18 @@
 						<nav class="flex items-center space-x-1">
 							<!-- 이전 버튼 (currentPage - 1) -->
 							<c:if test="${paging.currentPage > 1}">
-								<a href="${path}/orderList?pageNum=${paging.currentPage - 1}" 
+								<a href="${path}/orderList?pageNum=${paging.currentPage - 1}${searchParams}" 
 								   class="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 no-underline">
 								    <i class="ri-arrow-left-s-line"></i>
 								</a>
 							</c:if>
 							<c:forEach var="num" begin="${paging.startPage}" end="${paging.endPage}">
-								<a href="${path}/orderList?pageNum=${num}"
+								<a href="${path}/orderList?pageNum=${num}${searchParams}"
 									 class="px-3 py-2 text-sm rounded no-underline ${paging.currentPage == num ? 'bg-primary text-white' : 'text-gray-500 hover:text-gray-700'}"> ${num} </a>
 							</c:forEach>
 							<!-- 다음 버튼 (currentPage + 1) -->
 							<c:if test="${paging.currentPage < paging.pageCount}">
-								<a href="${path}/orderList?pageNum=${paging.currentPage + 1}" 
+								<a href="${path}/orderList?pageNum=${paging.currentPage + 1}${searchParams}" 
 								   class="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 no-underline">
 								    <i class="ri-arrow-right-s-line"></i>
 								</a>
@@ -268,7 +286,57 @@
 				if(!file.files || !file.files[0]) return;
 				form.submit();
 			});
+			
+			// 검색했을 시 값 가져와서 보여주기
+			const url = new URLSearchParams(window.location.search);
+			const status_result = url.get('status');
+			const start_date_result = url.get('start_date');
+			const end_date_result = url.get('end_date');
+			
+			const status = document.getElementById('status');
+			const start_date = document.getElementById('start_date');
+			const end_date = document.getElementById('end_date');
+			
+			if(status_result != null) {
+				status.value = status_result; 
+			}
+			
+			if(start_date_result != null) {
+				start_date.value = start_date_result;
+			}
+			
+			if(end_date_result != null) {
+				end_date.value = end_date_result;
+			}
+			
 		});
+		
+		function searchBtn() {
+			const status = document.getElementById('status').value;
+			const start_date = document.getElementById('start_date').value;
+			const end_date = document.getElementById('end_date').value;
+			
+			// 두 날짜 중 하나만 입력되었을 경우
+	        if ((start_date && !end_date) || (!start_date && end_date)) {
+	            alert('기간을 모두 입력해주세요.');
+	            return;
+	        }
+
+	        // 여기서 실제 검색 요청을 처리 (예: GET 요청)
+	        // location.href를 사용해서 파라미터 전달
+	        const params = new URLSearchParams();
+
+	        if (start_date && end_date) {
+	            params.append('start_date', start_date);
+	            params.append('end_date', end_date);
+	        }
+
+	        if (status) {
+	            params.append('status', status);
+	        }
+
+	        location.href = "${path}/orderList?" + params.toString();
+		};
 	</script>
 </body>
 </html>

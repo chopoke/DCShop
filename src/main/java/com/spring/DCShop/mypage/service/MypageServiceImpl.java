@@ -3,6 +3,8 @@ package com.spring.DCShop.mypage.service;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -310,10 +312,57 @@ public class MypageServiceImpl implements MypageService {
 		
 		int session_u_member_id = (Integer)request.getSession().getAttribute("session_u_member_id");
 		String pageNum = request.getParameter("pageNum");
+		String start_date = request.getParameter("start_date");
+		String end_date = request.getParameter("end_date");
+		String status = request.getParameter("status");
 		
+		Map<String, Object> orderList = new HashMap<String, Object>();
+		
+		orderList.put("u_member_id", session_u_member_id);
+		
+		// 변환할 날짜 형식 정의
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        // 1. String -> java.util.Date
+	    java.util.Date utilDate;
+        Date start_d = null;
+        Date end_d = null;
+		
+		if(start_date != null) {
+			try {
+				utilDate = sdf.parse(start_date);
+				
+				// 2. java.util.Date -> java.sql.Date
+				start_d = new Date(utilDate.getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			// orderListById.put("start_date", start_date);
+			orderList.put("start_date", start_d);
+			System.out.println(start_d);
+		}
+		
+		if(end_date != null) {
+			try {
+				utilDate = sdf.parse(end_date);
+				
+				// 2. java.util.Date -> java.sql.Date
+				end_d = new Date(utilDate.getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			// orderListById.put("end_date", end_date);
+			orderList.put("end_date", end_d);
+			System.out.println(end_d);
+		}
+		
+		if(status != null) {
+			orderList.put("status", status);
+			System.out.println(status);
+		}
+
 		// 전체 주문내역 갯수 카운트
 		Paging paging = new Paging(pageNum);
-		int total = myDao.orderListTotal(session_u_member_id);
+		int total = myDao.orderListTotal(orderList);
 		System.out.println("total : " + total);
 		
 		paging.setTotalCount(total);
@@ -321,15 +370,12 @@ public class MypageServiceImpl implements MypageService {
 		int start = paging.getStartRow();
 		int end = paging.getEndRow();
 		
-		Map<String, Object> orderListById = new HashMap<String, Object>();
+		orderList.put("start", start);
+		orderList.put("end", end);
 		
-		orderListById.put("u_member_id", session_u_member_id);
-		orderListById.put("start", start);
-		orderListById.put("end", end);
+		List<OrderDTO> order = myDao.orderListById(orderList);
 		
-		List<OrderDTO> orderList = myDao.orderListById(orderListById);
-		
-		model.addAttribute("order", orderList);
+		model.addAttribute("order", order);
 		model.addAttribute("paging", paging);
 	}
 	

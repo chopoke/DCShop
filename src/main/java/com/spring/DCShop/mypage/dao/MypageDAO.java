@@ -42,7 +42,7 @@ public interface MypageDAO {
 	public List<OrderDTO> orderListById(Map<String, Object> orderListById);
 	
 	// 주문리스트 총 개수
-	public int orderListTotal(int u_member_id);
+	public int orderListTotal(Map<String, Object> orderList);
 
 	// 주문 상세 내역
 	public List<OrderDTO> orderDetailAction(Long o_num);

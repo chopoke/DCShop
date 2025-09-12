@@ -108,10 +108,10 @@ public class MypageDAOImpl implements MypageDAO{
 	
 	// 주문리스트 총 개수
 	@Override
-	public int orderListTotal(int u_member_id) {
+	public int orderListTotal(Map<String, Object> orderList) {
 		System.out.println("MypageDAOImpl => orderListTotal");
 		
-		int total = sqlSession.selectOne("com.spring.DCShop.mypage.dao.MypageDAO.orderListTotal", u_member_id);
+		int total = sqlSession.selectOne("com.spring.DCShop.mypage.dao.MypageDAO.orderListTotal", orderList);
 		
 		return total;
 	}
