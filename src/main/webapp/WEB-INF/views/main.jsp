@@ -233,6 +233,11 @@
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body" style="padding-top: 0;">
+					<%--
+					 * 메인 미니 팝업
+					 * - latestNotices/latestEvents 중 가장 최신 1건씩 노출
+					 * - 제목 클릭 시 상세로 이동하며 listClick=1을 주어 조회수 증가 및 상세 렌더링 일관성 유지
+					 --%>
 					<!-- 최신 공지 -->
 					<c:if test="${not empty latestNotices}">
 						<c:set var="n" value="${latestNotices[0]}" />
@@ -293,8 +298,8 @@
 	<script>
 		document.addEventListener('DOMContentLoaded', function() {
 			try {
-				var hasNotice = ${not empty latestNotices ? 'true' : 'false'};
-				var hasEvent = ${not empty latestEvents ? 'true' : 'false'};
+				var hasNotice = '${not empty latestNotices}' === 'true';
+				var hasEvent = '${not empty latestEvents}' === 'true';
 				if (!hasNotice && !hasEvent) return;
 
 				var hideUntil = localStorage.getItem('mainNoticeHideUntil');
@@ -388,9 +393,9 @@
 						<a href="${path}/notice_detail?b_num=${n.b_num}&listClick=1"
 							style="text-decoration: none; color: #333;">${n.b_title}</a>
 					</div>
-					<div style="font-size: 12px; color: #9a9a9a; margin-top: 2px;">
+						 <div style="font-size: 12px; color: #9a9a9a; margin-top: 2px; text-align: right;">
 						<fmt:formatDate value="${n.b_dateposted}" pattern="yyyy.MM.dd" />
-						· 조회 ${n.b_views}
+						
 					</div>
 				</div>
 			</c:if>
@@ -404,9 +409,9 @@
 						<a href="${path}/notice_detail?b_num=${e.b_num}&listClick=1"
 							style="text-decoration: none; color: #333;">${e.b_title}</a>
 					</div>
-					<div style="font-size: 12px; color: #9a9a9a; margin-top: 2px;">
+					<div style="font-size: 12px; color: #9a9a9a; margin-top: 2px; text-align: right;">
 						<fmt:formatDate value="${e.b_dateposted}" pattern="yyyy.MM.dd" />
-						· 조회 ${e.b_views}
+						
 					</div>
 				</div>
 			</c:if>

@@ -166,6 +166,7 @@
                     <td class="py-2 px-3 align-top">
                       <span class="text-gray-700">
                         <c:choose>
+                          <c:when test="${q.q_category == '교환'}">교환</c:when>
                           <c:when test="${q.q_category == '환불'}">환불</c:when>
                           <c:when test="${q.q_category == '배송'}">배송</c:when>
                           <c:when test="${q.q_category == '가격'}">가격</c:when>
