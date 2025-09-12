@@ -252,5 +252,22 @@ tailwind.config = {
 	<%@ include file="../setting/footer.jsp"%>
 	<!-- 푸터 끝 -->
 	
+	
+<script>
+   document.addEventListener('DOMContentLoaded', function(){
+      const img = document.getElementById('profileImg');
+      const file = document.getElementById('u_image');
+      const form = document.getElementById('avatarForm');
+      
+      if (!img || !file || !form) return;
+      
+      img.addEventListener('click', () => file.click());
+      
+      file.addEventListener('change', () => {
+         if(!file.files || !file.files[0]) return;
+         form.submit();
+      });
+   });
+</script>	
 </body>
 </html>

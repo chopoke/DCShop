@@ -227,8 +227,8 @@ public class MypageServiceImpl implements MypageService {
 	    }
 		
 		// input경로 정의
-//		String saveDir = request.getSession().getServletContext().getRealPath("/resources/image/profile/");		// -> tomcat 배포 war폴더
-		String saveDir = "D:\\ICT_Project\\workspace_check\\DCShop\\src\\main\\webapp\\resources\\image\\profile\\";
+//		String warDir = request.getSession().getServletContext().getRealPath("/resources/image/profile/");		// -> tomcat 배포 war폴더
+		String saveDir = "D:\\DEV05\\middleProject_ict05\\DCShop\\src\\main\\webapp\\resources\\image\\profile\\";
 		File dir = new File(saveDir);				
 		if (!dir.exists()) dir.mkdirs();			// 폴더 없으면 생성
 		
