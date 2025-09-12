@@ -173,7 +173,7 @@
 				            >수정</button>
 				
 				            <form class="frm-delete" method="post" 
-				            	action="${pageContext.request.contextPath}/mypage/pets/delete" >
+				            	action="${pageContext.request.contextPath}/mypage_deletePet.do" >
 				              <input type="hidden" name="p_num" value="${p.p_num}">
 				              <button type="submit" class="inline-flex items-center justify-center h-9 min-w-[64px] px-3 rounded-md border border-red-200 bg-white text-sm font-medium text-red-600 whitespace-nowrap hover:!bg-red-100 hover:!border-red-300 hover:shadow-sm transition-colors">
 				                삭제
@@ -199,7 +199,7 @@
 				  </div>
 				
 				  	<form id="petForm" class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4"
-				        method="post" action="${pageContext.request.contextPath}/mypage/pets/save">
+				        method="post" action="${pageContext.request.contextPath}/mypage_savePet.do">
 					    <!-- 어떤 모드인지 표시는 JS로만(서버는 p_num 유무로 판단) -->
 					    <input type="hidden" name="p_num" id="p_num">
 					    <!-- u_member_id는 서버 세션에서 설정 권장. 필요시 hidden으로 내려도 됨 -->

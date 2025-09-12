@@ -155,7 +155,7 @@ public class MypageController {
 	}
 	
 	// 반려동물 정보 저장
-	@PostMapping("/mypage/pets/save")		// @ModelAttribute로 넘어온 요소들을 받아줌 -> 자동매핑
+	@PostMapping("mypage_savePet.do")		// @ModelAttribute로 넘어온 요소들을 받아줌 -> 자동매핑
 	public String saveOne(@ModelAttribute MyPetDTO pet, HttpServletRequest req, HttpServletResponse res, Model model) {
 	    myService.updatePetInfo(pet, req, res, model);
 	    
@@ -222,7 +222,7 @@ public class MypageController {
 	}
 
 	// 반려동물 정보 삭제
-	@PostMapping(value = "/mypage/pets/delete", produces = "application/json; charset=UTF-8")
+	@PostMapping(value = "/mypage_deletePet.do", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public Map<String, Object> delete(@RequestParam String p_num, HttpServletRequest req, HttpServletResponse res, Model model) {
 	    int cnt = myService.deletePetInfo(p_num, req, res, model);
