@@ -276,7 +276,7 @@
 	      pd_pet_category, pd_subcategory, pd_created, pd_updated
 	  	)VALUES (
 	      #{pd_id}, #{pd_name}, #{pd_description}, #{pd_price}, #{pd_stock}, 
-	      #{pd_category}, #{pd_brand}, #{pd_image_url}, #{pd_shipping_fee}, 
+	      #{pd_category}, #{pd_brand}, #{pd_image_url, jdbcType=VARCHAR}, #{pd_shipping_fee}, 
 	      #{pd_discount_rate}, #{pd_status}, #{pd_option}, 
 	      #{pd_pet_category}, #{pd_subcategory}, SYSDATE, SYSDATE
   		)

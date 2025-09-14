@@ -12,6 +12,8 @@
     .hero-section1{width:100%;background:white;padding:.5rem 0;padding-top:5rem}
     .form-label{display:block;font-size:.875rem;color:#6b7280;margin-bottom:.25rem}
     .form-input{width:100%;border:1px solid #e5e7eb;border-radius:.5rem;padding:.5rem .75rem}
+    /* 숨김 파일 입력을 버튼처럼 쓰기 위한 보조 스타일 */
+    .sr-only-input{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
   </style>
 </head>
 <body class="bg-gray-100">
@@ -28,7 +30,7 @@
         <img src="${path}/resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
         <h2 class="text-lg font-semibold">${session_u_nickname}</h2>
         <p class="text-gray-500 text-sm mb-4">${session_u_email}</p>
-        <a href="${path}/mypage/profile" class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</a>
+        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
 
         <nav class="w-full space-y-2 text-sm">
           <a href="${path}/admin_board"   class="block py-2 px-3 rounded hover:bg-gray-100">게시판관리</a>
@@ -41,7 +43,7 @@
         </nav>
       </aside>
 
-      <!-- 메인 콘텐츠(기존 상품등록 폼 그대로 이동) -->
+      <!-- 메인 콘텐츠 -->
       <main class="flex-1 min-w-0 p-8 bg-gray-50">
         <div class="w-full max-w-4xl bg-white shadow rounded-xl overflow-hidden">
           <!-- 헤더 -->
@@ -58,8 +60,8 @@
             </c:if>
           </div>
 
-          <!-- 폼 -->
-          <form action="${path}/admin_product_insertAction" method="post" class="p-6 space-y-6">
+          <!-- 폼 (파일 업로드 위해 enctype 추가) -->
+          <form action="${path}/admin_product_insertAction" method="post" enctype="multipart/form-data" class="p-6 space-y-6">
             <!-- 1단 그리드 -->
             <div class="grid md:grid-cols-2 gap-4">
               <div>
@@ -148,13 +150,31 @@
               </div>
             </div>
 
-            <!-- 이미지 -->
+            <!-- 이미지: 파일탐색기 버튼 + 미리보기 -->
             <div>
-              <label class="form-label">이미지 URL</label>
-              <input name="pd_image_url" class="form-input" placeholder="https:// 또는 /resources/..."/>
-              <p class="text-xs text-gray-400 mt-1">
-                외부 URL 또는 내부 경로(/로 시작) 모두 가능. (파일 업로드로 바꾸려면 알려주세요)
-              </p>
+              <label class="form-label">상품 이미지(파일 업로드)</label>
+
+              <!-- 진짜 파일 인풋은 숨기고 라벨을 버튼처럼 사용 -->
+              <input id="pd_image" name="pd_image" type="file" accept="image/*" class="sr-only-input" />
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-wrap items-center gap-2">
+                  <label for="pd_image" class="inline-flex items-center px-4 py-2 bg-gray-900 text-white rounded-lg cursor-pointer hover:bg-black">
+                    파일 선택
+                  </label>
+                  <button type="button" id="btnClearImage" class="px-3 py-2 border rounded-lg hover:bg-gray-50">
+                    초기화
+                  </button>
+                  <span id="fileName" class="text-sm text-gray-600">선택된 파일 없음</span>
+                </div>
+
+                <!-- 미리보기 영역 -->
+                <div id="previewWrap" class="hidden">
+                  <img id="previewImg" alt="미리보기" class="mt-2 rounded-lg border max-h-56 object-contain" />
+                </div>
+
+                <p class="text-xs text-gray-400">
+                </p>
+              </div>
             </div>
 
             <!-- 버튼 -->
@@ -169,5 +189,51 @@
   </div>
 
   <%@ include file="../setting/footer.jsp" %>
+
+  <!-- 파일 미리보기/초기화 스크립트 -->
+  <script>
+    (function(){
+      const fileInput = document.getElementById('pd_image');
+      const fileName  = document.getElementById('fileName');
+      const btnClear  = document.getElementById('btnClearImage');
+      const previewWrap = document.getElementById('previewWrap');
+      const previewImg  = document.getElementById('previewImg');
+
+      function resetPreview() {
+        fileInput.value = '';
+        fileName.textContent = '선택된 파일 없음';
+        previewWrap.classList.add('hidden');
+        previewImg.removeAttribute('src');
+      }
+
+      fileInput.addEventListener('change', function(e){
+        const file = e.target.files && e.target.files[0];
+        if(!file){ resetPreview(); return; }
+
+        // 파일명 표기
+        fileName.textContent = file.name;
+
+        // 용량(10MB) 체크
+        const MAX = 10 * 1024 * 1024;
+        if (file.size > MAX) {
+          alert('파일 크기가 10MB를 초과합니다.');
+          resetPreview();
+          return;
+        }
+
+        // 이미지 미리보기
+        const reader = new FileReader();
+        reader.onload = function(evt){
+          previewImg.src = evt.target.result;
+          previewWrap.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      });
+
+      btnClear.addEventListener('click', function(){
+        resetPreview();
+      });
+    })();
+  </script>
 </body>
 </html>
