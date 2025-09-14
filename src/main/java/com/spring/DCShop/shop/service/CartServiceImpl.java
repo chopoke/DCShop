@@ -59,10 +59,10 @@ public class CartServiceImpl implements CartService {
 		int pdId = Integer.parseInt(request.getParameter("pdId"));
 		int qty = Integer.parseInt(request.getParameter("qty"));
 
-		CartDTO dto = new CartDTO();
-		dto.setuMemberId(uMemberId);
-		dto.setPdId(pdId);
-		dto.setCtQuantity(qty);
+//		CartDTO dto = new CartDTO();
+//		dto.setuMemberId(uMemberId);
+//		dto.setPdId(pdId);
+//		dto.setCtQuantity(qty);
 		
 		// cartdao.upsertCart(dto);
 		

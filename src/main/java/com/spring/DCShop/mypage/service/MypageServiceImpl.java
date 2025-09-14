@@ -169,7 +169,6 @@ public class MypageServiceImpl implements MypageService {
 	// 정보수정 페이지 user정보 get
 	@Override
 	public void findById(String loginId, Model model) {
-
 		MypageDTO dto = myDao.getUserInfo(loginId);
 		model.addAttribute("dto", dto);
 	}
@@ -234,13 +233,13 @@ public class MypageServiceImpl implements MypageService {
 	    }
 		
 		// input경로 정의
-//		String saveDir = request.getSession().getServletContext().getRealPath("/resources/image/profile/");		// -> tomcat 배포 war폴더
-		String saveDir = "D:\\ICT_Project\\workspace_check\\DCShop\\src\\main\\webapp\\resources\\image\\profile\\";
-		File dir = new File(saveDir);				
+		String warDir = request.getSession().getServletContext().getRealPath("/resources/image/profile/");		// -> tomcat 배포 war폴더
+		String saveDir = "D:\\DEV05\\middleProject_ict05\\DCShop\\src\\main\\webapp\\resources\\image\\profile\\";
+		File dir = new File(warDir);				
 		if (!dir.exists()) dir.mkdirs();			// 폴더 없으면 생성
 		
 	    String savedName = file.getOriginalFilename();		// 원본파일명 그대로 저장
-		file.transferTo(new File(saveDir, savedName));		// 저장!
+		file.transferTo(new File(warDir, savedName));		// 저장!
 			
 		Map<String, Object> map = new HashMap<>();
 		map.put("u_image", savedName);

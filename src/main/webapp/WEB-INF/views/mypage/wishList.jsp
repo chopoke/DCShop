@@ -46,14 +46,10 @@
 				  </c:otherwise>
 			</c:choose>
 			
-			<div class="relative inline-block">
 			<img id="profileImg"
 			     src="${imgUrl}"
 			     alt="Profile"
 			     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
-			</div>
-            <!-- <img src="resources/img_main/mypage_default.png" alt="Profile"
-	               class="rounded-full w-28 h-28 object-cover mb-4"> -->
             
             <h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
             <h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
