@@ -89,8 +89,7 @@
 	          data: param,
 	          success: function() {  // 콜백함수(6) => 문의삭제가 완료되면 서버에서 콜백함수 호출
 	         	alert('답변이 등록되었습니다.');
-	         	window.location.reload();
-	         	history.back();
+	         	window.location.href='${path}/admin_qna';
 	          },
 	          error: function() {
 	            alert('답변이 등록되지 않았습니다.');
@@ -109,7 +108,6 @@
           data: param,
           success: function() {  // 콜백함수(6) => 문의삭제가 완료되면 서버에서 콜백함수 호출
          	alert('문의가 삭제되었습니다.');
-         	window.location.reload();
          	history.back();
           },
           error: function() {
@@ -141,13 +139,13 @@
 		
 		        <!-- 네비게이션 -->
 		        <nav class="w-full space-y-2 text-sm">
-		          <a href="#"   class="block py-2 px-3 rounded hover:bg-gray-100">게시판관리</a>
-		          <a href="#"   class="block py-2 px-3 rounded hover:bg-gray-100">주문관리</a>
-		          <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품관리</a>
-		          <a href="./mypage_qna.do"     class="block py-2 px-3 rounded hover:bg-gray-100 bg-gray-50 font-semibold">문의관리</a>
-		          <a href="#"  class="block py-2 px-3 rounded hover:bg-gray-100">리뷰관리</a>
-		          <a href="#"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
-		          <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+		          <a href="${path}/admin_board"   class="block py-2 px-3 rounded hover:bg-gray-100">게시판관리</a>
+		          <a href="${path}/admin_order"   class="block py-2 px-3 rounded hover:bg-gray-100">주문관리</a>
+		          <a href="${path}/admin_product" class="block py-2 px-3 rounded hover:bg-gray-100">상품관리</a>
+		          <a href="${path}/admin_qna"     class="block py-2 px-3 rounded bg-gray-900 text-white">문의관리</a>
+		          <a href="${path}/admin_review"  class="block py-2 px-3 rounded hover:bg-gray-100">리뷰관리</a>
+		          <a href="${path}/admin_user"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
+		          <a href="${path}/logout.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
 		        </nav>
 		      </aside>
 		      
