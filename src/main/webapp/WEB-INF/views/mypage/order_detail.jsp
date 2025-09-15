@@ -79,7 +79,7 @@ tailwind.config = {
 	<section class="hero-section1"></section>
 
 	<!-- 전체 컨테이너 -->
-	<div class="min-h-screen flex justify-center py-8">
+	<div class="min-h-[1200px] flex justify-center py-8">
 		<!-- 메인 래퍼 -->
 		<div
 			class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
@@ -117,16 +117,17 @@ tailwind.config = {
 	            <!-- 네비게이션 -->
 	            <nav class="w-full space-y-2 text-sm">
 	                  <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> 
-	                  <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
+	                  <a href="./orderList" class="block py-2 px-3 bg-gray-900 text-white rounded hover:bg-gray-100">주문내역</a>
+	                  <a href="./wishList.do" class="block py-2 px-3 rounded hover:bg-gray-100">관심상품</a>  
 	                  <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
-	                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
-	                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
-	                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+	                  <a href="./mypage_qna.do" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
+	                  <a href="./mypage/my_reviews.do" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
+	                  <!-- <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a> -->
                </nav>
          </aside>
 
 			<!-- 메인 콘텐츠 -->
-			<div class="max-w-7xl mx-auto p-6">
+			<div class="flex-1 p-8 bg-gray-50">
 		      <div class="flex items-center justify-between mb-6">
 		        <h1 class="text-2xl font-bold text-gray-900">주문 상세</h1>
 		        <a href="${path}/orderList" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 flex items-center gap-2 !rounded-button no-underline">
