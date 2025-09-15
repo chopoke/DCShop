@@ -266,18 +266,6 @@ tailwind.config = {
 
 	<script>
 		document.addEventListener('DOMContentLoaded', function(){
-			const img = document.getElementById('profileImg');
-			const file = document.getElementById('u_image');
-			const form = document.getElementById('avatarForm');
-			
-			if (!img || !file || !form) return;
-			
-			img.addEventListener('click', () => file.click());
-			
-			file.addEventListener('change', () => {
-				if(!file.files || !file.files[0]) return;
-				form.submit();
-			});
 			
 			// 검색했을 시 값 가져와서 보여주기
 			const url = new URLSearchParams(window.location.search);
@@ -302,7 +290,7 @@ tailwind.config = {
 			}
 			
 		});
-		
+		 
 		function searchBtn() {
 			const status = document.getElementById('status').value;
 			const start_date = document.getElementById('start_date').value;
