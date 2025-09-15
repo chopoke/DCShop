@@ -73,7 +73,7 @@ public class AdminDAOImpl implements AdminDAO{
 		int boardRecommentDeleteCnt = sqlSession.delete("com.spring.DCShop.mypage.dao.AdminDAO.adminBoardRecommentDelete", ids);
 		return boardRecommentDeleteCnt;
 	}
-
+	
 	// 게시판 선택 삭제 - 댓글(자식)
 	@Override
 	public int adminBoardCommentDelete(List<Integer> ids) {
@@ -245,4 +245,14 @@ public class AdminDAOImpl implements AdminDAO{
 		List<UserDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.AdminDAO.adminUserList2");
 		return list;
 	}
+	// 문의관리 - 답변페이지
+	@Override
+	public QuestDTO questDetail(int q_num) {
+		return sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.questDetail", q_num);
+	}
+	
+	@Override
+	public void updateAnswer(QuestDTO dto) {
+		sqlSession.update("com.spring.DCShop.mypage.dao.AdminDAO.updateAnswer", dto);
+	};
 }

@@ -38,7 +38,7 @@
 			<div class="w-100 button-group">
 				<div class="flex" style="gap: 16px;">
 					<a class="paybtn w-100" href="${path}/checkout"  rel="noreferrer noopener">다시 주문하기</a>
-					<a class="paybtn w-100" href="${path}/main.do" rel="noreferrer noopener">홈으로</a>
+					<a class="paybtn w-100" href="${path}/shop_main.do" rel="noreferrer noopener">상품목록</a>
 					<!-- <a class="btn w-100" href="https://docs.tosspayments.com/reference/error-codes" target="_blank" rel="noreferrer noopener">에러코드 문서보기</a> 
 					<a class="btn w-100" href="https://techchat.tosspayments.com" target="_blank" rel="noreferrer noopener">실시간 문의하기</a> -->
 				</div>

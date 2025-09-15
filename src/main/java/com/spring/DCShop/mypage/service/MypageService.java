@@ -1,6 +1,8 @@
 package com.spring.DCShop.mypage.service;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,10 +35,10 @@ public interface MypageService {
 	public void profileUpdate(MultipartHttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
 	
-	// 주문내역 가져오기
+	// 장바구니 내역 가져오기
 	public void carListInfo(HttpServletRequest request, HttpServletResponse response, Model model);
 	
-	// 장바구니 내역 가져오기
+	// 주문내역 가져오기
 	public void orderListInfo(HttpServletRequest request, HttpServletResponse response, Model model);
 
 	// 기존 펫 정보 가져오기
@@ -50,4 +52,13 @@ public interface MypageService {
 	
 	// 회원탈퇴
 	public int deleteUserInfo(HttpServletRequest request, HttpServletResponse response, Model model);
+	
+	// 회원가입-펫등록 기반정보, 상품 5개 추천하기
+	public void chooseRandomProduct(HttpServletRequest request, HttpServletResponse response, Model model);
+
+	// 주문내역 페이지에서 주문리스트 가져오기
+	public void orderListById(HttpServletRequest request, HttpServletResponse response, Model model); 
+	
+	// 주문 상세 내역
+	public void orderDetailAction(HttpServletRequest request, HttpServletResponse response, Model model);
 }

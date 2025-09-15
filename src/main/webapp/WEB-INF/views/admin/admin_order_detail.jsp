@@ -91,7 +91,7 @@ tailwind.config = {
 
                 <!-- 주문상태 변경 -->
                 <div class="relative">
-                  <button id="statusBtn" type="button" class="px-3 py-2 text-sm bg-stone-950 text-white rounded-md hover:bg-gray-800">
+                  <button id="statusBtn" type="button" class="px-3 py-2 text-sm bg-stone-500 text-white rounded-md hover:bg-stone-400">
                     주문상태 변경
                   </button>
                   <div id="statusMenu" class="hidden absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-md shadow-lg z-20">

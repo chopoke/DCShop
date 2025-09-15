@@ -64,7 +64,8 @@
 							data-readdy="true" class="text-gray-700 hover:text-primary no-underline transition-colors">강아지</a> 
 							<a href="${path}/shop_main.do?petType=2" 
 							class="text-gray-700 hover:text-primary no-underline transition-colors ">고양이</a> 
-							<a href="${path}/shop_main.do?event=1" 
+							<a href="${path}/shop_main.do?event=1"
+
 							class="text-gray-700 hover:text-primary no-underline transition-colors ">이벤트</a> 
 						<a href="#"
 							class="text-gray-700 hover:text-primary transition-colors" onclick="window.location='${path}/cartListShow.do'"><img alt="" src="resources/img_main/장바구니강.png" width="35px"></a>
@@ -413,9 +414,9 @@
 										<c:forEach var="item" items="${cateList}">
 											<c:if test="${ item >= 1100 and item < 1600 }">
 												<a href="#" 
-												class="js-subcat text-sm text-gray-500 hover:text-primary no-underline transition-colors whitespace-nowrap px-1"
-												data-pet-type="1"
-												data-subcategory="${item}">
+													class="js-subcat text-sm text-gray-500 hover:text-primary no-underline transition-colors whitespace-nowrap px-1"
+													data-pet-type="1"
+													data-subcategory="${item}">
 													${dogcategoryNames[item]}</a> 
 											</c:if>
 										</c:forEach>
@@ -424,7 +425,7 @@
 										<c:forEach var="item" items="${cateList}">
 											<c:if test="${ item >= 2100 and item < 2600 }">
 												<a href="#" 
-												class="js-subcat text-sm text-gray-500 hover:text-primary no-underline transition-colors  whitespace-nowrap px-1"
+												class="js-subcat text-sm text-gray-500 hover:text-primary no-underline transition-colors  whitespace-nowrap px-1" 
 												data-pet-type="2"
 												data-subcategory="${item}">
 													${catcategoryNames[item]}</a> 

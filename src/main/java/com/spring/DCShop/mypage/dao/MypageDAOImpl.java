@@ -11,7 +11,9 @@ import com.spring.DCShop.mypage.dto.CartDTO;
 import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.dto.MypageDTO;
 import com.spring.DCShop.mypage.dto.OrderDTO;
+import com.spring.DCShop.mypage.dto.ProductDTO;
 import com.spring.DCShop.shop.dto.QuestDTO;
+
 
 @Repository
 public class MypageDAOImpl implements MypageDAO{
@@ -29,7 +31,7 @@ public class MypageDAOImpl implements MypageDAO{
 		return list;
 		
 	}
-
+	
 	@Override
 	public List<CartDTO> getCartList(Map<String, Object> productListInfo) {
 
@@ -121,5 +123,48 @@ public class MypageDAOImpl implements MypageDAO{
 	public int userInfoDelete(Map<String, Object> map) {
 		int deleteCnt = sqlSession.update("com.spring.DCShop.mypage.dao.MypageDAO.userInfoDelete", map);
 		return deleteCnt;
+	}
+
+	@Override
+	public List<MyPetDTO> userOfPets(int u_member_id) {
+		List<MyPetDTO> petINfo = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.userOfPets", u_member_id);
+		return petINfo;
+	}
+
+	@Override
+	public List<ProductDTO> productInfo(Map<String, Object> map) {
+		System.out.println(map);
+		List<ProductDTO> productInfo = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.productInfo", map);
+		return productInfo;
+	}
+
+	// 주문내역 페이지 주문리스트
+	@Override
+	public List<OrderDTO> orderListById(Map<String, Object> orderListById) {
+		System.out.println("MypageDAOImpl => orderListById");
+		
+		List<OrderDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.orderListById", orderListById);
+		
+		return list;
+	}
+	
+	// 주문리스트 총 개수
+	@Override
+	public int orderListTotal(Map<String, Object> orderList) {
+		System.out.println("MypageDAOImpl => orderListTotal");
+		
+		int total = sqlSession.selectOne("com.spring.DCShop.mypage.dao.MypageDAO.orderListTotal", orderList);
+		
+		return total;
+	}
+	
+	// 주문 상세 내역
+	@Override
+	public List<OrderDTO> orderDetailAction(Long o_num) {
+		System.out.println("MypageDAOImpl => orderDetailAction");
+		
+		List<OrderDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.MypageDAO.orderDetailAction", o_num);
+		
+		return list;
 	}
 }

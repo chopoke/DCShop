@@ -24,13 +24,30 @@
     .modal.show { display:flex; }
   </style>
   <script>
-   $(function() {  // 상세페이지가 로딩되면
-      $('#DeleteQuestion').click(function(q_num) {
-          if (confirm("문의를 삭제하시겠습니까?")) {	//바로 삭제
-          	window.location.href = '${path}/question_deleteAction.qa?q_num='+q_num;
+  setInterval(function() {
+	  if (sessionStorage.getItem('reloadCheck') === 'true') {
+	    sessionStorage.removeItem('reloadCheck');
+	    window.location.reload();
+	  }
+	}, 500);
+
+   function question_delete(q_num){
+      let param = {	//문의자는 session이므로 controller에서 request로 직접받음.
+   		 "q_num": q_num,
+      }
+      $.ajax({
+          url: '${path}/question_deleteAction.qa',  // 컨트롤러 이동(3)
+          type: 'POST',
+          data: param,
+          success: function() {  // 콜백함수(6) => 문의삭제가 완료되면 서버에서 콜백함수 호출
+         	alert('문의가 삭제되었습니다.');
+         	window.location.reload();
+          },
+          error: function() {
+            alert('문의가 삭제되지않았니다.');
           }
-      };
-   });
+       });
+   }
 </script>
 </head>
 <body class="bg-gray-100">
@@ -166,6 +183,7 @@
                     <td class="py-2 px-3 align-top">
                       <span class="text-gray-700">
                         <c:choose>
+                          <c:when test="${q.q_category == '교환'}">교환</c:when>
                           <c:when test="${q.q_category == '환불'}">환불</c:when>
                           <c:when test="${q.q_category == '배송'}">배송</c:when>
                           <c:when test="${q.q_category == '가격'}">가격</c:when>
@@ -179,19 +197,18 @@
                     <td class="py-2 px-3 align-top">
                       <div class="ellipsis" title="${q.q_title}">
                         <a href="javascript:void(0)" class="text-blue-600 hover:underline"
-                           onclick="window.location='${path}/question_answer.qa?q_num=${q.q_num}'">${q.q_title}</a>
+                           onclick="window.location='${path}/qna_answer?q_num=${q.q_num}'">${q.q_title}</a>
                       </div>
-                      <%-- <div class="text-gray-400 text-xs ellipsis" title="${q.preview}">${q.preview}</div> --%>
                     </td>
                     <td class="py-2 px-3 align-top ellipsis" title="${q.u_id}">${q.u_id}</td>
                     <td class="py-2 px-3 align-top"><fmt:formatDate value="${q.q_regDate}" pattern="yyyy-MM-dd" /></td>
                     <td class="py-2 px-3 align-top">
-                      <%-- <c:choose>	처리일
-                        <c:when test="${not empty q.completed_at}">
-                          <fmt:formatDate value="${q.completed_at}" pattern="yyyy-MM-dd" />
+                      <c:choose>
+                        <c:when test="${not empty q.a_regdate}">
+                          ${q.a_regdate}
                         </c:when>
                         <c:otherwise>-</c:otherwise>
-                      </c:choose> --%>
+                      </c:choose>
                     </td>
                     <c:if test="${not (q.q_answer eq 'Y')}">
 						<td class="text-center">
@@ -211,11 +228,11 @@
                       <div class="flex flex-wrap gap-1">
                         <button type="button" class="px-2 py-1 border rounded hover:bg-gray-50"
                                 onclick="openModal(${q.q_num})">보기</button>
-                        <a href="${path}/admin_qna/replyForm?q_num=${q.q_num}"
+                        <a href="${path}/qna_answer?q_num=${q.q_num}"
                            class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">답변</a>
                         <a href="${path}/admin_qna/delete?q_num=${q.q_num}"
                            class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                           onclick="DeleteQuestion(${dto.q_num})">삭제</a>
+                           onclick="question_delete(${q.q_num})">삭제</a>
                       </div>
                     </td>
                   </tr>
