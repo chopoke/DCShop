@@ -290,7 +290,7 @@ tailwind.config = {
 			}
 			
 		});
-		
+		 
 		function searchBtn() {
 			const status = document.getElementById('status').value;
 			const start_date = document.getElementById('start_date').value;
