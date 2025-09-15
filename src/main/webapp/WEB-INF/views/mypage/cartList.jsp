@@ -7,14 +7,12 @@
 <c:set var="dissubtotalSum" value="0" />
 
 <c:forEach var="c" items="${cart}">
-
-<<<<<<< HEAD
 	<!-- 상품 배송비 -->
 	<c:set var="pdShip" value="${c.productDto[0].pdShippingFee}" />
 	<!-- 갯수 가져오기 -->
 	<c:set var="qty" value="${c.ctQuantity}" />
 	<!-- 상품 할인 비율 -->
-	<c:set var="rate" value="${c.productDto[0].pdDiscountRate}" />
+<%-- 	<c:set var="rate" value="${c.productDto[0].pdDiscountRate}" /> --%>
 	<!-- 상품 할인된 가격 가져오기 -->
 	<c:set var="hasDiscount" value="${rate gt 0 and rate lt 100}" />
 	<c:set var="discPriceInt"
@@ -30,29 +28,6 @@
 	<c:if test="${pdShip gt shippingFeeSum}">
 		<c:set var="shippingFeeSum" value="${pdShip}" />
 	</c:if>
-=======
-   <!-- 상품 배송비 -->
-   <c:set var="pdShip" value="${c.productDto[0].pdShippingFee}" />
-   <!-- 갯수 가져오기 -->
-   <c:set var="qty" value="${c.ctQuantity}" />
-   <!-- 상품 할인 비율 -->
-   <c:set var="rate" value="${c.productDto[0].pdDiscountRate}" />
-   <!-- 상품 할인된 가격 가져오기 -->
-   <c:set var="hasDiscount" value="${rate gt 0 and rate lt 100}" />
-   <c:set var="discPriceInt"
-      value="${ (c.productDto[0].pdPrice * (100 - rate)) div 100 }" />
-   <c:set var="dissubtotal" value="${dissubtotal + (discPriceInt * qty)}" />
-
-   <%-- 배송비 0원이 있으면 플래그 true --%>
-   <c:if test="${pdShip == 0}">
-      <c:set var="hasFreeShipping" value="true" />
-   </c:if>
-
-   <%-- 무료배송이 아닌 경우 최대 배송비 계산 --%>
-   <c:if test="${pdShip gt shippingFeeSum}">
-      <c:set var="shippingFeeSum" value="${pdShip}" />
-   </c:if>
->>>>>>> 804000a089027805ef4914e0880f391a17f90153
 </c:forEach>
 
 <%-- 플래그에 따라 최종 배송비 확정 --%>
@@ -171,7 +146,6 @@ tailwind.config = {
    
    // 수량 증가
    function plusFunction(pdId) {
-<<<<<<< HEAD
 	   const qtyId = "qty-" + pdId;  
 		const qtyPdId = "qty-input-" + pdId;
 	    const pd_stock = document.getElementById("pd_stock-"+pdId);
@@ -223,59 +197,6 @@ tailwind.config = {
 	    });
 	   
 	}
-=======
-      const qtyId = "qty-" + pdId;  
-      const qtyPdId = "qty-input-" + pdId;
-       const pd_stock = document.getElementById("pd_stock-"+pdId);
-      
-       const input = document.getElementById(qtyPdId);
-
-       if(input.value == pd_stock.value) {
-         alert(input.value + "갯수는 현 재고의 수량을 초과합니다.");
-         return false;
-       }
-       
-      let obj = new Object();
-      obj.pdId = pdId;
-      
-      let jsonData = JSON.stringify(obj);
-       $.ajax({
-          url : CTX + '/incQty.do',
-          type : 'POST',
-          data : jsonData,
-          contentType: 'application/json;charset=UTF-8',
-          success : function(res) {
-             if (res.result === 'ok') {
-                window.location.href = CTX + '/cartList';
-             }
-          },
-          error : function(request, status, error) {
-          },
-       });
-   }
-    // 수량 감소
-   function decFunction(pdId) {
-       const qtyId = "qty-" + pdId;  
-      let obj = new Object();
-      obj.pdId = pdId;
-         
-      let jsonData = JSON.stringify(obj);
-       $.ajax({
-          url : CTX + '/dicQty.do',
-          type : 'POST',
-          data : jsonData,
-          contentType: 'application/json;charset=UTF-8',
-          success : function(res) {
-             if (res.result === 'ok') {
-                window.location.href = CTX + '/cartList';
-             }
-          },
-          error : function(request, status, error) {
-          },
-       });
-      
-   }
->>>>>>> 804000a089027805ef4914e0880f391a17f90153
    
    // 상품 제거
    function removeFunction(pdId, button) {
@@ -358,7 +279,6 @@ tailwind.config = {
 }
 
 .qty-input::-webkit-inner-spin-button, .qty-input::-webkit-outer-spin-button
-<<<<<<< HEAD
 	{
 	-webkit-appearance: none;
 	margin: 0;
@@ -366,15 +286,6 @@ tailwind.config = {
 
 .qty-input {
 	-moz-appearance: textfield;
-=======
-   {
-   -webkit-appearance: none;
-   margin: 0;
-}
-
-.qty-input {
-   -moz-appearance: textfield;
->>>>>>> 804000a089027805ef4914e0880f391a17f90153
 }
 </style>
 </head>
@@ -384,20 +295,11 @@ tailwind.config = {
    <!-- 헤더 끝 -->
 
    <section class="hero-section1"></section>
-
-<<<<<<< HEAD
 	<!-- 전체 컨테이너 -->
 	<div class="min-h-[1200px] flex justify-center py-8">
 		<!-- 메인 래퍼 -->
 		<div
 			class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
-=======
-   <!-- 전체 컨테이너 -->
-   <div class="min-h-[1200px] flex justify-center py-8">
-      <!-- 메인 래퍼 -->
-      <div
-         class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
->>>>>>> 804000a089027805ef4914e0880f391a17f90153
 
          <!-- 사이드바 -->
          <aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
@@ -429,7 +331,7 @@ tailwind.config = {
             <!-- 네비게이션 -->
             <nav class="w-full space-y-2 text-sm">
 
-<<<<<<< HEAD
+
 					<a href="${pageContext.request.contextPath}/mypage_editPet.do"
 						class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> <a
 						href="./orderList"
@@ -444,30 +346,12 @@ tailwind.config = {
 						class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
 				</nav>
 			</aside>
-=======
-               <a href="${pageContext.request.contextPath}/mypage_editPet.do"
-                  class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> <a
-                  href="./orderList"
-                  class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a>
-               <a href="./wishList.do" class="block py-2 px-3 rounded hover:bg-gray-100">관심상품</a>  
-                  <a
-                  href="./cartList"
-                  class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> <a
-                  href="./mypage_qna.do"
-                  class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> <a
-                  href="./mypage/my_reviews.do"
-                  class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> <a
-                  href="#"
-                  class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
-            </nav>
-         </aside>
->>>>>>> 804000a089027805ef4914e0880f391a17f90153
 
          <!-- 페이지 헤더 -->
          <main class="flex-1 p-8 bg-gray-50">
 
             <h1 class="text-3xl font-bold text-gray-900 mb-2">장바구니</h1>
-            <c:out value="${hasFreeShipping}">dd</c:out>
+            <c:out value="${hasFreeShipping}"></c:out>
             <div class="d-flex justify-content-between align-items-center mb-3">
                <div class="text-secondary small">
                   주문한 상품 총: <strong id="totalItemsCount">${cartCountSum}</strong>개
@@ -477,8 +361,6 @@ tailwind.config = {
                   class="btn btn-outline-secondary btn-sm"
                   onclick="deleteSelected()">선택상품 삭제</button>
             </div>
-
-<<<<<<< HEAD
 				<!-- 장바구니 상품 목록 -->
 				<div class="card shadow-sm mb-4">
 					<div class="card-body p-0">
@@ -540,68 +422,6 @@ tailwind.config = {
 													</div>
 												</div>
 											</td>
-=======
-            <!-- 장바구니 상품 목록 -->
-            <div class="card shadow-sm mb-4">
-               <div class="card-body p-0">
-                  <div class="table-responsive"
-                     style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc;">
-                     <table class="table align-middle mb-0">
-                        <thead class="table-light">
-                           <tr>
-                              <th class="ps-3"><input class="form-check-input"
-                                 type="checkbox" id="selectAll" /></th>
-                              <th>상품정보</th>
-                              <th class="text-center">수량</th>
-                              <th class="text-end">상품금액</th>
-                              <th class="text-end">주문금액</th>
-                              <th class="text-center">삭제</th>
-                           </tr>
-                        </thead>
-                        <tbody class="border-top" id="cartItems">
-                           <c:forEach var="item" items="${cart}">
-                              <div id="cart-item" data-id="${item.pdId}"></div>
-                              <c:set var="pd" value="${item.productDto[0]}" />
-                              <c:set var="rate" value="${pd.pdDiscountRate}" />
-                              <c:set var="hasDiscount" value="${rate gt 0 and rate lt 100}" />
-                              <c:set var="discPriceInt"
-                                 value="${ (pd.pdPrice * (100 - rate)) div 100 }" />
-                              <tr class="cart-row" data-pd-id="${item.pdId}"
-                                 data-ct-id="${item.ctNum}">
-                                 <td class="ps-3"><input
-                                    class="form-check-input cart-item-checkbox" type="checkbox"
-                                    value="${item.pdId}" data-ct-id="${item.ctNum}" /></td>
-                                 <td>
-                                    <div class="d-flex align-items-center gap-3">
-                                       <input type="hidden" id="pd_stock-${pd.pdId}"
-                                          value="${pd.pdStock}" /> <input type="hidden"
-                                          class="pd-img" value="<c:out value="${pd.pdImageUrl}"/>">
-                                       <input type="hidden" class="pd-discount"
-                                          value="<c:out value="${pd.pdDiscountRate}"/>"> <img
-                                          src="<c:url value="${pd.pdImageUrl}"/>" alt="상품 이미지"
-                                          class="rounded w-16 h-16 object-cover" width="64"
-                                          height="64" />
-                                       <div>
-                                          <div class="fw-semibold pd-name">
-                                             <c:out value="${pd.pdName}" />
-                                          </div>
-
-                                          <div class="text-secondary small mt-1">
-                                             <c:if test="${pd.pdOption != ''}">
-                                                ${pd.pdOption}
-                                             </c:if>
-                                          </div>
-                                          <c:if test="${pd.pdStock < 5}">
-                                             <div id="stockArea"
-                                                class="flex items-center text-red-500 text-[10px] font-semibold space-x-2">
-                                                <i class="ri-alarm-warning-line text-[10px]"></i> <span>품절임박
-                                                   | </span> <span id="stockText"><c:out
-                                                      value="${pd.pdStock}" />개 남았습니다</span>
-                                             </div>
-                                          </c:if>
-                                       </div>
-                                    </div>
-                                 </td>
 
 
                                  <!-- 수량 조절 -->
@@ -612,13 +432,13 @@ tailwind.config = {
                                           <i class="bi bi-dash"></i>
                                        </button>
 
-                                       <span id="qty-${item.pdId}"
-                                          class="quantity-display fw-semibold pd-qty"> <input
-                                          type="number" class="form-control text-center qty-input"
-                                          id="qty-input-${item.pdId}" style="width: 6rem;"
-                                          inputmode="numeric"
-                                          value="<c:out value="${item.ctQuantity}"/>" />
-                                       </span>
+													<span id="qty-${item.pdId}"
+														class="quantity-display fw-semibold pd-qty"> <input
+														type="number" class="form-control text-center qty-input"
+														id="qty-input-${item.pdId}" style="width: 6rem;"
+														inputmode="numeric"
+														value="<c:out value="${item.ctQuantity}"/>" />
+													</span>
 
                                        <button class="btn btn-outline-secondary btn-sm"
                                           onclick="plusFunction(${item.pdId})" aria-label="수량 증가">
@@ -626,7 +446,6 @@ tailwind.config = {
                                        </button>
                                     </div>
                                  </td>
->>>>>>> 804000a089027805ef4914e0880f391a17f90153
 
 
                                  <td class="text-end fw-semibold "><c:choose>
@@ -649,17 +468,6 @@ tailwind.config = {
                                        </c:otherwise>
                                     </c:choose></td>
 
-<<<<<<< HEAD
-													<span id="qty-${item.pdId}"
-														class="quantity-display fw-semibold pd-qty"> <input
-														type="number" class="form-control text-center qty-input"
-														id="qty-input-${item.pdId}" style="width: 6rem;"
-														inputmode="numeric"
-														value="<c:out value="${item.ctQuantity}"/>" />
-													</span>
-=======
->>>>>>> 804000a089027805ef4914e0880f391a17f90153
-
                                  <td class="text-end fw-bold"><fmt:formatNumber
                                        value="${discPriceInt * item.ctQuantity}" type="currency"
                                        currencySymbol="₩" minFractionDigits="0"
@@ -679,48 +487,7 @@ tailwind.config = {
                </div>
             </div>
 
-<<<<<<< HEAD
 
-											<td class="text-end fw-semibold "><c:choose>
-													<c:when test="${hasDiscount}">
-														<span class="price-now money"> <fmt:formatNumber
-																value="${discPriceInt}" type="currency"
-																currencySymbol="₩" minFractionDigits="0"
-																maxFractionDigits="0" />
-														</span>
-														<s class="price-old money order-amount"> <fmt:formatNumber
-																value="${pd.pdPrice}" type="currency" currencySymbol="₩"
-																minFractionDigits="0" maxFractionDigits="0" />
-														</s>
-													</c:when>
-													<c:otherwise>
-														<span class="price-now money order-amount"> <fmt:formatNumber
-																value="${pd.pdPrice}" type="currency" currencySymbol="₩"
-																minFractionDigits="0" maxFractionDigits="0" />
-														</span>
-													</c:otherwise>
-												</c:choose></td>
-
-
-											<td class="text-end fw-bold"><fmt:formatNumber
-													value="${discPriceInt * item.ctQuantity}" type="currency"
-													currencySymbol="₩" minFractionDigits="0"
-													maxFractionDigits="0" /></td>
-											<td class="text-center">
-												<button class="btn btn-link text-secondary px-2"
-													onclick="removeFunction(${item.pdId}, this)"
-													aria-label="삭제">
-													<i class="bi bi-x-lg"></i>
-												</button>
-											</td>
-										</tr>
-									</c:forEach>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-=======
             <!-- 주문 요약 및 액션 버튼 (교체본) -->
             <div class="card shadow-sm rounded-3">
                <div class="card-body">
@@ -728,7 +495,6 @@ tailwind.config = {
 
                      <div
                         class="ms-auto d-flex align-items-center gap-3 flex-wrap justify-content-end">
->>>>>>> 804000a089027805ef4914e0880f391a17f90153
 
                         <div class="text-end fw-bold order-amount">
                            <div class="text-secondary small">총 상품금액</div>
