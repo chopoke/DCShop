@@ -64,9 +64,9 @@
 
           <input type="text" name="q" placeholder="제목/내용/작성자"
                  value="${fn:escapeXml(param.q)}"
-                 class="col-span-5 border rounded px-3 py-2"/>
+                 class="col-span-4 border rounded px-3 py-2"/>
 
-          <button class="col-span-1 bg-blue-600 text-white rounded px-3">검색</button>
+          <button class="col-span-2 bg-black text-sm text-white rounded px-3">검색</button>
         </form>
 
         <!-- 선택 액션 바 -->
@@ -177,19 +177,19 @@
         <div class="flex justify-center items-center gap-1 mt-4">
           <c:if test="${paging.prev > 0}">
             <a href="?pageNum=${paging.prev}&q=${fn:escapeXml(param.q)}&category=${param.category}&from=${param.from}&to=${param.to}"
-               class="px-3 py-1 border rounded hover:bg-gray-100">이전</a>
+               class="px-3 py-2 border rounded hover:bg-gray-100">이전</a>
           </c:if>
 
           <c:forEach var="p" begin="${paging.startPage}" end="${paging.endPage}">
             <a href="?pageNum=${p}&q=${fn:escapeXml(param.q)}&category=${param.category}&from=${param.from}&to=${param.to}"
-               class="px-3 py-1 border rounded ${p == paging.currentPage ? 'bg-gray-900 text-white' : 'hover:bg-gray-100'}">
+               class="px-3 py-2 border rounded ${p == paging.currentPage ? 'bg-gray-900 text-white' : 'hover:bg-gray-100'}">
               ${p}
             </a>
           </c:forEach>
 
           <c:if test="${paging.next gt 0 and paging.next le paging.pageCount}">
 			  <a href="?pageNum=${paging.next}&q=${fn:escapeXml(param.q)}&category=${param.category}&from=${param.from}&to=${param.to}"
-			     class="px-3 py-1 border rounded hover:bg-gray-100">다음</a>
+			     class="px-3 py-2 border rounded hover:bg-gray-100">다음</a>
 		  </c:if>
         </div>
 
