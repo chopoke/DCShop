@@ -17,6 +17,8 @@ public class QuestDTO {
     private Date q_regDate;  //문의 일자
     private String q_img;	 //문의 이미지
     private String q_category; //문의 종류 ㅁ
+    private Date a_regdate;  //답변처리 일자
+    private String a_answer; //답변 내용
     
     private int rn;		//상품에 달린 문의의 번호
     
@@ -114,16 +116,28 @@ public class QuestDTO {
 	}
 	
 	
+	// 답변 관련 데이터. 
+	public Date getA_regdate() {
+		return a_regdate;
+	}
+	public void setA_regdate(Date a_regDate) {
+		this.a_regdate = a_regDate;
+	}
+	public String getA_answer() {
+		return a_answer;
+	}
+	public void setA_answer(String a_answer) {
+		this.a_answer = a_answer;
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "QuestDTO [q_num=" + q_num + ", pd_id=" + pd_id + ", u_member_id=" + u_member_id + ", u_id=" + u_id
 				+ ", q_answer=" + q_answer + ", q_title=" + q_title + ", q_content=" + q_content + ", q_secret="
-				+ q_secret + ", q_regDate=" + q_regDate + ", q_img=" + q_img + ", q_category=" + q_category + ", rn="
-				+ rn + "]";
+				+ q_secret + ", q_regDate=" + q_regDate + ", q_img=" + q_img + ", q_category=" + q_category
+				+ ", a_regdate=" + a_regdate + ", a_answer=" + a_answer + ", rn=" + rn + "]";
 	}
-	
-	
-    
 }
 //CREATE TABLE qna_tbl (
 //	    q_num       NUMBER          PRIMARY KEY,                    -- 문의번호
@@ -135,5 +149,6 @@ public class QuestDTO {
 //	    q_secret    VARCHAR2(1) DEFAULT 'N'  CHECK (q_secret IN ('Y','N')) NOT NULL,         -- 비밀글여부
 //	    q_regDate   DATE DEFAULT SYSDATE NOT NULL,                  -- 등록일
 //	    q_img       VARCHAR2(255),                                  -- 이미지 URL
-//	    q_category  VARCHAR2(20)
+//	    q_category  VARCHAR2(20)	-- 답변 종류
+//		a_
 //);
