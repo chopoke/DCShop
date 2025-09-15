@@ -108,7 +108,8 @@ tailwind.config = {
 	            <!-- 네비게이션 -->
 	            <nav class="w-full space-y-2 text-sm">
 	                  <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> 
-	                  <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
+	                  <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a>
+	                  <a href="./wishList.do" class="block py-2 px-3 rounded hover:bg-gray-100">관심상품</a> 
 	                  <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
 	                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
 	                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
@@ -152,7 +153,7 @@ tailwind.config = {
 						</div>
 						<div></div>
 						<div align="right">
-							<button class="px-6 py-2 bg-primary text-white rounded-button text-sm font-medium hover:bg-blue-600 transition-colors whitespace-nowrap !rounded-button" onclick="searchBtn()">
+							<button class="px-6 py-2 bg-black rounded-lg text-white rounded-button text-sm font-medium hover:bg-blue-600 transition-colors whitespace-nowrap !rounded-button" onclick="searchBtn()">
 								검색
 							</button>
 						</div>

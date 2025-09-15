@@ -106,7 +106,7 @@
 		             placeholder="상품명 / 작성자 / 내용 검색" class="form-ctl">
 		    </div>
 		    <div class="md:col-span-3 flex items-end">
-		      <button type="submit" class="btn-primary">검색</button>
+		      <button type="submit" class="px-12 py-2 bg-black rounded-lg text-white rounded-button text-sm font-medium hover:bg-blue-600 transition-colors whitespace-nowrap !rounded-button">검색</button>
 		    </div>
 		
 		  </div>

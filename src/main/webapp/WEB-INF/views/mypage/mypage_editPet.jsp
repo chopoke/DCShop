@@ -103,12 +103,13 @@
 
          <!-- 메인 콘텐츠 -->
          <main class="flex-1 p-8 bg-gray-50">
+         	<h1 class="text-3xl font-bold text-gray-900 mb-2">내 반려동물</h1>
             <!-- 반려동물 목록 -->
 			<section class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 mt-8">
 			  	<div class="flex items-center justify-between">
 				    <h3 class="text-lg font-semibold text-gray-900">내 반려동물</h3>
 				    <button id="btnOpenAdd" type="button"
-				      class="rounded-xl bg-indigo-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+				      class="rounded-xl bg-stone-500 px-3.5 py-2 text-sm font-medium text-white hover:bg-stone-400">
 				      + 반려동물 추가
 				    </button>
 				  </div>
@@ -257,7 +258,7 @@
 					    </div>
 					
 					    <div class="sm:col-span-2 mt-2 flex gap-2">
-					      	<button type="submit" class="rounded-xl bg-indigo-600 text-white px-4 py-2 font-medium hover:bg-indigo-700">저장</button>
+					      	<button type="submit" class="rounded-xl bg-stone-500 text-white px-4 py-2 font-medium hover:bg-stone-400">저장</button>
 					      	<button type="button" id="btnReset" class="rounded-lg border px-3 py-2 hover:bg-gray-50">초기화</button>
 					    </div>
 				  	</form>
