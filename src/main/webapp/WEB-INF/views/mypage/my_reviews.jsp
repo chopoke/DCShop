@@ -135,7 +135,7 @@
               <c:set var="totalPages" value="${(total + pageSize - 1) / pageSize}" />
               <c:forEach var="i" begin="1" end="${totalPages}">
                 <a href="<c:url value='/mypage/my_reviews.bc'><c:param name='page' value='${i}'/></c:url>"
-                   class="px-3 py-1 rounded border <c:if test='${i == page}'> bg-blue-600 text-white border-blue-600</c:if>">
+                   class="px-3 py-2 rounded border <c:if test='${i == page}'> bg-black text-white border-black</c:if>">
                   ${i}
                 </a>
               </c:forEach>

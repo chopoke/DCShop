@@ -165,7 +165,7 @@
 						            <input type="hidden" name="pdId" value="${p.pd_id}">
 						            <input type="hidden" name="qty" value="1">
 						            <button type="submit"
-					                    class="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
+					                    class="px-4 py-2 rounded-xl bg-stone-500 text-white text-sm font-medium hover:bg-stone-400"
 					                    <c:if test="${p.pd_stock le 0}">disabled</c:if>>
 					              	장바구니 담기
 					            	</button>
