@@ -1,10 +1,12 @@
 package com.spring.DCShop.mypage.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.spring.DCShop.board.dto.BoardDTO;
 import com.spring.DCShop.board.page.Paging;
@@ -50,33 +54,6 @@ public class AdminServiceImpl implements AdminService{
 		model.addAttribute("userCount", userCount);
 	}
 	
-	// 회원목록-최신가입자5건
-	@Override
-	public void adminUser(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-		System.out.println("AdminServiceImpl - adminUser()");
-		List<UserDTO> list = dao.adminUserList1();
-		model.addAttribute("list", list);
-	}
-	
-	// 회원목록 - 펫통계
-	@Override
-	public void adminUserPet(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws ServletException, IOException {
-		Map<String, Object> stats = dao.adminUserPet();
-		int dogCount = ((Number)stats.getOrDefault("dog_count",0)).intValue();
-		int catCount = ((Number)stats.getOrDefault("cat_count",0)).intValue();
-		int maleCount = ((Number)stats.getOrDefault("male_count",0)).intValue();
-		int femaleCount = ((Number)stats.getOrDefault("female_count",0)).intValue();
-		int neuteredCount = ((Number)stats.getOrDefault("neutered_count",0)).intValue();
-		
-		model.addAttribute("dogCount", dogCount);
-		model.addAttribute("catCount", catCount);
-		model.addAttribute("maleCount", maleCount);
-		model.addAttribute("femaleCount", femaleCount);
-		model.addAttribute("neuteredCount", neuteredCount);
-	}
-
 	// 게시판목록
 	@Override
 	public void adminBoardList(HttpServletRequest request, HttpServletResponse response, Model model)
@@ -285,9 +262,58 @@ public class AdminServiceImpl implements AdminService{
 		dto.setPd_option(request.getParameter("pd_option"));
 		dto.setPd_pet_category(Integer.parseInt(request.getParameter("pd_pet_category")));
 		dto.setPd_subcategory(Integer.parseInt(request.getParameter("pd_subcategory")));
-		dao.adminProductInsert(dto);
-		
-		
+
+
+		// 1) 파일 받기 (input name="pd_image")
+	    String imageUrl = null;
+	    if (request instanceof MultipartHttpServletRequest) {
+	        MultipartHttpServletRequest mreq =
+	            (MultipartHttpServletRequest) request;
+
+	        MultipartFile file = mreq.getFile("pd_image");
+	        if (file != null && !file.isEmpty()) {
+	            // 2) 용량 제한(서버단) 보조 체크 (예: 10MB)
+	            long MAX = 10L * 1024 * 1024;
+	            if (file.getSize() > MAX) {
+	                model.addAttribute("error", "이미지 파일은 10MB 이하만 업로드 가능합니다.");
+	                return;
+	            }
+
+	            // 3) 저장 경로 만들기 (예: /resources/upload/product/yyyyMM/)
+	            String yyyymm = new java.text.SimpleDateFormat("yyyyMM").format(new Date());
+	            String relDir  = "/resources/upload/product/" + yyyymm; // 웹에서 접근할 상대경로
+	            String absDir  = request.getServletContext().getRealPath(relDir);
+
+	            File dir = new File(absDir);
+	            if (!dir.exists()) dir.mkdirs();
+
+	            // 4) 파일명 생성 (원본 확장자 유지)
+	            String original = file.getOriginalFilename();
+	            String ext = (original != null && original.lastIndexOf('.') != -1)
+	                    ? original.substring(original.lastIndexOf('.') + 1)
+	                    : null;
+
+	            String saved = java.util.UUID.randomUUID().toString().replace("-", "");
+	            if (ext != null && !ext.isEmpty()) saved += "." + ext.toLowerCase();
+
+	            File dest = new File(dir, saved);
+
+	            try {
+	                file.transferTo(dest);
+	                // 5) DB에는 URL(컨텍스트 기준 경로) 저장
+	                imageUrl = relDir + "/" + saved;  // 예: /DCShop/resources/upload/product/202509/uuid.jpg
+	            } catch (Exception e) {
+	                model.addAttribute("error", "이미지 업로드 실패: " + e.getMessage());
+	                return;
+	            }
+	        }
+	    }
+
+	    // 파일이 선택되었으면 파일 경로 우선, 없으면(선택 안함) null 유지
+	    dto.setPd_image_url(imageUrl);
+
+	    // 6) 저장
+	    dao.adminProductInsert(dto);
 	}
 		
 	
@@ -441,7 +467,6 @@ public class AdminServiceImpl implements AdminService{
 		String name = request.getParameter("pd_name");
 		String brand = request.getParameter("pd_brand");
 		String desc = request.getParameter("pd_description");
-		String imageUrl = request.getParameter("pd_image_url");
 		String option = request.getParameter("pd_option");
 		int price = Integer.parseInt(request.getParameter("pd_price"));
 		int stock = Integer.parseInt(request.getParameter("pd_stock"));
@@ -455,6 +480,51 @@ public class AdminServiceImpl implements AdminService{
 		if (!("판매중".equals(status) || "품절".equals(status) || "재입고대기".equals(status))) {
             status = "판매중";
         }
+		
+		// ❗ 새 파일이 없으면 기존 이미지 유지
+	    final String oldUrl = request.getParameter("pd_image_url_old"); // update.jsp의 hidden
+	    String imageUrl = oldUrl;
+	    
+	    if (request instanceof MultipartHttpServletRequest) {
+	        MultipartHttpServletRequest mreq =
+	                (MultipartHttpServletRequest) request;
+
+	        MultipartFile file = mreq.getFile("pd_image");
+	        if (file != null && !file.isEmpty()) {
+	            // 용량 보조 체크 (10MB)
+	            long MAX = 10L * 1024 * 1024;
+	            if (file.getSize() > MAX) {
+	                model.addAttribute("error", "이미지 파일은 10MB 이하만 업로드 가능합니다.");
+	                // 폼으로 되돌리고 싶다면 forward view 리턴; 현재 패턴 유지 위해 여기선 그냥 기존 이미지로 진행
+	            } else {
+	                // 저장 디렉터리: /resources/upload/product/yyyyMM
+	                String yyyymm = new java.text.SimpleDateFormat("yyyyMM").format(new java.util.Date());
+	                String relDir = "/resources/upload/product/" + yyyymm; // ★ DB엔 이 상대경로만 저장(컨텍스트 제외)
+	                String absDir = request.getServletContext().getRealPath(relDir);
+
+	                File dir = new File(absDir);
+	                if (!dir.exists()) dir.mkdirs();
+
+	                String original = file.getOriginalFilename();
+	                String ext = (original != null && original.lastIndexOf('.') != -1)
+	                        ? original.substring(original.lastIndexOf('.') + 1)
+	                        : null;
+
+	                String saved = java.util.UUID.randomUUID().toString().replace("-", "");
+	                if (ext != null && !ext.isEmpty()) saved += "." + ext.toLowerCase();
+
+	                File dest = new File(dir, saved);
+	                try {
+	                    file.transferTo(dest);
+	                    // 컨텍스트 제외한 상대경로만 DB에 저장
+	                    imageUrl = relDir + "/" + saved; // 예: /resources/upload/product/202509/uuid.jpg
+	                } catch (Exception e) {
+	                    model.addAttribute("error", "이미지 업로드 실패: " + e.getMessage());
+	                    // 실패 시 기존 이미지 유지(imageUrl=old)
+	                }
+	            }
+	        }
+	    }
 		
 		// DTO 구성
 		ShopDTO dto = new ShopDTO();
@@ -664,4 +734,39 @@ public class AdminServiceImpl implements AdminService{
  		model.addAttribute("list", list);
  		model.addAttribute("paging", paging);
  	}
+
+ 	// 회원목록-최신가입자5건
+ 	@Override
+ 	public void adminUser(HttpServletRequest request, HttpServletResponse response, Model model)
+ 			throws ServletException, IOException {
+ 		System.out.println("AdminServiceImpl - adminUser()");
+ 		List<UserDTO> list = dao.adminUserList1();
+ 		model.addAttribute("list", list);
+ 	}
+ 	
+ 	// 회원목록 - 펫통계
+ 	@Override
+ 	public void adminUserPet(HttpServletRequest request, HttpServletResponse response, Model model)
+ 			throws ServletException, IOException {
+ 		Map<String, Object> stats = dao.adminUserPet();
+ 		int dogCount = ((Number)stats.getOrDefault("dog_count",0)).intValue();
+ 		int catCount = ((Number)stats.getOrDefault("cat_count",0)).intValue();
+ 		int maleCount = ((Number)stats.getOrDefault("male_count",0)).intValue();
+ 		int femaleCount = ((Number)stats.getOrDefault("female_count",0)).intValue();
+ 		int neuteredCount = ((Number)stats.getOrDefault("neutered_count",0)).intValue();
+ 		
+ 		model.addAttribute("dogCount", dogCount);
+ 		model.addAttribute("catCount", catCount);
+ 		model.addAttribute("maleCount", maleCount);
+ 		model.addAttribute("femaleCount", femaleCount);
+ 		model.addAttribute("neuteredCount", neuteredCount);
+ 	}
+ 	
+ 	// 회원목록 - 탈퇴회원5건
+	@Override
+	public void adminUserDelete(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws ServletException, IOException {
+		List<UserDTO> list2 = dao.adminUserList2();
+		model.addAttribute("list2", list2);
+	}
 }

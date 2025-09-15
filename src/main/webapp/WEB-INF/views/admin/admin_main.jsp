@@ -56,34 +56,6 @@
           <p class="text-sm text-gray-500 mt-1">${sessionid} 관리자님 환영합니다.</p>
         </div>
 
-        <!-- 핵심 지표 (옵션: model에 값 있으면 표시, 없으면 0) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          <div class="bg-white rounded-xl border p-5">
-            <div class="text-sm text-gray-500">게시글 수</div>
-            <div class="text-2xl font-bold mt-1"><c:out value="${boardCount}" default="0"/></div>
-          </div>
-          <div class="bg-white rounded-xl border p-5">
-            <div class="text-sm text-gray-500">주문 수</div>
-            <div class="text-2xl font-bold mt-1"><c:out value="${orderCount}" default="0"/></div>
-          </div>
-          <div class="bg-white rounded-xl border p-5">
-            <div class="text-sm text-gray-500">상품 수</div>
-            <div class="text-2xl font-bold mt-1"><c:out value="${productCount}" default="0"/></div>
-          </div>
-          <div class="bg-white rounded-xl border p-5">
-            <div class="text-sm text-gray-500">문의 수</div>
-            <div class="text-2xl font-bold mt-1"><c:out value="${qnaCount}" default="0"/></div>
-          </div>
-          <div class="bg-white rounded-xl border p-5">
-            <div class="text-sm text-gray-500">리뷰 수</div>
-            <div class="text-2xl font-bold mt-1"><c:out value="${reviewCount}" default="0"/></div>
-          </div>
-          <div class="bg-white rounded-xl border p-5">
-            <div class="text-sm text-gray-500">회원 수</div>
-            <div class="text-2xl font-bold mt-1"><c:out value="${userCount}" default="0"/></div>
-          </div>
-        </div>
-
         <!-- 섹션 바로가기 버튼 6개 -->
         <section aria-label="관리자 섹션 바로가기">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
