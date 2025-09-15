@@ -708,7 +708,7 @@
 		WHERE rn BETWEEN #{start} AND #{end}
 		ORDER BY rn ASC
 	</select>
-
+	
 	<!-- 회원가입자 최신 5건 조회 -->
 	<select id="adminUserList1"
 		resultType="com.spring.DCShop.user.dto.UserDTO">
@@ -753,6 +753,7 @@
 	    WHERE ROWNUM <= 5 
 	    ]]>
 	</select>
+	
 	<!-- qna상세페이지 -->
 	<select id="questDetail" parameterType="int"
 		resultType="com.spring.DCShop.shop.dto.QuestDTO">
@@ -770,9 +771,10 @@
 	<update id="updateAnswer"
 		parameterType="com.spring.DCShop.shop.dto.QuestDTO">
 		UPDATE qna_tbl
-		SET a_regdate = SYSDATE
-		, a_answer = #{a_answer}
-		, q_answer = 'Y'
+			SET a_regdate = SYSDATE
+			, a_answer = #{a_answer}
+			, q_answer = 'Y'
 		WHERE q_num = #{q_num}
 	</update>
+
 </mapper>

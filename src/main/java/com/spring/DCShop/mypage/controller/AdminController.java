@@ -32,7 +32,6 @@ public class AdminController {
 		return "admin/admin_main";
 	}
 	
-	
 	//게시판 목록
 	@RequestMapping("admin_board")
 	public String admin_board(HttpServletRequest request, HttpServletResponse response, Model model)
