@@ -1,6 +1,7 @@
 package com.spring.DCShop.mypage.dto;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class OrderDTO {
@@ -11,6 +12,7 @@ public class OrderDTO {
 	private String o_name;
 	private String o_phone;
 	private Date o_date;
+	private Timestamp o_date_detail;		// 결제 상세날짜
 	private int o_price;
 	private String o_Delivery_State;
 	private Date o_Delivery_Date;
@@ -21,6 +23,7 @@ public class OrderDTO {
 	private String o_Request;
 	private String o_Status;
 	private String o_payment_key;
+	private int productCount; 		// 상품개수
 	private List<ProductDTO> productDto;
 	
 	public OrderDTO() {
@@ -28,9 +31,9 @@ public class OrderDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public OrderDTO(Long o_Num, int pd_Id, int u_Member_Id, String o_name, String o_phone, Date o_date, int o_price,
+	public OrderDTO(Long o_Num, int pd_Id, int u_Member_Id, String o_name, String o_phone, Date o_date, Timestamp o_date_detail, int o_price,
 			String o_Delivery_State, Date o_Delivery_Date, int o_Count, String o_Payment, String o_Address,
-			int o_Zip_Code, String o_Request, String o_Status, String o_payment_key, List<ProductDTO> productDto) {
+			int o_Zip_Code, String o_Request, String o_Status, String o_payment_key, int productCount, List<ProductDTO> productDto) {
 		super();
 		this.o_Num = o_Num;
 		this.pd_Id = pd_Id;
@@ -38,6 +41,7 @@ public class OrderDTO {
 		this.o_name = o_name;
 		this.o_phone = o_phone;
 		this.o_date = o_date;
+		this.o_date_detail = o_date_detail;
 		this.o_price = o_price;
 		this.o_Delivery_State = o_Delivery_State;
 		this.o_Delivery_Date = o_Delivery_Date;
@@ -48,6 +52,7 @@ public class OrderDTO {
 		this.o_Request = o_Request;
 		this.o_Status = o_Status;
 		this.o_payment_key = o_payment_key;
+		this.productCount = productCount;
 		this.productDto = productDto;
 	}
 
@@ -97,6 +102,14 @@ public class OrderDTO {
 
 	public void setO_date(Date o_date) {
 		this.o_date = o_date;
+	}
+	
+	public Timestamp getO_date_detail() {
+		return o_date_detail;
+	}
+	
+	public void setO_date_detail(Timestamp o_date_detail) {
+		this.o_date_detail = o_date_detail;
 	}
 
 	public int getO_price() {
@@ -185,6 +198,14 @@ public class OrderDTO {
 
 	public void setProductDto(List<ProductDTO> productDto) {
 		this.productDto = productDto;
+	}
+	
+	public int getProductCount() {
+		return productCount;
+	}
+	
+	public void setProductCount(int productCount) {
+		this.productCount = productCount;
 	}
 
 	@Override

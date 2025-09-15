@@ -3,45 +3,54 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
- <mapper namespace="com.spring.DCShop.mypage.dao.AdminDAO">
-	
+
+<mapper namespace="com.spring.DCShop.mypage.dao.AdminDAO">
+
 	<!-- 관리자메인-건수 -->
-	<select id="countBoard"   resultType="int">SELECT COUNT(*) FROM board_tbl</select>
-	<select id="countOrder"   resultType="int">SELECT COUNT(*) FROM order_tbl</select>
-	<select id="countProduct" resultType="int">SELECT COUNT(*) FROM product_tbl</select>
-	<select id="countQna"     resultType="int">SELECT COUNT(*) FROM qna_tbl</select>
-	<select id="countReview"  resultType="int">SELECT COUNT(*) FROM review_tbl</select>
-	<select id="countUser"    resultType="int">SELECT COUNT(*) FROM user_tbl</select>
-	
+	<select id="countBoard" resultType="int">SELECT COUNT(*) FROM
+		board_tbl</select>
+	<select id="countOrder" resultType="int">SELECT COUNT(*) FROM
+		order_tbl</select>
+	<select id="countProduct" resultType="int">SELECT COUNT(*) FROM
+		product_tbl</select>
+	<select id="countQna" resultType="int">SELECT COUNT(*) FROM qna_tbl
+	</select>
+	<select id="countReview" resultType="int">SELECT COUNT(*) FROM
+		review_tbl</select>
+	<select id="countUser" resultType="int">SELECT COUNT(*) FROM user_tbl
+	</select>
+
 	<!-- Board 목록 매핑: BoardDTO + 작성자(UserDTO) 리스트 -->
-	<resultMap id="BoardListMap" type="com.spring.DCShop.board.dto.BoardDTO">
-	    <id     property="b_num"        column="b_num"/>
-	    <result property="u_member_id"  column="u_member_id"/>
-	    <result property="b_title"      column="b_title"/>
-	    <result property="b_contents"   column="b_contents"/>
-	    <result property="b_category"   column="b_category"/>
-	    <result property="b_dateposted" column="b_dateposted"/>
-	    <result property="b_updateDate" column="b_updateDate"/>
-	    <result property="b_views"      column="b_views"/>
-	    <result property="b_recommend"  column="b_recommend"/>
-	    <result property="b_image"      column="b_image"/>
-	    <result property="b_comments"   column="b_comments"/>
-	
-	    <!-- 작성자 1명이라도 DTO 구조가 List<UserDTO>이므로 collection으로 매핑 -->
-	    <collection property="userDTO" ofType="com.spring.DCShop.user.dto.UserDTO">
-	      <id     property="u_member_id" column="u_member_id"/>
-	      <result property="u_nickname"  column="u_nickname"/>
-	      <!-- 필요시 u_id, u_email 등 추가 가능 -->
-	    </collection>
+	<resultMap id="BoardListMap"
+		type="com.spring.DCShop.board.dto.BoardDTO">
+		<id property="b_num" column="b_num" />
+		<result property="u_member_id" column="u_member_id" />
+		<result property="b_title" column="b_title" />
+		<result property="b_contents" column="b_contents" />
+		<result property="b_category" column="b_category" />
+		<result property="b_dateposted" column="b_dateposted" />
+		<result property="b_updateDate" column="b_updateDate" />
+		<result property="b_views" column="b_views" />
+		<result property="b_recommend" column="b_recommend" />
+		<result property="b_image" column="b_image" />
+		<result property="b_comments" column="b_comments" />
+
+		<!-- 작성자 1명이라도 DTO 구조가 List<UserDTO>이므로 collection으로 매핑 -->
+		<collection property="userDTO"
+			ofType="com.spring.DCShop.user.dto.UserDTO">
+			<id property="u_member_id" column="u_member_id" />
+			<result property="u_nickname" column="u_nickname" />
+			<!-- 필요시 u_id, u_email 등 추가 가능 -->
+		</collection>
 	</resultMap>
-	
-	  <!-- 게시판 목록(검색+페이징) -->
-	  <select id="adminBoardList" parameterType="map" resultMap="BoardListMap">
-	    SELECT *
-	    FROM (
-	      SELECT T.*, ROWNUM rn
-	      FROM (
+
+	<!-- 게시판 목록(검색+페이징) -->
+	<select id="adminBoardList" parameterType="map"
+		resultMap="BoardListMap">
+		SELECT *
+		FROM (
+		SELECT T.*, ROWNUM rn
+		FROM (
 	        <![CDATA[
 	        SELECT
 	          b.b_num,
@@ -60,16 +69,16 @@
 	        JOIN user_tbl  u ON u.u_member_id = b.u_member_id
 	        WHERE 1=1
 	        ]]>
-	        <if test="category != null and category != ''">
+		<if test="category != null and category != ''">
 	          <![CDATA[ AND b.b_category = #{category} ]]>
-	        </if>
-	        <if test="from != null and from != ''">
+		</if>
+		<if test="from != null and from != ''">
 	          <![CDATA[ AND b.b_dateposted >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
-	        </if>
-	        <if test="to != null and to != ''">
+		</if>
+		<if test="to != null and to != ''">
 	          <![CDATA[ AND b.b_dateposted <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
-	        </if>
-	        <if test="q != null and q != ''">
+		</if>
+		<if test="q != null and q != ''">
 	          <![CDATA[
 	          AND (
 	            b.b_title LIKE '%'||#{q}||'%'
@@ -77,33 +86,34 @@
 	            OR u.u_nickname LIKE '%'||#{q}||'%'
 	          )
 	          ]]>
-	        </if>
+		</if>
 	        <![CDATA[
 	        ORDER BY b.b_dateposted DESC, b.b_num DESC
 	        ]]>
-	      ) T
-	    )
-	    WHERE rn BETWEEN #{startRow} AND #{endRow}
-	  </select>
-	
-	  <!-- 게시판 총 건수 -->
-	  <select id="adminBoardCount" parameterType="map" resultType="int">
+		) T
+		)
+		WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+	<!-- 게시판 총 건수 -->
+	<select id="adminBoardCount" parameterType="map"
+		resultType="int">
 	    <![CDATA[
 	    SELECT COUNT(*)
 	    FROM board_tbl b
 	    JOIN user_tbl  u ON u.u_member_id = b.u_member_id
 	    WHERE 1=1
 	    ]]>
-	    <if test="category != null and category != ''">
+		<if test="category != null and category != ''">
 	      <![CDATA[ AND b.b_category = #{category} ]]>
-	    </if>
-	    <if test="from != null and from != ''">
+		</if>
+		<if test="from != null and from != ''">
 	      <![CDATA[ AND b.b_dateposted >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
-	    </if>
-	    <if test="to != null and to != ''">
+		</if>
+		<if test="to != null and to != ''">
 	      <![CDATA[ AND b.b_dateposted <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
-	    </if>
-	    <if test="q != null and q != ''">
+		</if>
+		<if test="q != null and q != ''">
 	      <![CDATA[
 	      AND (
 	        b.b_title LIKE '%'||#{q}||'%'
@@ -111,59 +121,64 @@
 	        OR u.u_nickname LIKE '%'||#{q}||'%'
 	      )
 	      ]]>
-	    </if>
-	  </select>
-	  
-	  <!-- 게시판 선택 삭제 -(부모) -->
-	  <delete id="adminBoardDelete" parameterType="list">
-	    DELETE FROM board_tbl
-	    WHERE b_num IN
-	    <foreach collection="list" item="id" open="(" separator="," close=")">
-	      #{id}
-	    </foreach>
-	  </delete>
-	  <!-- 게시판 선택 삭제 - 추천(자식) -->
-	  <delete id="adminBoardRecommentDelete" parameterType="list">
-	    DELETE FROM recommend_tbl
-	    WHERE b_num IN
-	    <foreach collection="list" item="id" open="(" separator="," close=")">
-	      #{id}
-	    </foreach>
-	  </delete>
-	  <!-- 게시판 선택 삭제 - 댓글(자식) -->
-	  <delete id="adminBoardCommentDelete" parameterType="list">
-	    DELETE FROM comment_tbl
-	    WHERE b_num IN
-	    <foreach collection="list" item="id" open="(" separator="," close=")">
-	      #{id}
-	    </foreach>
-	  </delete>
-	  
-	  
-	  <!-- 상품관리 - 총 건수 -->
-	  <select id="adminProductCount" parameterType="map" resultType="int">
-	    SELECT COUNT(*)
-	    FROM product_tbl p
-	    WHERE 1=1
-	    <if test="status != null and status != ''">
-	      AND p.pd_status =
-	      <choose>
-	        <when test="status == 'ON'"> '판매중' </when>
-	        <when test="status == 'OFF'"> '품절' </when>
-	        <when test="status == 'WAIT'"> '재입고대기' </when>
-	      </choose>
-	    </if>
-	    <if test="catFrom != null and catTo != null">
-	      AND p.pd_subcategory BETWEEN #{catFrom} AND #{catTo}
-	    </if>
-	    <if test="q != null and q != ''">
-	      AND (p.pd_name LIKE '%' || #{q} || '%' OR p.pd_brand LIKE '%' || #{q} || '%')
-	    </if>
-	  </select>
-	
-	  <!-- 상품관리 - 목록 (ROWNUM 페이징, DTO/JSP 이름과 정확히 일치) -->
-	  <select id="adminProductList" parameterType="map"
-	          resultType="com.spring.DCShop.shop.dto.ShopDTO">
+		</if>
+	</select>
+
+	<!-- 게시판 선택 삭제 -(부모) -->
+	<delete id="adminBoardDelete" parameterType="list">
+		DELETE FROM board_tbl
+		WHERE b_num IN
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<!-- 게시판 선택 삭제 - 추천(자식) -->
+	<delete id="adminBoardRecommentDelete" parameterType="list">
+		DELETE FROM recommend_tbl
+		WHERE b_num IN
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<!-- 게시판 선택 삭제 - 댓글(자식) -->
+	<delete id="adminBoardCommentDelete" parameterType="list">
+		DELETE FROM comment_tbl
+		WHERE b_num IN
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+
+	<!-- 상품관리 - 총 건수 -->
+	<select id="adminProductCount" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM product_tbl p
+		WHERE 1=1
+		<if test="status != null and status != ''">
+			AND p.pd_status =
+			<choose>
+				<when test="status == 'ON'"> '판매중' </when>
+				<when test="status == 'OFF'"> '품절' </when>
+				<when test="status == 'WAIT'"> '재입고대기' </when>
+			</choose>
+		</if>
+		<if test="catFrom != null and catTo != null">
+			AND p.pd_subcategory BETWEEN #{catFrom} AND #{catTo}
+		</if>
+		<if test="q != null and q != ''">
+			AND (p.pd_name LIKE '%' || #{q} || '%' OR p.pd_brand LIKE '%' || #{q} ||
+			'%')
+		</if>
+	</select>
+
+	<!-- 상품관리 - 목록 (ROWNUM 페이징, DTO/JSP 이름과 정확히 일치) -->
+	<select id="adminProductList" parameterType="map"
+		resultType="com.spring.DCShop.shop.dto.ShopDTO">
 	    <![CDATA[
 	    SELECT * FROM (
 	      SELECT t.*, ROWNUM rn
@@ -194,24 +209,24 @@
 	        FROM product_tbl p
 	        WHERE 1=1
 	    ]]>
-	        <if test="status != null and status != ''">
+		<if test="status != null and status != ''">
 	          <![CDATA[
 	          AND p.pd_status =
 	          ]]>
-	          <choose>
-	            <when test="status == 'ON'">  <![CDATA[ '판매중' ]]></when>
-	            <when test="status == 'OFF'"> <![CDATA[ '품절' ]]></when>
-	            <when test="status == 'WAIT'"><![CDATA[ '재입고대기' ]]></when>
-	          </choose>
-	        </if>
-	        <if test="catFrom != null and catTo != null">
+			<choose>
+				<when test="status == 'ON'">  <![CDATA[ '판매중' ]]></when>
+				<when test="status == 'OFF'"> <![CDATA[ '품절' ]]></when>
+				<when test="status == 'WAIT'"><![CDATA[ '재입고대기' ]]></when>
+			</choose>
+		</if>
+		<if test="catFrom != null and catTo != null">
 	          <![CDATA[ AND p.pd_subcategory BETWEEN #{catFrom} AND #{catTo} ]]>
-	        </if>
-	        <if test="q != null and q != ''">
+		</if>
+		<if test="q != null and q != ''">
 	          <![CDATA[
 	          AND (p.pd_name LIKE '%' || #{q} || '%' OR p.pd_brand LIKE '%' || #{q} || '%')
 	          ]]>
-	        </if>
+		</if>
 	    <![CDATA[
 	        ORDER BY p.pd_id DESC
 	      ) t
@@ -219,266 +234,281 @@
 	    WHERE rn BETWEEN #{start} AND #{end}
 	    ]]>
 	</select>
-	
-	  <!-- 상품관리 - 선택 일괄 상태변경 (ON/OFF/WAIT → 한글 값으로 매핑) -->
-	  <update id="adminProductStatus" parameterType="map">
-	    UPDATE product_tbl
-	       SET pd_status = CASE
-				           WHEN #{to} = 'ON'  THEN '판매중'
-				           WHEN #{to} = 'OFF' THEN '품절'
-				           WHEN #{to} = 'WAIT' THEN '재입고대기'
-				           ELSE '품절'
-				           END,
-		       pd_stock = CASE 
-		       			  WHEN #{to} IN ('OFF','WAIT') THEN 0 
-		       			  ELSE pd_stock 
-		       			  END
-	     WHERE pd_id IN
-	     <foreach collection="ids" item="id" open="(" separator="," close=")">
-	       #{id}
-	     </foreach>
-	  </update>
-	
-	  <!-- 상품관리 - 선택 일괄 삭제 -->
-	  <delete id="adminProductDelete" parameterType="list">
-	    DELETE FROM product_tbl
-	     WHERE pd_id IN
-	     <foreach collection="list" item="id" open="(" separator="," close=")">
-	       #{id}
-	     </foreach>
-	  </delete>
-	  <!-- 상품관리 - 자식삭제(리뷰) -->
-	  <delete id="adminProductReviewDelete" parameterType="list">
-	  	DELETE FROM review_tbl
-	  	WHERE pd_id IN
-	  	<foreach collection="list" item="id" open="(" separator="," close=")">
-	       #{id}
-	    </foreach>
-	  </delete>
-	  <!-- 상품관리 - 자식삭제(문의) -->
-	  <delete id="adminProductQnaDelete" parameterType="list">
-	  	DELETE FROM qna_tbl
-	  	WHERE pd_id IN
-	  	<foreach collection="list" item="id" open="(" separator="," close=")">
-	       #{id}
-	    </foreach>
-	  </delete>
-	  
-	  <!-- 상품관리 - 등록 -->
-	  <insert id="adminProductInsert" parameterType="com.spring.DCShop.shop.dto.ShopDTO">
-	  <selectKey keyProperty="pd_id" resultType="int" order="BEFORE">
-	    SELECT product_seq.NEXTVAL FROM dual
-	  </selectKey>
-	  	INSERT INTO product_tbl(
-	  	  pd_id, pd_name, pd_description, pd_price, pd_stock, 
-	      pd_category, pd_brand, pd_image_url, pd_shipping_fee, 
-	      pd_discount_rate, pd_status, pd_option, 
-	      pd_pet_category, pd_subcategory, pd_created, pd_updated
-	  	)VALUES (
-	      #{pd_id}, #{pd_name}, #{pd_description}, #{pd_price}, #{pd_stock}, 
-	      #{pd_category}, #{pd_brand}, #{pd_image_url, jdbcType=VARCHAR}, #{pd_shipping_fee}, 
-	      #{pd_discount_rate}, #{pd_status}, #{pd_option}, 
-	      #{pd_pet_category}, #{pd_subcategory}, SYSDATE, SYSDATE
-  		)
-	  </insert>
-	  
-	  <!-- 상품수정 - 수정폼 -->
-	  <select id="adminProductUpdateForm" parameterType="int" resultType="com.spring.DCShop.shop.dto.ShopDTO">
-	  	SELECT
-	      pd_id, pd_name, pd_brand, pd_description, pd_price, pd_stock,
-	      pd_shipping_fee, pd_discount_rate, pd_status, pd_option,
-	      pd_category, pd_subcategory, pd_pet_category, pd_image_url
-	    FROM product_tbl
-	    WHERE pd_id = #{pdId}
-	  </select>
-	  
-	  <!-- 상품관리 - 수정처리 -->
-	  <update id="adminProductUpdate" parameterType="com.spring.DCShop.shop.dto.ShopDTO">
-	  	UPDATE product_tbl
-	       SET pd_name          = #{pd_name},
-	           pd_description   = #{pd_description},
-	           pd_price         = #{pd_price},
-	           pd_stock         = CASE
-	                              WHEN #{pd_status} IN ('품절','재입고대기') THEN 0
-	                              ELSE #{pd_stock}
-	                              END,
-	           pd_category      = #{pd_category},
-	           pd_brand         = #{pd_brand},
-	           pd_image_url     = #{pd_image_url},
-	           pd_shipping_fee  = #{pd_shipping_fee},
-	           pd_discount_rate = #{pd_discount_rate},
-	           pd_status        = #{pd_status},
-	           pd_option        = #{pd_option},
-	           pd_pet_category  = #{pd_pet_category},
-	           pd_subcategory   = #{pd_subcategory},
-	           pd_updated       = SYSDATE
-	     WHERE pd_id = #{pd_id}
-	  </update>
-	  
-	  <!-- 주문관리 - 목록 -->
-	  <select id="findOrder" parameterType="map" resultType="map">
-	  	SELECT *
-		  FROM (
-		    SELECT ROWNUM AS "rn", x.*
-		    FROM (
-		      SELECT
-		        o.o_num            AS "o_num",
-		        o.pd_id            AS "pd_id",
-		        o.o_date           AS "o_date",
-		        o.o_name           AS "o_name",
-		        o.u_member_id      AS "u_member_id",
-		        o.o_payment        AS "o_payment",
-		        o.o_price          AS "o_price",
-		        o.o_delivery_state AS "o_delivery_state",
-		        o.o_status         AS "o_status"
-		      FROM order_tbl o
-		      WHERE 1=1
-		        <!-- 날짜 범위 -->
-		        <if test="from != null and from != ''">
+
+	<!-- 상품관리 - 선택 일괄 상태변경 (ON/OFF/WAIT → 한글 값으로 매핑) -->
+	<update id="adminProductStatus" parameterType="map">
+		UPDATE product_tbl
+		SET pd_status = CASE
+		WHEN #{to} = 'ON' THEN '판매중'
+		WHEN #{to} = 'OFF' THEN '품절'
+		WHEN #{to} = 'WAIT' THEN '재입고대기'
+		ELSE '품절'
+		END,
+		pd_stock = CASE
+		WHEN #{to} IN ('OFF','WAIT') THEN 0
+		ELSE pd_stock
+		END
+		WHERE pd_id IN
+		<foreach collection="ids" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</update>
+
+	<!-- 상품관리 - 선택 일괄 삭제 -->
+	<delete id="adminProductDelete" parameterType="list">
+		DELETE FROM product_tbl
+		WHERE pd_id IN
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<!-- 상품관리 - 자식삭제(리뷰) -->
+	<delete id="adminProductReviewDelete" parameterType="list">
+		DELETE FROM review_tbl
+		WHERE pd_id IN
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<!-- 상품관리 - 자식삭제(문의) -->
+	<delete id="adminProductQnaDelete" parameterType="list">
+		DELETE FROM qna_tbl
+		WHERE pd_id IN
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<!-- 상품관리 - 등록 -->
+	<insert id="adminProductInsert"
+		parameterType="com.spring.DCShop.shop.dto.ShopDTO">
+		<selectKey keyProperty="pd_id" resultType="int"
+			order="BEFORE">
+			SELECT product_seq.NEXTVAL FROM dual
+		</selectKey>
+		INSERT INTO product_tbl(
+		pd_id, pd_name, pd_description, pd_price, pd_stock,
+		pd_category, pd_brand, pd_image_url, pd_shipping_fee,
+		pd_discount_rate, pd_status, pd_option,
+		pd_pet_category, pd_subcategory, pd_created, pd_updated
+		)VALUES (
+		#{pd_id}, #{pd_name}, #{pd_description}, #{pd_price}, #{pd_stock},
+		#{pd_category}, #{pd_brand}, #{pd_image_url, jdbcType=VARCHAR},
+		#{pd_shipping_fee},
+		#{pd_discount_rate}, #{pd_status}, #{pd_option},
+		#{pd_pet_category}, #{pd_subcategory}, SYSDATE, SYSDATE
+		)
+	</insert>
+
+	<!-- 상품수정 - 수정폼 -->
+	<select id="adminProductUpdateForm" parameterType="int"
+		resultType="com.spring.DCShop.shop.dto.ShopDTO">
+		SELECT
+		pd_id, pd_name, pd_brand, pd_description, pd_price, pd_stock,
+		pd_shipping_fee, pd_discount_rate, pd_status, pd_option,
+		pd_category, pd_subcategory, pd_pet_category, pd_image_url
+		FROM product_tbl
+		WHERE pd_id = #{pdId}
+	</select>
+
+	<!-- 상품관리 - 수정처리 -->
+	<update id="adminProductUpdate"
+		parameterType="com.spring.DCShop.shop.dto.ShopDTO">
+		UPDATE product_tbl
+		SET pd_name = #{pd_name},
+		pd_description = #{pd_description},
+		pd_price = #{pd_price},
+		pd_stock = CASE
+		WHEN #{pd_status} IN ('품절','재입고대기') THEN 0
+		ELSE #{pd_stock}
+		END,
+		pd_category = #{pd_category},
+		pd_brand = #{pd_brand},
+		pd_image_url = #{pd_image_url},
+		pd_shipping_fee = #{pd_shipping_fee},
+		pd_discount_rate = #{pd_discount_rate},
+		pd_status = #{pd_status},
+		pd_option = #{pd_option},
+		pd_pet_category = #{pd_pet_category},
+		pd_subcategory = #{pd_subcategory},
+		pd_updated = SYSDATE
+		WHERE pd_id = #{pd_id}
+	</update>
+
+	<!-- 주문관리 - 목록 -->
+	<select id="findOrder" parameterType="map" resultType="map">
+		SELECT *
+		FROM (
+		SELECT ROWNUM AS "rn", x.*
+		FROM (
+		SELECT
+		o.o_num AS "o_num",
+		o.pd_id AS "pd_id",
+		o.o_date AS "o_date",
+		o.o_name AS "o_name",
+		o.u_member_id AS "u_member_id",
+		o.o_payment AS "o_payment",
+		o.o_price AS "o_price",
+		o.o_delivery_state AS "o_delivery_state",
+		o.o_status AS "o_status"
+		FROM order_tbl o
+		WHERE 1=1
+		<!-- 날짜 범위 -->
+		<if test="from != null and from != ''">
 		          <![CDATA[ AND o.o_date >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
-		        </if>
-		        <if test="to != null and to != ''">
+		</if>
+		<if test="to != null and to != ''">
 		          <![CDATA[ AND o.o_date <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
-		        </if>
-		
-		        <!-- 상태/결제수단 -->
-		        <if test="oStatus != null and oStatus != ''">
-		          AND o.o_status = #{oStatus}
-		        </if>
-		        <if test="oPayment != null and oPayment != ''">
-		          AND o.o_payment = #{oPayment}
-		        </if>
-		
-		        <!-- 키워드: 이름 LIKE -->
-		        <if test="field == 'o_name' and keywordText != null and keywordText != ''">
-		          AND o.o_name LIKE '%' || #{keywordText} || '%'
-		        </if>
-		
-		        <!-- 키워드: 숫자(equal). 숫자 아닐 경우 0건 처리 -->
-		        <if test="field == 'o_num'">
-		          <choose>
-		            <when test="keywordNum != null">
-		              AND o.o_num = #{keywordNum}
-		            </when>
-		            <when test="keywordText != null and keywordText != ''">
-		              AND 1 = 0
-		            </when>
-		          </choose>
-		        </if>
-		
-		        <if test="field == 'pd_id'">
-		          <choose>
-		            <when test="keywordNum != null">
-		              AND o.pd_id = #{keywordNum}
-		            </when>
-		            <when test="keywordText != null and keywordText != ''">
-		              AND 1 = 0
-		            </when>
-		          </choose>
-		        </if>
-		
-		      ORDER BY o.o_date DESC, o.o_num DESC, o.pd_id DESC
-		    ) x
+		</if>
+
+		<!-- 상태/결제수단 -->
+		<if test="oStatus != null and oStatus != ''">
+			AND o.o_status = #{oStatus}
+		</if>
+		<if test="oPayment != null and oPayment != ''">
+			AND o.o_payment = #{oPayment}
+		</if>
+
+		<!-- 키워드: 이름 LIKE -->
+		<if
+			test="field == 'o_name' and keywordText != null and keywordText != ''">
+			AND o.o_name LIKE '%' || #{keywordText} || '%'
+		</if>
+
+		<!-- 키워드: 숫자(equal). 숫자 아닐 경우 0건 처리 -->
+		<if test="field == 'o_num'">
+			<choose>
+				<when test="keywordNum != null">
+					AND o.o_num = #{keywordNum}
+				</when>
+				<when test="keywordText != null and keywordText != ''">
+					AND 1 = 0
+				</when>
+			</choose>
+		</if>
+
+		<if test="field == 'pd_id'">
+			<choose>
+				<when test="keywordNum != null">
+					AND o.pd_id = #{keywordNum}
+				</when>
+				<when test="keywordText != null and keywordText != ''">
+					AND 1 = 0
+				</when>
+			</choose>
+		</if>
+
+		ORDER BY o.o_date DESC, o.o_num DESC, o.pd_id DESC
+		) x
 		    <![CDATA[ WHERE ROWNUM <= #{endRow} ]]>
-		  )
+		)
 		  <![CDATA[ WHERE "rn" >= #{startRow} ]]>
-	  </select>
-	  
-	  <!-- 주문관리 - 건수 -->
-	  <select id="adminCountOrder" parameterType="map" resultType="int">
-	  	SELECT COUNT(*)
-		  FROM order_tbl o
-		  WHERE 1=1
-		    <if test="from != null and from != ''">
+	</select>
+
+	<!-- 주문관리 - 건수 -->
+	<select id="adminCountOrder" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM order_tbl o
+		WHERE 1=1
+		<if test="from != null and from != ''">
 		      <![CDATA[ AND o.o_date >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
-		    </if>
-		    <if test="to != null and to != ''">
+		</if>
+		<if test="to != null and to != ''">
 		      <![CDATA[ AND o.o_date <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
-		    </if>
-		    <if test="oStatus != null and oStatus != ''">
-		      AND o.o_status = #{oStatus}
-		    </if>
-		    <if test="oPayment != null and oPayment != ''">
-		      AND o.o_payment = #{oPayment}
-		    </if>
-		    <if test="field == 'o_name' and keywordText != null and keywordText != ''">
-		      AND o.o_name LIKE '%' || #{keywordText} || '%'
-		    </if>
-		    <if test="field == 'o_num'">
-		      <choose>
-		        <when test="keywordNum != null">
-		          AND o.o_num = #{keywordNum}
-		        </when>
-		        <when test="keywordText != null and keywordText != ''">
-		          AND 1 = 0
-		        </when>
-		      </choose>
-		    </if>
-		    <if test="field == 'pd_id'">
-		      <choose>
-		        <when test="keywordNum != null">
-		          AND o.pd_id = #{keywordNum}
-		        </when>
-		        <when test="keywordText != null and keywordText != ''">
-		          AND 1 = 0
-		        </when>
-		      </choose>
-		    </if>
-	  </select>
-	  
-	  <!-- 주문관리 - 상세_정보 -->
-	  <select id="adminOrderInfo" parameterType="String" resultType="map">
-	  	SELECT
-		    o.o_num                       AS "o_num",
-		    MIN(o.u_member_id)            AS "u_member_id",
-		    MIN(o.o_name)                 AS "o_name",
-		    MIN(o.o_phone)                AS "o_phone",
-		    MIN(o.o_date)                 AS "o_date",
-		    MIN(o.o_status)               AS "o_status",
-		    MIN(o.o_delivery_state)       AS "o_delivery_state",
-		    MIN(o.o_delivery_date)        AS "o_delivery_date",
-		    MIN(o.o_payment)              AS "o_payment",
-		    SUM(o.o_price)                AS "o_price",
-		    MIN(o.o_address)              AS "recv_addr",   
-		    MIN(o.o_request)              AS "recv_request",
-		    MIN(o.o_zip_code)             AS "o_zip_code",
-		    MIN(o.o_payment_key)          AS "o_pay_no",      
-		    CAST(NULL AS DATE)            AS "o_pay_datetime" 
-		  FROM order_tbl o
-		  WHERE o.o_num = #{oNum}
-		  GROUP BY o.o_num
-	  </select>
-	  <!-- 주문관리 - 상세_상품목록 -->
-	  <select id="adminOrderProductList" parameterType="String" resultType="map">
-	  	SELECT
-		    o.o_num                 AS "o_num",
-		    o.pd_id                 AS "pd_id",
-		    o.o_count               AS "qty",
-		    o.o_price               AS "price",
-		    p.pd_name               AS "pd_name",
-		    p.pd_image_url          AS "pd_image_url"
-		  FROM order_tbl o
-		  JOIN product_tbl p ON p.pd_id = o.pd_id
-		  WHERE o.o_num = #{oNum}
-		  ORDER BY o.pd_id
-	  </select>
-	  
-	  <!-- 주문관리 - 주문상태변경 -->
-	  <update id="adminOrderStatus" parameterType="map">
-	  	UPDATE order_tbl
-	       SET o_status = #{newStatus}
-	     WHERE o_num = #{oNum}
-	  </update>
-	  
-	  <!-- 주문관리 - 배송상태변경 -->
-	  <update id="adminOrderDelivery" parameterType="map">
-	  	UPDATE order_tbl
-	       SET o_delivery_state = #{newStatus}
-	     WHERE o_num = #{oNum}
-	  </update>
-	  
-	  <!-- 리뷰 총 개수 -->
-	  <select id="adminReviewCount" parameterType="map" resultType="int">
+		</if>
+		<if test="oStatus != null and oStatus != ''">
+			AND o.o_status = #{oStatus}
+		</if>
+		<if test="oPayment != null and oPayment != ''">
+			AND o.o_payment = #{oPayment}
+		</if>
+		<if
+			test="field == 'o_name' and keywordText != null and keywordText != ''">
+			AND o.o_name LIKE '%' || #{keywordText} || '%'
+		</if>
+		<if test="field == 'o_num'">
+			<choose>
+				<when test="keywordNum != null">
+					AND o.o_num = #{keywordNum}
+				</when>
+				<when test="keywordText != null and keywordText != ''">
+					AND 1 = 0
+				</when>
+			</choose>
+		</if>
+		<if test="field == 'pd_id'">
+			<choose>
+				<when test="keywordNum != null">
+					AND o.pd_id = #{keywordNum}
+				</when>
+				<when test="keywordText != null and keywordText != ''">
+					AND 1 = 0
+				</when>
+			</choose>
+		</if>
+	</select>
+
+	<!-- 주문관리 - 상세_정보 -->
+	<select id="adminOrderInfo" parameterType="String"
+		resultType="map">
+		SELECT
+		o.o_num AS "o_num",
+		MIN(o.u_member_id) AS "u_member_id",
+		MIN(o.o_name) AS "o_name",
+		MIN(o.o_phone) AS "o_phone",
+		MIN(o.o_date) AS "o_date",
+		MIN(o.o_status) AS "o_status",
+		MIN(o.o_delivery_state) AS "o_delivery_state",
+		MIN(o.o_delivery_date) AS "o_delivery_date",
+		MIN(o.o_payment) AS "o_payment",
+		SUM(o.o_price) AS "o_price",
+		MIN(o.o_address) AS "recv_addr",
+		MIN(o.o_request) AS "recv_request",
+		MIN(o.o_zip_code) AS "o_zip_code",
+		MIN(o.o_payment_key) AS "o_pay_no",
+		CAST(NULL AS DATE) AS "o_pay_datetime"
+		FROM order_tbl o
+		WHERE o.o_num = #{oNum}
+		GROUP BY o.o_num
+	</select>
+	<!-- 주문관리 - 상세_상품목록 -->
+	<select id="adminOrderProductList" parameterType="String"
+		resultType="map">
+		SELECT
+		o.o_num AS "o_num",
+		o.pd_id AS "pd_id",
+		o.o_count AS "qty",
+		o.o_price AS "price",
+		p.pd_name AS "pd_name",
+		p.pd_image_url AS "pd_image_url"
+		FROM order_tbl o
+		JOIN product_tbl p ON p.pd_id = o.pd_id
+		WHERE o.o_num = #{oNum}
+		ORDER BY o.pd_id
+	</select>
+
+	<!-- 주문관리 - 주문상태변경 -->
+	<update id="adminOrderStatus" parameterType="map">
+		UPDATE order_tbl
+		SET o_status = #{newStatus}
+		WHERE o_num = #{oNum}
+	</update>
+
+	<!-- 주문관리 - 배송상태변경 -->
+	<update id="adminOrderDelivery" parameterType="map">
+		UPDATE order_tbl
+		SET o_delivery_state = #{newStatus}
+		WHERE o_num = #{oNum}
+	</update>
+
+	<!-- 리뷰 총 개수 -->
+	<select id="adminReviewCount" parameterType="map"
+		resultType="int">
 	    <![CDATA[
 	    SELECT COUNT(*)
 	      FROM review_tbl r
@@ -486,30 +516,30 @@
 	      JOIN user_tbl    u ON u.u_member_id = r.u_member_id
 	     WHERE 1=1
 	    ]]>
-	    <!-- 카테고리: JSP는 'dog'/'cat' → DB는 1/2 이므로 여기서 매핑 -->
-	    <if test="category != null and category != ''">
-	      AND p.pd_pet_category =
-	      <choose>
-	        <when test="category == 'dog'">1</when>
-	        <when test="category == 'cat'">2</when>
-	        <otherwise>p.pd_pet_category</otherwise>
-	      </choose>
-	    </if>
-	
-	    <!-- 평점 -->
-	    <if test="rate != null and rate != ''">
+		<!-- 카테고리: JSP는 'dog'/'cat' → DB는 1/2 이므로 여기서 매핑 -->
+		<if test="category != null and category != ''">
+			AND p.pd_pet_category =
+			<choose>
+				<when test="category == 'dog'">1</when>
+				<when test="category == 'cat'">2</when>
+				<otherwise>p.pd_pet_category</otherwise>
+			</choose>
+		</if>
+
+		<!-- 평점 -->
+		<if test="rate != null and rate != ''">
 	      <![CDATA[ AND r.r_score = TO_NUMBER(#{rate}) ]]>
-	    </if>
-	
-	    <!-- 기간 -->
-	    <if test="from != null and from != ''">
+		</if>
+
+		<!-- 기간 -->
+		<if test="from != null and from != ''">
 	      <![CDATA[ AND r.r_regDate >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
-	    </if>
-	    <if test="to != null and to != ''">
+		</if>
+		<if test="to != null and to != ''">
 	      <![CDATA[ AND r.r_regDate <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
-	    </if>
-	
-	    <!-- 검색어: 상품명/닉네임/내용 -->
+		</if>
+
+		<!-- 검색어: 상품명/닉네임/내용 -->
 		<if test="q != null and q != ''">
 		  <![CDATA[
 		  AND (
@@ -520,10 +550,11 @@
 		  ]]>
 		</if>
 
-	  </select>
-	
-	  <!-- 리뷰 목록 (페이징) -->
-		<select id="adminReviewList" parameterType="map" resultType="map">
+	</select>
+
+	<!-- 리뷰 목록 (페이징) -->
+	<select id="adminReviewList" parameterType="map"
+		resultType="map">
 		  <![CDATA[
 		  SELECT *
 		    FROM (
@@ -543,24 +574,24 @@
 		                  JOIN user_tbl    u ON u.u_member_id = r.u_member_id
 		                  WHERE 1=1
 		  ]]>
-		                  <if test="category != null and category != ''">
-		                    AND p.pd_pet_category =
-		                    <choose>
-		                      <when test="category == 'dog'">1</when>
-		                      <when test="category == 'cat'">2</when>
-		                      <otherwise>p.pd_pet_category</otherwise>
-		                    </choose>
-		                  </if>
-		                  <if test="rate != null and rate != ''">
+		<if test="category != null and category != ''">
+			AND p.pd_pet_category =
+			<choose>
+				<when test="category == 'dog'">1</when>
+				<when test="category == 'cat'">2</when>
+				<otherwise>p.pd_pet_category</otherwise>
+			</choose>
+		</if>
+		<if test="rate != null and rate != ''">
 		                    <![CDATA[ AND r.r_score = TO_NUMBER(#{rate}) ]]>
-		                  </if>
-		                  <if test="from != null and from != ''">
+		</if>
+		<if test="from != null and from != ''">
 		                    <![CDATA[ AND r.r_regDate >= TO_DATE(#{from}, 'YYYY-MM-DD') ]]>
-		                  </if>
-		                  <if test="to != null and to != ''">
+		</if>
+		<if test="to != null and to != ''">
 		                    <![CDATA[ AND r.r_regDate <  TO_DATE(#{to},   'YYYY-MM-DD') + 1 ]]>
-		                  </if>
-		                  <if test="q != null and q != ''">
+		</if>
+		<if test="q != null and q != ''">
 		                    <![CDATA[
 		                    AND (
 		                          LOWER(p.pd_name)    LIKE '%'||LOWER(#{q})||'%'
@@ -568,17 +599,18 @@
 		                       OR LOWER(r.r_content)  LIKE '%'||LOWER(#{q})||'%'
 		                    )
 		                    ]]>
-		                  </if>
+		</if>
 		  <![CDATA[
 		                  ORDER BY r.r_num DESC
 		                ) t
 		         )
 		   WHERE rn BETWEEN #{startRow} AND #{endRow}
 		  ]]>
-		</select>
-		
-		<!-- 리뷰 상세 -->
-		<select id="adminReviewDetail" parameterType="int" resultType="map">
+	</select>
+
+	<!-- 리뷰 상세 -->
+	<select id="adminReviewDetail" parameterType="int"
+		resultType="map">
 		  <![CDATA[
 		  SELECT
 		    r.r_num       AS "r_num",
@@ -595,87 +627,91 @@
 		  JOIN user_tbl    u ON u.u_member_id = r.u_member_id
 		  WHERE r.r_num = #{rNum}
 		  ]]>
-		</select>
+	</select>
 
-	
-	  <!-- 4) 리뷰 선택 삭제 -->
-	  <delete id="adminReviewDelete" parameterType="list">
+
+	<!-- 4) 리뷰 선택 삭제 -->
+	<delete id="adminReviewDelete" parameterType="list">
 	    <![CDATA[
 	    DELETE FROM review_tbl
 	     WHERE r_num IN
 	    ]]>
-	    <foreach collection="list" item="id" open="(" separator="," close=")">
-	      #{id}
-	    </foreach>
-	  </delete>
-	  
-	  
-	  <select id="adminQnaCnt" parameterType="java.util.Map" resultType="int">
-	  	SELECT count(*)
-		  FROM
-			(SELECT A.*
-				  , rownum AS rn
-			   FROM (SELECT q.*
-			   		   FROM product_tbl p
-			   		      , qna_tbl q
-			   		      , user_tbl u
-					  WHERE p.pd_id = q.pd_id
-					  	AND u.u_member_id = q.u_member_id
-				  	<if test="q_category != null and q_category != ''">
-				  		AND q.q_category = #{q_category}
-				  	</if>
-				  	<if test="from != null and from != ''">
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+
+	<select id="adminQnaCnt" parameterType="java.util.Map"
+		resultType="int">
+		SELECT count(*)
+		FROM
+		(SELECT A.*
+		, rownum AS rn
+		FROM (SELECT q.*
+		FROM product_tbl p
+		, qna_tbl q
+		, user_tbl u
+		WHERE p.pd_id = q.pd_id
+		AND u.u_member_id = q.u_member_id
+		<if test="q_category != null and q_category != ''">
+			AND q.q_category = #{q_category}
+		</if>
+		<if test="from != null and from != ''">
 				  	<![CDATA[
 			  			AND q.q_regDate >= #{from}
 		  			]]>
-    				</if>
-    				<if test="to != null and to != ''">
+		</if>
+		<if test="to != null and to != ''">
     				<![CDATA[
     					AND q.q_regDate <= #{to}
    					]]>
-    				</if>
-    				<if test="q_answer != null and q_answer != ''">
-    					AND q.q_answer = #{q_answer}
-    				</if>
-    				) A
-			)
-	  </select>
-	  
-	  <select id="adminQnaList" parameterType="java.util.Map" resultType="com.spring.DCShop.shop.dto.QuestDTO">
-	  	SELECT *
-		  FROM
-			(SELECT A.*, rownum AS rn
-			   FROM (SELECT q.*,
-			   				u.u_id
-			   		   FROM product_tbl p
-			   		      , qna_tbl q
-			   		      , user_tbl u
-					  WHERE p.pd_id = q.pd_id
-					  	AND u.u_member_id = q.u_member_id
-					  	<if test="q_category != null and q_category != ''">
-					  		AND q.q_category = #{q_category}
-					  	</if>
-					  	<if test="from != null and from != ''">
+		</if>
+		<if test="q_answer != null and q_answer != ''">
+			AND q.q_answer = #{q_answer}
+		</if>
+		) A
+		)
+	</select>
+
+	<select id="adminQnaList" parameterType="java.util.Map"
+		resultType="com.spring.DCShop.shop.dto.QuestDTO">
+		SELECT *
+		FROM
+		(SELECT A.*, rownum AS rn
+		FROM (SELECT q.*,
+		u.u_id
+		FROM product_tbl p
+		, qna_tbl q
+		, user_tbl u
+		WHERE p.pd_id = q.pd_id
+		AND u.u_member_id = q.u_member_id
+		<if test="q_category != null and q_category != ''">
+			AND q.q_category = #{q_category}
+		</if>
+		<if test="from != null and from != ''">
 					  	<![CDATA[
 				  			AND q.q_regDate >= #{from}
 			  			]]>
-	    				</if>
-	    				<if test="to != null and to != ''">
+		</if>
+		<if test="to != null and to != ''">
 	    				<![CDATA[
 	    					AND q.q_regDate <= #{to}
     					]]>
-	    				</if>
-	    				<if test="q_answer != null and q_answer != ''">
-	    					AND q.q_answer = #{q_answer}
-	    				</if>
-				   ORDER BY q.q_regdate DESC) A 
-			)
+		</if>
+		<if test="q_answer != null and q_answer != ''">
+			AND q.q_answer = #{q_answer}
+		</if>
+		ORDER BY q.q_regdate DESC) A
+		)
 		WHERE rn BETWEEN #{start} AND #{end}
 		ORDER BY rn ASC
-	  </select>
-	  
+	</select>
+
 	<!-- 회원가입자 최신 5건 조회 -->
-	<select id="adminUserList1" resultType="com.spring.DCShop.user.dto.UserDTO">
+	<select id="adminUserList1"
+		resultType="com.spring.DCShop.user.dto.UserDTO">
 		<![CDATA[
 	    SELECT A.*
 	    	 , ROWNUM
@@ -688,7 +724,7 @@
 	    WHERE ROWNUM <= 5
 	    ]]>
 	</select>
-	
+
 	<!-- 회원관리 - 펫통계 -->
 	<select id="adminUserPet" resultType="hashmap">
 		<![CDATA[
@@ -701,9 +737,10 @@
 		FROM pet_tbl
 	    ]]>
 	</select>
-	
+
 	<!-- 회원탈퇴자 최신 5건 조회 -->
-	<select id="adminUserList2" resultType="com.spring.DCShop.user.dto.UserDTO">
+	<select id="adminUserList2"
+		resultType="com.spring.DCShop.user.dto.UserDTO">
 		<![CDATA[
 	    SELECT A.*
 	    	 , ROWNUM
@@ -716,4 +753,26 @@
 	    WHERE ROWNUM <= 5 
 	    ]]>
 	</select>
+	<!-- qna상세페이지 -->
+	<select id="questDetail" parameterType="int"
+		resultType="com.spring.DCShop.shop.dto.QuestDTO">
+		SELECT q.*
+		, u_id
+		FROM product_tbl p
+		, qna_tbl q
+		, user_tbl u
+		WHERE p.pd_id = q.pd_id
+		AND u.u_member_id = q.u_member_id
+		AND q.q_num = #{q_num}
+	</select>
+
+	<!-- 답변 등록 -->
+	<update id="updateAnswer"
+		parameterType="com.spring.DCShop.shop.dto.QuestDTO">
+		UPDATE qna_tbl
+		SET a_regdate = SYSDATE
+		, a_answer = #{a_answer}
+		, q_answer = 'Y'
+		WHERE q_num = #{q_num}
+	</update>
 </mapper>

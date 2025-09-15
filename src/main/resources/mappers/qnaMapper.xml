@@ -87,5 +87,5 @@
       DELETE FROM qna_tbl
        WHERE q_num = #{q_num}
    </delete>
-   
+
 </mapper> 

@@ -86,6 +86,12 @@ public interface AdminDAO {
 	// 문의관리 - 리스트 
 	public List<QuestDTO> adminQnaList(Map<String, Object> param);
 	
+	// 문의관리 - 답변 페이지
+	public QuestDTO questDetail(int q_num);
+	
+	// 문의관리 - 답변
+	public void updateAnswer(QuestDTO dto);
+	
 	// 리뷰관리 - 총 개수
 	public int adminReviewCount(Map<String, Object> param);
 	
@@ -106,5 +112,5 @@ public interface AdminDAO {
 	
 	// 회원목록 - 탈퇴회원5건조회
 	public List<UserDTO> adminUserList2();
-	
+
 }

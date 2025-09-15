@@ -46,14 +46,10 @@
 				  </c:otherwise>
 			</c:choose>
 			
-			<div class="relative inline-block">
 			<img id="profileImg"
 			     src="${imgUrl}"
 			     alt="Profile"
 			     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
-			</div>
-            <!-- <img src="resources/img_main/mypage_default.png" alt="Profile"
-	               class="rounded-full w-28 h-28 object-cover mb-4"> -->
             
             <h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
             <h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
@@ -65,8 +61,8 @@
             <!-- 네비게이션 -->
             <nav class="w-full space-y-2 text-sm">
                  <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> 
-                 <a href="./wishList.do" class="block py-2 px-3 rounded hover:bg-gray-100">내 찜목록</a> 
-                 <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
+                 <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a>
+                 <a href="./wishList.do" class="block py-2 px-3 rounded hover:bg-gray-100">관심상품</a>  
                  <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
                  <a href="./mypage_qna.do" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
                  <a href="./mypage/my_reviews.do" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a>

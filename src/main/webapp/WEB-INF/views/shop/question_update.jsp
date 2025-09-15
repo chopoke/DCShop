@@ -89,7 +89,7 @@
           data: param,
           success: function() {  // 콜백함수(6) => 문의삭제가 완료되면 서버에서 콜백함수 호출
          	alert('문의가 삭제되었습니다.');
-         	window.location.reload();
+         	sessionStorage.setItem('reloadCheck', 'true'); // 문자열로 새로고침용 세션 저장
          	history.back();
           },
           error: function() {
@@ -225,7 +225,7 @@
 		            <button type="reset" class="px-6 h-10 !bg-gray-100 !text-gray-600 !rounded-button hover:!bg-gray-200 !transition-colors !whitespace-nowrap !mr-3">
 		              취소
 		            </button>
-		            <button id="UpdateQuestion" class="px-6 h-10 !bg-blue-200 text-white !rounded-button hover:!bg-blue-600 !transition-colors !whitespace-nowrap">
+		            <button id="UpdateQuestion" class="px-6 h-10 !bg-blue-200 text-white !rounded-button hover:!bg-blue-600 !transition-colors !whitespace-nowrap !mr-3">
 		              수정
 		            </button>
 		            <button id="DeleteQuestion" class="px-6 h-10 !bg-red-500 text-white !rounded-button hover:!bg-red-200 !transition-colors !whitespace-nowrap">

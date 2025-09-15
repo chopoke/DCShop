@@ -38,7 +38,7 @@
 
 			<div class="w-100 button-group">
 				<div class="flex" style="gap: 16px;">
-					<a class="paybtn w-100" href="#">주문내역</a> 
+					<a class="paybtn w-100" id="orderDetailLink" href="#">주문상세내역</a> 
 					<a class="paybtn w-100" href="${path}/shop_main.do" rel="noreferrer noopener">상품목록</a>
 				</div>
 			</div>
@@ -58,7 +58,7 @@
 		const amount = urlParams.get("amount");
 		const paymentType = urlParams.get("paymentType");
 		const orderInfo = urlParams.get("orderInfo");
-
+		
 		async function confirm() {
 			const requestData = {
 				paymentKey : paymentKey,
@@ -94,6 +94,8 @@
 
 		orderIdElement.textContent = orderId;
 		amountElement.textContent = amount;
+		
+		document.getElementById("orderDetailLink").href = `${path}/orderDetail?o_num=` + orderId;
 	</script>
 </body>
 </html>
