@@ -30,7 +30,7 @@
 	}
   	  ///////////////////////////////////////////
   	  // 장바구니 담기(product main에서)
-  	async function addToCart(ev, pdId){
+  	async function addToCart(ev, pdId){		//async 로 비동기(:await사용가능)
 	    ev.preventDefault();			// <a>태그나 href로 연결된 동작을 막음
 	    ev.stopPropagation();			// 상위 엘리먼트에 이벤트가 전달되는 것을 막음. (다음 이벤트 중단)
 
@@ -42,15 +42,15 @@
 	      params.append('pdId', pdId);    // 컨트롤러가 pdId 받는 경우 대비 (둘 다 보냄)
 	      params.append('qty', 1);		// 수량
 
-	      let res = await fetch(CTX + '/cart.do', {		// 네트워크 요청이 끝날 때 까지 함수만 멈추고, 응답 오면 함수를 이어서 재개
+	      let res = await fetch(CTX + '/cart.do', {		// 네트워크 요청이 끝날 때 까지 함수만 멈추고, 응답 오면 함수를 이어서 재개(fetch는 Promise반환)
 	        method: 'POST',
-	        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-	        body: params.toString(),
+	        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },		//컨텐트 타입 명시 -> @RequestParam
+	        body: params.toString(),		// pd_id=123&qty=1  같은 모양의 문자열 생성  => 실제 전송될 바디
 	        redirect: 'follow'			// fecth함수의 기본값이자 , 30x 에러가 떴을때 대응책 -> res.redirected, res.url로 설정한 곳으로 이동
 	      });
 
-	      // 로그인 필요(30x 에러시 대응책)
-	      if (res.redirected && /login/i.test(res.url)) {		
+	      // 로그인 필요(30x 에러시 대응책)								// res.url :최종응답 url -> i(대소문자무시).test(str) 'login'이 url에 포함되어 있는지  ->true, false  ==> true면 로그인페이지로 이동
+	      if (res.redirected && /login/i.test(res.url)) {		// res.redirected :중간에 리다이렉트로 최종주소가 바뀌었는지 / 
 	        showToast('로그인이 필요합니다.');
 	        return false;
 	      }
@@ -58,7 +58,7 @@
 	      if (!res.ok) {		// res의 응답이 200~299명 true -> 앞에서 300~은 감지했으니 400~500에러가 잡히는 부분
 	        const txt = await res.text().catch(()=> '');		// 서버의 응답을 문자열로 받기	(1회소모인 response body의 응답을 안전하게 받기 위해 추가로 catch사용)
 	        console.error('addToCart failed:', res.status, txt);		// 로그확인용
-	        showToast('장바구니 담기 실패 😥 (' + res.status + ')');			// 토스트로 띄워주기!
+	        showToast('장바구니 담기 실패 😥 (' + res.status + ')');			// 토스트로 띄워주기!(res.status : 숫자 상태코드 ex -20x, 30x ...)
 	        return false;		// anync 함수라 실제론 promise(false)리턴. (이미 프맆벤트디펄트로 기본 액션을 막아두었기 때무넹 큰 의미 없음)
 	      }
 

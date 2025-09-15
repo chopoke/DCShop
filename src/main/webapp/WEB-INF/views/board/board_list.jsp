@@ -158,32 +158,34 @@
 	document.addEventListener("DOMContentLoaded", function(){		// 페이지 로드시 실행
 		// url 에서 가져온 값으로 카테고리 변경해서 보여주기
 		const url = new URLSearchParams(window.location.search);	// 현재주소에서 search한 key-vlaue쌍 -> url에 담음
-		const category = url.get('category') || 'all' ;
-		const name = {all : "전체", free : "자유", honeytip : "꿀팁", review : "리뷰", question : "질문"}	// 매핑할 데이터
-		const el = document.querySelector(".filter-link");		// 링크들을 담은 요소
+		const category = url.get('category') || 'all' ;				// 카테고리 값 없으면 all처리
+		const name = {all : "전체", free : "자유", honeytip : "꿀팁", review : "리뷰", question : "질문"}	// 매핑할 데이터-> 각 텍스트를 한글로 매핑
+		const el = document.querySelector(".filter-link");			// 링크들을 담은 요소
 	    if (el) el.textContent = (name[category] || "전체") + "▼";	// 기존에 보이던 요소 덮어씌우기
 	    
 	    const form = document.getElementById("searchForm");			// 폼 가져오기
 	    const catInput = document.getElementById("categoryInput");	// 카테고리들 가져오기
 	    
-	    if (catInput) catInput.value = category;
+	    if (catInput) catInput.value = category;			// 값이 존재하면 value로 채워넣기
 	    
-	    document.querySelectorAll("#filter-menu a").forEach(a =>
+	    
+/* 	    document.querySelectorAll(".filter-menu a").forEach(a =>
 	    	a.addEventListener("click", function(e){
 	    		e.preventDefault();
 	    		catInput.value = this.dataset.cat;
 	    	      form.action = "${pageContext.request.contextPath}/board_list?pageNum=1";		// 카테고리 변경시 페이지 번호 1
 	    	      form.submit();
 	    	})
-	    )
+	    ) */
 	    
-	    const cur = new URL(location.href);
-	    document.querySelectorAll(".pagination a").forEach(a => {
-	      	const target = new URL(a.getAttribute("href"), location.origin);
-	      	const pageNum = target.searchParams.get("pageNum");
-	      	const next = new URLSearchParams(cur.search);
-	      	if (pageNum) next.set("pageNum", pageNum);
-	      	a.href = cur.pathname + "?" + next.toString();
+	    
+	    const cur = new URL(location.href);				// 히든값 없으면 url에서 구성
+	    document.querySelectorAll(".pagination a").forEach(a => {		// 페이지네이션의 모든 a를 순회
+	      	const target = new URL(a.getAttribute("href"), location.origin);	// a의 href가 갖고있는 링크
+	      	const pageNum = target.searchParams.get("pageNum");					// 그 링크의 pageNum을 가져오기
+	      	const next = new URLSearchParams(cur.search);					// 현재화면의 쿼리스트링을 복사(키워드, 정렬, 카테고리 값)
+	      	if (pageNum) next.set("pageNum", pageNum);						// 거기에 pageNum만 추가
+	      	a.href = cur.pathname + "?" + next.toString();					// 최종적으로 링크에 덮어넣기
 	    });
 	});
 </script>	

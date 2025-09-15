@@ -265,27 +265,29 @@
 		  	function sliderToPrice(v) {			
 		  		return Math.round((v / 100) * PRICE_MAX_CAP / 1000) * 1000;
 		  	}
-		 	// 숫자 -> ₩ 포맷
+		 	// 숫자 -> ₩ 포맷 -> 한국 스케일 천단위 콤마표기
 		    function won(n){ return n.toLocaleString('ko-KR'); }
 		 	
 		 	// 배지 표시
 		    function showPricePill(min, max) {
-		    	priceText.textContent = '가격: ₩' + won(min) + ' ~ ₩' + won(max);
-		        pricePill.classList.remove("hidden");
+		    	priceText.textContent = '가격: ₩' + won(min) + ' ~ ₩' + won(max);		// 텍스트 덮어씌우기
+		        pricePill.classList.remove("hidden");		// class에 hidden값 제거 -> 보이도록
 		     }
 		    function hidePricePill() {
-		        pricePill.classList.add("hidden");
-		        priceText.textContent = "";
+		        pricePill.classList.add("hidden");	// class에 hidden값을 주며 안보이게
+		        priceText.textContent = "";		// 텍스트 갱신 -> 공백주기
 		     }
-		    minPriceDisplay.textContent = won(0);
-		    maxPriceDisplay.textContent = won(sliderToPrice(priceRange.value));
+		    minPriceDisplay.textContent = won(0);			// 초기 값 설정 0원
+		    maxPriceDisplay.textContent = won(sliderToPrice(priceRange.value));		// 최대는 현재 슬라이더 위치값.
 
-		    // 디바운스(연속 입력 방지)
+		    // 디바운스(연속 입력 방지)-> 매번 ajax 안날리고, 마지막 1번에
 		    let t = null;
 		    function debounce(fn, delay=250){
 		      clearTimeout(t);
 		      t = setTimeout(fn, delay);		
 		    }
+		    
+		    // 중복검색어 감안하여 검색어값 가져와서 넣어주기
 		    function currentKeyword(){
 		        return $("#searchKeyword").val() || $("#currentSearchKeyword").val() || "";
 		    }
@@ -293,16 +295,18 @@
 		    function applyPriceFilter(){
 		        const sortOrder     = $("#sortOrder").val() || "new_pd";
 		        const searchKeyword = currentKeyword();
+		    	// 현재 url에서 기본 필터 추출
 		        const qs            = new URLSearchParams(location.search);
 		        const petType       = qs.get("petType") || "${petType}";
 		        const category      = qs.get("category") || "${category}";
 		        const subcategory   = qs.get("subcategory") || "";
 
+		        // 서버에 보낼 가격 범위 (최댓값만 슬라이더 조정하고 min은 0 고정!)
 		        const priceMin = 0;
 		        const priceMax = sliderToPrice(priceRange.value);
 
 		        $.ajax({
-		          url: "${path}/productList.do",
+		          url: "${path}/productList.do",		// 제품 List html부분
 		          type: "GET",
 		          data: {
 		            petType, category, subcategory,
@@ -310,7 +314,7 @@
 		            priceMin, priceMax
 		          },
 		          success: function(res){
-		            $("#product-grid").html(res);
+		            $("#product-grid").html(res);		// include한 부분만 교체
 
 		            // 배지 업데이트
 		            showPricePill(priceMin, priceMax);
@@ -326,8 +330,8 @@
 		            qs2.set("priceMax", priceMax);
 		            history.pushState(null, "", location.pathname + "?" + qs2.toString());
 		          },
-		          error: function(xhr){
-		            console.error(xhr.status, xhr.responseText);
+		          error: function(xhr){		//xhr :  에러콜백에서 받는 인자
+		            console.error(xhr.status, xhr.responseText); // xhr.status:상태코드 , xhr.responseText:서버가 보낸 원문
 		            $("#product-grid").html("오류");
 		          }
 		        });
@@ -336,48 +340,49 @@
 		      // 슬라이더 움직일 때: 숫자 표시 + 배지/목록 적용(디바운스)
 		      priceRange.addEventListener("input", function () {
 		        const priceMax = sliderToPrice(this.value);
-		        maxPriceDisplay.textContent = won(priceMax);
-		        debounce(applyPriceFilter, 300);
+		        maxPriceDisplay.textContent = won(priceMax);		// 실시간 숫자표시
+		        debounce(applyPriceFilter, 300);			// 0.3초 디바운스후 호출(서버)
 		      });
 
 		      // X 버튼: 가격 필터 해제
 		      clearPrice.addEventListener("click", function(){
 		      	// 기본값으로 리셋
-		        	priceRange.value = 100; // 150000원 위치
-		        	minPriceDisplay.textContent = won(0);
-		        	maxPriceDisplay.textContent = won(PRICE_MAX_CAP);
-		        	hidePricePill();
+	        	priceRange.value = 100; // 150000원 위치
+	        	minPriceDisplay.textContent = won(0);
+	        	maxPriceDisplay.textContent = won(PRICE_MAX_CAP);
+	        	hidePricePill();
 
-			        // 목록 갱신 (priceMin/Max 제거)
-			        const sortOrder     = $("#sortOrder").val() || "new_pd";
-			        const searchKeyword = currentKeyword();
-			        const qs            = new URLSearchParams(location.search);
-			        const petType       = qs.get("petType") || "${petType}";
-			        const category      = qs.get("category") || "${category}";
-			        const subcategory   = qs.get("subcategory") || "";
+		        // 목록 갱신 (priceMin/Max 제거)
+		        const sortOrder     = $("#sortOrder").val() || "new_pd";
+		        const searchKeyword = currentKeyword();
+		        const qs            = new URLSearchParams(location.search);
+		        const petType       = qs.get("petType") || "${petType}";
+		        const category      = qs.get("category") || "${category}";
+		        const subcategory   = qs.get("subcategory") || "";
 
-			        $.ajax({
-				  		url: "${path}/productList.do",
-				        type: "GET",
-				        data: {
-				          petType, category, subcategory,
-				          searchKeyword, sortOrder,
-				          priceMin: "", priceMax: ""
-				        },
-				        success: function(res){
-		 		           $("#product-grid").html(res);
-		
-				            // URL 정리
-				            const qs2 = new URLSearchParams(location.search);
-				            qs2.delete("priceMin");
-				            qs2.delete("priceMax");
-				            history.pushState(null, "", location.pathname + "?" + qs2.toString());
-				        },
-				        error: function(xhr){
-				            console.error(xhr.status, xhr.responseText);
-				            $("#product-grid").html("오류");
-		          		}
-		        	});
+		        $.ajax({
+			  		url: "${path}/productList.do",
+			        type: "GET",
+			        data: {
+			          petType, category, subcategory,
+			          searchKeyword, sortOrder,
+			          priceMin: "", priceMax: ""
+			        },
+			        success: function(res){
+	 		           $("#product-grid").html(res);
+	
+			            // URL 정리 -> price 관련 파라미터 제거하기
+			            const qs2 = new URLSearchParams(location.search);
+			            qs2.delete("priceMin");
+			            qs2.delete("priceMax");
+			            // null:인자값안줌, location.pathname:현재경로 qs2+toString 쿼리 문자열로 인자값 전달 key-value
+			            history.pushState(null, "", location.pathname + "?" + qs2.toString());
+			        },
+			        error: function(xhr){
+			            console.error(xhr.status, xhr.responseText);
+			            $("#product-grid").html("오류");
+	          		}
+	        	});
 		      });
 		});
 	</script>

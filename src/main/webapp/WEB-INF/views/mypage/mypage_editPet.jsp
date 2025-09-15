@@ -272,25 +272,26 @@
    <!-- 푸터 끝 -->
    
 <script>
-  // --- 1) 품종 카탈로그 ---
-  const DOG_BREEDS = ["말티즈","포메라니안","푸들","진돗개","리트리버","보더콜리","웰시코기","치와와","시츄","시바견","비글","기타"];
-  const CAT_BREEDS = ["코숏","먼치킨","샴","러시안블루","메인쿤","스핑크스","페르시안","터키시앙고라","코리안쇼트헤어","아비시니안","뱅갈","기타"];
+  // --- 1) 품종 카탈로그 ---  정적배열
+  	const DOG_BREEDS = ["말티즈","포메라니안","푸들","진돗개","리트리버","보더콜리","웰시코기","치와와","시츄","시바견","비글","기타"];
+  	const CAT_BREEDS = ["코숏","먼치킨","샴","러시안블루","메인쿤","스핑크스","페르시안","터키시앙고라","코리안쇼트헤어","아비시니안","뱅갈","기타"];
 
-  function fillBreedOptions(selectEl, type, current) {
-    const list = (type === '강아지') ? DOG_BREEDS : (type === '고양이' ? CAT_BREEDS : []);
-    selectEl.innerHTML = '<option value="">반려동물 종류를 선택해주세요.</option>';
-    list.forEach(b => {
-      const opt = document.createElement('option');
-      opt.value = b; opt.textContent = b;
-      if (current && current === b) opt.selected = true;
-      selectEl.appendChild(opt);
-    });
-  }
+  	function fillBreedOptions(selectEl, type, current) {
+		// 종류에 맞는 품종을 select옵션으로 재구성
+	  	const list = (type === '강아지') ? DOG_BREEDS : (type === '고양이' ? CAT_BREEDS : []);		
+	    selectEl.innerHTML = '<option value="">반려동물 종류를 선택해주세요.</option>';	// 기존 select 초기화 맨 위에 placeholder역할
+	    list.forEach(b => {		// 각 품종명(b)에 대해 option을 하나씩 만들기
+	    	const opt = document.createElement('option');		// select박스의 옵션만들기
+	      	opt.value = b; opt.textContent = b;					// 옵션 밸류값을 각 리스트에서 반복순회하며 넣어줌
+	      	if (current && current === b) opt.selected = true;	// current가 b와 같으면 선택상태 뷰여
+	      	selectEl.appendChild(opt);		// 만들어둔 옵션을 select에 붙ㅇ미 => 즉 placeholder역할 1개, b(옵션) n개 들어감
+    	});
+  	}
 
   // --- 2) 체급 계산 ---
-  function mapSize(weight) {
-    const n = parseFloat(weight);
-    if (isNaN(n)) return '';
+  function mapSize(weight) {	
+    const n = parseFloat(weight);		// 무조건 실수(float)로 파싱
+    if (isNaN(n)) return '';		// 문자열(eba등)이 들어가면 공백처리
     // DB CHECK: '대형','중형','소형' 만 허용 → 간단 3단계 매핑
     if (n < 4)  return '소형';
     if (n < 20) return '중형';
@@ -304,6 +305,7 @@
   const btnClose    = document.getElementById('btnClosePanel');
   const btnReset    = document.getElementById('btnReset');
 
+  // 폼필드 한곳에 묶어두기(입력요소)F.p_name.value 이런식으로 바로 접근하기 우해
   const F = {
     p_num:     document.getElementById('p_num'),
     p_name:    document.getElementById('p_name'),
@@ -318,41 +320,44 @@
 
   function openPanel(mode, data) {
     panelTitle.textContent = (mode === 'edit') ? '반려동물 수정' : '반려동물 추가';
-    editPanel.classList.remove('hidden');
+    editPanel.classList.remove('hidden');		// 수정버튼 클릭시 보이기
 
     // 값 세팅
-    F.p_num.value   = data?.p_num || '';
+    F.p_num.value   = data?.p_num || '';		// data? : 옵셔널체인징 -데이터가 없거나 null이어도 undefinded반환
     F.p_name.value  = data?.p_name || '';
     F.p_birth.value = data?.p_birth || '';
     F.p_gender.value= data?.p_gender || '';
-    F.p_weight.value= (data?.p_weight ?? '');
+    F.p_weight.value= (data?.p_weight ?? '');		// 왼쪽이 null 또는 undefined일떄만 오른쪽 사용
     F.p_size.value  = data?.p_size || '';
-    F.sizeBadge.textContent = data?.p_size || '-';
+    F.sizeBadge.textContent = data?.p_size || '-';		// 표시용 텍스트
 
     // 타입 라디오 + 품종 옵션
-    let currentType = '';
+    let currentType = '';		// 초기화
     F.typeRadios.forEach(r => {
-      r.checked = (data?.p_type ? (r.value === data.p_type) : r.checked);
-      if (r.checked) currentType = r.value;
-      // change 이벤트: 타입 변경 시 품종 목록 재구성
-      r.onchange = () => {
-        fillBreedOptions(F.p_kind, r.value);
-        F.p_kind.value = '';
+    	// data에 p_type이 있으면 radio value값과 일치하는 라디오  check속성 부여, 없으면 기존유지
+      r.checked = (data?.p_type ? (r.value === data.p_type) : r.checked);	
+      
+      if (r.checked) currentType = r.value;		// 체크된 라디오 찾아서 currentType에 저장
+      
+      r.onchange = () => {		// 라디오가 바뀔때마다 호출
+        fillBreedOptions(F.p_kind, r.value);		// 선택 타입에 맞게 품종 옵션들 재생성
+        F.p_kind.value = '';			// 타입이 변경되었으니 품종 선택 초기ㅗ하
       };
     });
+    // 패널을 열자마자 기본타입 또는 선택된 타입에 맞맞게 품종 채우기
     fillBreedOptions(F.p_kind, currentType, data?.p_kind);
 
     // 체급 연동
-    const onWeight = () => {
+    const onWeight = () => {		// 몸무게/체급 갱신 콜백
       const s = mapSize(F.p_weight.value);
-      F.p_size.value = s;
-      F.sizeBadge.textContent = s || '-';
+      F.p_size.value = s;		// hidden값을 갱신하기 위함
+      F.sizeBadge.textContent = s || '-';		//sizebadge에도 같이 주고 없으면 -
     };
-    F.p_weight.oninput = onWeight;
-    onWeight();
+    F.p_weight.oninput = onWeight;	// 콜백함수 대입해 사용자가 input업데이트하는 동안 실시간으로 갱신
+    onWeight();		// 패널이 열리자마자 초기화면면도 맞춰줌
   }
 
-  function closePanel() { editPanel.classList.add('hidden'); }
+  function closePanel() { editPanel.classList.add('hidden'); }	// hidden값 부여
 
   // 동물 추가 버튼 클릭시 빈 값으로 설정된 폼 오픈
   btnOpenAdd?.addEventListener('click', () => {
@@ -362,17 +367,17 @@
   });
 
   // 닫기 및 초기화
-  btnClose?.addEventListener('click', closePanel);
-  btnReset?.addEventListener('click', () => openPanel('add', { p_type: '강아지' }));
+  btnClose?.addEventListener('click', closePanel);		// 옵션체이닝 -> 버튼 엘리먼트 없으면 걍 건너띔
+  btnReset?.addEventListener('click', () => openPanel('add', { p_type: '강아지' }));	// 초기화 버튼이 있을때만 동작
 
   // 수정버튼클릭시 기존정보 로드
-  document.querySelectorAll('.btn-edit').forEach(btn => {
+  document.querySelectorAll('.btn-edit').forEach(btn => {		// 페이지내 모든 btn-edit에 클릭리스너 할당
   btn.addEventListener('click', () => {
-    const card = btn.closest('.pet-card');      // 꼭 .pet-card 로!
-    const d = card.dataset;
+    const card = btn.closest('.pet-card');      // 버튼에서 위로 올라가면서 .pet-card 조상 요소를 가장 가까운 거 하나 찾기
+    const d = card.dataset;		// 할당했던 dataset들을 카멜케이스로 담음
 
-    openPanel('edit', {
-      p_num:   d.pnum || '',
+    openPanel('edit', {		// 카멜형식! 주의
+      p_num:   d.pnum || '',		// 값이 없을때 빈 문자열 대체
       p_name:  d.pname || '',
       p_type:  d.ptype || '',       // 강아지/고양이
       p_gender:d.pgender || '',     // M/F
@@ -386,31 +391,31 @@
 });
 
   // 초기 상태: petList가 없으면 패널 자동 오픈
-  const hasPets = !!document.querySelector('#petCards > *');
-  if (!hasPets) {
+  const hasPets = !!document.querySelector('#petCards > *');	// 카드컨테이너 petCards의 첫번째 자식요소 찾기 잇으면 true, 없ㅇ면 false
+  if (!hasPets) {		//반려동물 없다면
     // 기본 타입 강아지
     F.typeRadios.forEach(r => r.checked = (r.value === '강아지'));
-    openPanel('add', { p_type: '강아지' });
+    openPanel('add', { p_type: '강아지' });		// 강아지 기본으로 패널을 띄움
   }
   
   // 삭제 ajax
-  document.querySelectorAll('.frm-delete').forEach(frm => {
+  document.querySelectorAll('.frm-delete').forEach(frm => {		// 삭제폼 제출시 jajx처리
 	  frm.addEventListener('submit', async (e) => {
 	    e.preventDefault();
 	    if (!confirm('삭제할까요?')) return;
 
-	    const url = frm.action;
-	    const formData = new FormData(frm);
+	    const url = frm.action;		// 폼의 action속성
+	    const formData = new FormData(frm);		// 폼내 모든 데이터필드 수집
 	    try {
-	      const resp = await fetch(url, {
+	      const resp = await fetch(url, {		// 비동기 post요청
 	        method: 'POST',
 	        body: formData
 	      });
 	      const data = await resp.json();
-	      if (data.ok) {
+	      if (data.ok) {		// 서버에서 ok(200)응답이 오면
 	        // 카드 DOM 제거
-	        const card = frm.closest('[data-pnum]');
-	        if (card) card.remove();
+	        const card = frm.closest('[data-pnum]');	//data-pnum속성이 붙은 가장 가까운 조상
+	        if (card) card.remove();		// 삭제성공시 카드 제거
 
 	        // 목록이 비면 안내문 추가 (옵션)
 	        if (!document.querySelector('#petCards > *')) {
