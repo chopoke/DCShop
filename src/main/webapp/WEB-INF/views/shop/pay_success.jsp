@@ -57,14 +57,12 @@
 		const orderId = urlParams.get("orderId");
 		const amount = urlParams.get("amount");
 		const paymentType = urlParams.get("paymentType");
-		const orderInfo = urlParams.get("orderInfo");
 		
 		async function confirm() {
 			const requestData = {
 				paymentKey : paymentKey,
 				orderId : orderId,
 				amount : amount,
-				orderInfo: orderInfo ? JSON.parse(decodeURIComponent(orderInfo)) : null
 			};
 
 			const response = await fetch("${path}/pay_confirm", {
@@ -81,7 +79,10 @@
 				// 결제 실패 비즈니스 로직을 구현하세요.
 				console.log(json);
 				
-				window.location.href = `${path}/pay_fail?message=${json.message}&code=${json.code}`;
+				const message = json.message;
+				const code = json.code;
+				
+				window.location.href = "${path}/pay_fail?message=" + message + "&code=" + code;
 			}
 
 			// 결제 성공 비즈니스 로직을 구현하세요.
