@@ -149,7 +149,6 @@ public class AdminServiceImpl implements AdminService{
 		String category = request.getParameter("category");
 		String q = request.getParameter("q");
 		String pageNum = request.getParameter("pageNum");
-		String pageSizeStr = request.getParameter("pageSize");
 		
 		// 2) 카테고리 분류 방법
 		Integer catFrom = null;
@@ -769,4 +768,37 @@ public class AdminServiceImpl implements AdminService{
 		List<UserDTO> list2 = dao.adminUserList2();
 		model.addAttribute("list2", list2);
 	}
+ 	
+ 	@Override
+	public QuestDTO adminQnaDetail(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException {
+		//문의 번호 받아와서 객체에 담기
+ 		int q_num = Integer.parseInt(request.getParameter("q_num"));
+ 		
+		QuestDTO dto = dao.questDetail(q_num);
+		
+		System.out.println(dto);
+		
+		return dto;
+	}
+ 	
+ 	@Override
+ 	public void answerSubmitAction(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException{
+ 		System.out.println("답변 작성 ing~");
+ 		String u_role = (String)request.getSession().getAttribute("session_u_role");
+ 		
+ 		Integer q_num = Integer.parseInt(request.getParameter("q_num"));
+ 		String a_answer = request.getParameter("a_answer"); 
+ 		
+ 		QuestDTO dto = new QuestDTO();
+ 		
+ 		dto.setQ_num(q_num);
+ 		dto.setA_answer(a_answer);
+ 		
+ 		if(q_num != null && a_answer != null && ("ADMIN".equals(u_role))) {
+ 			dao.updateAnswer(dto);
+ 		}
+ 		System.out.println("답변 작성 완료");
+ 	}
 }

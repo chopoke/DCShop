@@ -67,4 +67,10 @@ public class LoginController {
 		return "main";
 	}
 	
+	@RequestMapping("comm_CSD.do")
+	public String comm_CSD() {
+		logger.info("=== url -> login_main ===");
+		
+		return "comm/comm_CSD";
+	}
 }

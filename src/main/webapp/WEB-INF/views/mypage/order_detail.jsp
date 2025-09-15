@@ -1,5 +1,17 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/setting/setting.jsp"%>
+
+<c:set var="shippingFee" value="0"/>
+<c:set var="totalPrice" value="0" />
+<c:forEach var="o" items="${order}">
+    <c:set var="totalPrice" value="${totalPrice + (o.o_price * o.o_Count)}" />
+    <c:forEach var="pd" items="${o.productDto}">
+    	<c:if test="${pd.pdShippingFee > shippingFee}">
+    		<c:set var="shippingFee" value="${pd.pdShippingFee}"/>
+    	</c:if>
+    </c:forEach> 
+</c:forEach>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -74,46 +86,63 @@ tailwind.config = {
 
 			<!-- 사이드바 -->
 			<aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
-				<!-- 프로필 -->
-				<img src="resources/img_main/mypage_default.png" alt="Profile"
-					class="rounded-full w-28 h-28 object-cover mb-4">
-				<h2 class="text-lg font-semibold">Sarah Johnson</h2>
-				<p class="text-gray-500 text-sm mb-4">sarah@example.com</p>
-				<button
-					class="px-4 py-2 bg-stone-950 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
 				
+				<!-- 프로필 -->
+				<form id="avatarForm" action="${path}/mypage_imgUpload.do" method="post" enctype="multipart/form-data">
+				  	<input type="hidden" name="u_id" value="${sessionScope.sessionid}">
+				  	<input type="file" id="u_image" name="u_image" accept="image/*" style="display:none;">
+				</form>
+				<c:choose>
+				  <c:when test="${empty dto.u_image}">
+				    <c:url var="imgUrl" value="/resources/img_main/mypage_default.png" />
+				  </c:when>
+				  <c:otherwise>
+				    <c:url var="imgUrl" value="/resources/image/profile/${dto.u_image}" />
+				  </c:otherwise>
+				</c:choose>
+			
+				<img id="profileImg"
+				     src="${imgUrl}"
+				     alt="Profile"
+				     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
 
-				<!-- 네비게이션 -->
-				<nav class="w-full space-y-2 text-sm">
-                  <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> 
-                  <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
-                  <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
-                  <a href="./mypage_qna.do" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
-                  <a href="./mypage/my_reviews.do" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a>
-                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+				<h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+				<h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
+				<p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
+				<button
+					class="px-4 py-2 bg-black text-white !rounded-lg mb-6 hover:bg-blue-600"
+					onclick="window.location='${path}/mypage_pwdcheck.do'">정보수정</button>
+				
+				
+	            <!-- 네비게이션 -->
+	            <nav class="w-full space-y-2 text-sm">
+	                  <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100">내 반려동물</a> 
+	                  <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
+	                  <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
+	                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
+	                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
+	                  <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
                </nav>
-			</aside>
+         </aside>
 
 			<!-- 메인 콘텐츠 -->
 			<div class="max-w-7xl mx-auto p-6">
 		      <div class="flex items-center justify-between mb-6">
 		        <h1 class="text-2xl font-bold text-gray-900">주문 상세</h1>
-		        <button
-		          class="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 flex items-center gap-2 !rounded-button"
-		        >
+		        <a href="${path}/orderList" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 flex items-center gap-2 !rounded-button no-underline">
 		          <i class="ri-arrow-left-line"></i>
 		          목록으로
-		        </button>
+		        </a>
 		      </div>
 		
 		      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
 		        <div class="flex justify-between items-start mb-6">
 		          <div>
-		            <div class="text-sm text-gray-500">주문번호</div>
-		            <div class="text-lg font-medium">ORD20250909001</div>
+		            <div class="text-sm text-gray-500" >주문번호</div>
+		            <div class="text-lg font-medium">${order[0].o_Num}</div>
 		          </div>
 		          <div class="px-3 py-1 bg-gray-300 text-black rounded-full text-sm">
-		            배송 준비중
+		            ${order[0].o_Status}
 		          </div>
 		        </div>
 		
@@ -123,15 +152,15 @@ tailwind.config = {
 		            <div class="space-y-3">
 		              <div class="flex">
 		                <span class="w-24 text-sm text-gray-500">주문자</span>
-		                <span class="text-sm">김민수</span>
+		                <span class="text-sm">${order[0].o_name}</span>
 		              </div>
 		              <div class="flex">
 		                <span class="w-24 text-sm text-gray-500">연락처</span>
-		                <span class="text-sm">010-1234-5678</span>
+		                <span class="text-sm">${order[0].o_phone}</span>
 		              </div>
 		              <div class="flex">
 		                <span class="w-24 text-sm text-gray-500">회원 ID</span>
-		                <span class="text-sm">minsu.kim</span>
+		                <span class="text-sm">${sessionScope.sessionid }</span>
 		              </div>
 		            </div>
 		          </div>
@@ -142,12 +171,14 @@ tailwind.config = {
 		              <div class="flex">
 		                <span class="w-24 text-sm text-gray-500">배송주소</span>
 		                <span class="text-sm"
-		                  >서울특별시 강남구 테헤란로 123 (06234)</span
+		                  >${order[0].o_Address}</span
 		                >
 		              </div>
 		              <div class="flex">
 		                <span class="w-24 text-sm text-gray-500">배송요청</span>
-		                <span class="text-sm">부재시 경비실에 맡겨주세요</span>
+		                <c:if test="${order[0].o_Request != null}">
+		                	<span class="text-sm">${order[0].o_Request}</span>
+		                </c:if>
 		              </div>
 		            </div>
 		          </div>
@@ -179,41 +210,79 @@ tailwind.config = {
 		            </thead>
 		            <tbody class="bg-white divide-y divide-gray-200">
 		              <!-- 상품 리스트 영역 -->
-		              
-		              <tr>
-		                <td class="px-6 py-4">
-		                  <div class="flex items-center">
-		                    <div
-		                      class="h-16 w-16 flex-shrink-0 rounded-lg bg-gray-100"
-		                    ><img alt="" src=""></div>
-		                    <div class="ml-4">
-		                      <div class="text-sm font-medium text-gray-900">
-		                        스마트폰 케이스
-		                      </div>
-		                      <div class="text-sm text-gray-500">PD_ID: PRD001</div>
-		                    </div>
-		                  </div>
-		                </td>
-		                <td class="px-6 py-4 text-sm text-gray-500 text-center">2개</td>
-		                <td class="px-6 py-4 text-sm text-gray-900 text-right">
-		                  39,800원
-		                </td>
-		              </tr>
-		              
+		              <c:forEach var="order" items="${order}">
+		              	<c:forEach var="product" items="${order.productDto}">
+			              	<tr>
+			                <td class="px-6 py-4">
+			                  <div class="flex items-center">
+			                    <div class="h-16 w-16 flex-shrink-0 rounded-lg bg-gray-100">
+			                    	<a href="${path}/ad_shop_detailAction.pd?pdId=${product.pdId}" class="h-16 w-16 flex-shrink-0 rounded-lg"> 
+				                    	<img alt="${product.pdName}" src="<c:url value='${product.pdImageUrl}'/>" class="h-16 w-16 flex-shrink-0 rounded-lg">
+									</a>
+			                    </div>
+			                    <div class="ml-4">
+			                      <div class="text-sm font-medium text-gray-900">
+			                        ${product.pdName}
+			                      </div>
+			                      <div class="text-sm text-gray-500">${product.pdBrand}</div>
+			                    </div>
+			                  </div>
+			                </td>
+			                <td class="px-6 py-4 text-sm text-gray-500 text-center">${order.o_Count}개</td>
+			                <td class="px-6 py-4 text-sm text-gray-900 text-right">
+			                  <fmt:formatNumber value="${order.o_price * order.o_Count}" type="number" maxFractionDigits="0"/>원
+			                </td>
+			              </tr>
+			              </c:forEach>
+		              </c:forEach>
 		              <!-- 상품 리스트 영역 끝 -->
 		            </tbody>
 		            <tfoot class="bg-gray-50">
-		              <tr>
-		                <td
-		                  colspan="2"
-		                  class="px-6 py-4 text-sm text-gray-500 text-right"
-		                >
-		                  총 결제금액
-		                </td>
-		                <td class="px-6 py-4 text-right">
-		                  <span class="text-lg font-bold text-black">39,800원</span>
-		                </td>
-		              </tr>
+						<tr>
+						   <td
+						     colspan="2"
+						     class="px-6 py-3 text-sm text-gray-500 text-right"
+						   >
+						     배송비
+						   </td>
+						   <td class="px-6 py-3 text-right">
+						     <span class="text-lg font-bold text-black">
+						     	<c:choose>
+								    <c:when test="${totalPrice >= 100000}">
+								        무료
+								    </c:when>
+								    <c:otherwise>
+								        <span>
+								        	<fmt:formatNumber value="${shippingFee}" type="number" maxFractionDigits="0"/>원
+								        </span>
+								    </c:otherwise>
+								</c:choose>
+						     </span>
+						   </td>
+						 </tr>
+						<tr>
+						  <td
+						    colspan="2"
+						    class="px-6 py-4 text-sm text-gray-500 text-right"
+						  >
+						    총 결제금액
+						  </td>
+						  <td class="px-6 py-4 text-right">
+						    <span class="text-lg font-bold text-black">
+						    	<c:choose>
+								    <c:when test="${totalPrice >= 100000}">
+								        <fmt:formatNumber value="${totalPrice}" type="number" maxFractionDigits="0"/>원
+								    </c:when>
+								    <c:otherwise>
+								        <span>
+								        	<fmt:formatNumber value="${totalPrice + shippingFee}" type="number" maxFractionDigits="0"/>원
+								        </span>
+								    </c:otherwise>
+								</c:choose>
+						    	
+						    </span>
+						  </td>
+						</tr>
 		            </tfoot>
 		          </table>
 		        </div>
@@ -221,64 +290,6 @@ tailwind.config = {
 		
 		      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
 		        <h3 class="text-sm font-medium text-gray-900 mb-4">배송 현황</h3>
-		        <!-- <div class="relative flex justify-center">
-  				<div class="flex items-center justify-between mb-8 w-3/4">
-		            <div class="w-full flex items-center">
-		              <div class="relative flex items-center justify-center">
-		                <div
-		                  class="w-10 h-10 bg-primary rounded-full flex items-center justify-center"
-		                >
-		                  <i class="ri-check-line text-white"></i>
-		                </div>
-		                <div class="absolute top-full mt-2 text-sm text-center w-24">
-		                  <div class="font-medium text-gray-900">주문완료</div>
-		                </div>
-		              </div>
-		              <div class="flex-1 h-1 bg-primary"></div>
-		            </div>
-		
-		            <div class="w-full flex items-center">
-		              <div class="relative flex items-center justify-center">
-		                <div
-		                  class="w-10 h-10 bg-primary rounded-full flex items-center justify-center"
-		                >
-		                  <i class="ri-check-line text-white"></i>
-		                </div>
-		                <div class="absolute top-full mt-2 text-sm text-center w-24">
-		                  <div class="font-medium text-gray-900">배송준비</div>
-		                </div>
-		              </div>
-		              <div class="flex-1 h-1 bg-primary"></div>
-		            </div>
-		
-		            <div class="w-full flex items-center">
-		              <div class="relative flex items-center justify-center">
-		                <div
-		                  class="w-10 h-10 bg-primary rounded-full flex items-center justify-center"
-		                >
-		                  <i class="ri-check-line text-white"></i>
-		                </div>
-		                <div class="absolute top-full mt-2 text-sm text-center w-24">
-		                  <div class="font-medium text-gray-900">배송중</div>
-		                </div>
-		              </div>
-		              <div class="flex-1 h-1 bg-primary"></div>
-		            </div>
-		
-		            <div class="w-120 flex items-center ">
-		              <div class="relative flex items-center justify-center">
-		                <div
-		                  class="w-10 h-10 bg-primary rounded-full flex items-center justify-center"
-		                >
-		                  <i class="ri-check-line text-white"></i>
-		                </div>
-		                <div class="absolute top-full mt-2 text-sm text-center w-24">
-		                  <div class="font-medium text-gray-900">배송완료</div>
-		                </div>
-		              </div>
-		            </div>
-		          </div>
-		        </div> -->
 		        <div class="relative flex justify-center">
   				<div class="flex items-center justify-between mb-8 w-3/4">
 		            <div class="w-full flex items-center">
@@ -340,15 +351,17 @@ tailwind.config = {
 		        <div class="space-y-3">
 		          <div class="flex justify-between">
 		            <span class="text-sm text-gray-500">결제방법</span>
-		            <span class="text-sm">신용카드</span>
+		            <span class="text-sm">${order[0].o_Payment}</span>
 		          </div>
 		          <div class="flex justify-between">
 		            <span class="text-sm text-gray-500">결제일시</span>
-		            <span class="text-sm">2025.09.07 14:30:22</span>
+		            <span class="text-sm">
+		            	<fmt:formatDate value="${order[0].o_date_detail}" pattern="yyyy-MM-dd HH:mm:ss"/>
+		            </span>
 		          </div>
 		          <div class="flex justify-between">
 		            <span class="text-sm text-gray-500">결제번호</span>
-		            <span class="text-sm">PAY20250907001</span>
+		            <span class="text-sm">${order[0].o_payment_key}</span>
 		          </div>
 		        </div>
 		      </div>
@@ -361,7 +374,7 @@ tailwind.config = {
 	<%@ include file="../setting/footer.jsp"%>
 	<!-- 푸터 끝 -->
 	<script type="text/javascript">
-	const dil = '배송중';
+	const dil = '${order[0].o_Delivery_State}';
 
 	const statusCircle1 = document.getElementById('statusCircle1');
 	const statusCircle2 = document.getElementById('statusCircle2');

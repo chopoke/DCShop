@@ -128,11 +128,12 @@ public class QnaServiceImpl implements QnaService{
 		
 		Integer q_num = Integer.parseInt(request.getParameter("q_num"));
 		// 로그인 한 사람의 유저넘버 불러오기
-		int u_member_id = (Integer)request.getSession().getAttribute("session_u_member_id");
+		Integer u_member_id = (Integer)request.getSession().getAttribute("session_u_member_id");
+		String u_role = (String)request.getSession().getAttribute("session_u_role");
 		// 로그인한 사람이 작성자 본인이 맞는지 체크하기 위한 데이터 불러오기
 		QuestDTO check = dao.questDetail(q_num);
 		
-		if(q_num != null && check.getU_member_id()==u_member_id) {//로그인 한 사람이 글 작성자 본인이라면
+		if(u_role != null && u_member_id != null && (check.getU_member_id()==u_member_id || "ADMIN".equals(u_role) || u_role == "ADMIN")) {//로그인 한 사람이 글 작성자 본인이라면
 			dao.deleteQuest(q_num);
 		}
 	}

@@ -66,7 +66,7 @@
           <a href="${path}/admin_qna"     class="block py-2 px-3 rounded hover:bg-gray-100">문의관리</a>
           <a href="${path}/admin_review"  class="block py-2 px-3 rounded hover:bg-gray-100">리뷰관리</a>
           <a href="${path}/admin_user"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
-          <a href="${path}/logout" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+          <a href="${path}/logout.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
         </nav>
       </aside>
 
@@ -125,7 +125,7 @@
             </div>
 
             <div class="md:col-span-3 flex gap-2">
-              <button type="submit" class="w-full h-10 rounded-lg bg-blue-600 text-white hover:bg-blue-700">검색</button>
+              <button type="submit" class="w-full h-10 rounded-lg bg-black text-white hover:bg-blue-700">검색</button>
             </div>
           </div>
         </form>

@@ -3,6 +3,10 @@ package com.spring.DCShop.mypage.service;
 import java.io.IOException;
 import java.io.File;
 import java.sql.Date;
+import java.util.Collection;
+import java.util.Collections;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +27,18 @@ import com.spring.DCShop.mypage.dto.CartDTO;
 import com.spring.DCShop.mypage.dto.MyPetDTO;
 import com.spring.DCShop.mypage.dto.MypageDTO;
 import com.spring.DCShop.mypage.dto.OrderDTO;
+import com.spring.DCShop.mypage.dto.ProductDTO;
 import com.spring.DCShop.shop.dto.QuestDTO;
+
 
 @Service
 public class MypageServiceImpl implements MypageService {
 
 	@Autowired
 	private MypageDAO myDao;
+	
+	private int cat = 0;
+	private int dog = 0;
 	
 	private int productCountSum;
 	private int productTotalPrice;
@@ -55,12 +64,10 @@ public class MypageServiceImpl implements MypageService {
 		orderList.forEach(i -> {
 			productCountSum += i.getO_Count();
 		});
-
+		
 		productTotalPrice = 0;
 		orderList.forEach(i -> {
-			i.getProductDto().forEach(j -> {
-				productTotalPrice += i.getO_Count() * j.getPdPrice();
-			});
+			productTotalPrice += i.getO_price();
 		});
 		
 		model.addAttribute("order", orderList);
@@ -162,7 +169,6 @@ public class MypageServiceImpl implements MypageService {
 	// 정보수정 페이지 user정보 get
 	@Override
 	public void findById(String loginId, Model model) {
-
 		MypageDTO dto = myDao.getUserInfo(loginId);
 		model.addAttribute("dto", dto);
 	}
@@ -227,13 +233,13 @@ public class MypageServiceImpl implements MypageService {
 	    }
 		
 		// input경로 정의
-//		String saveDir = request.getSession().getServletContext().getRealPath("/resources/image/profile/");		// -> tomcat 배포 war폴더
-		String saveDir = "D:\\ICT_Project\\workspace_check\\DCShop\\src\\main\\webapp\\resources\\image\\profile\\";
-		File dir = new File(saveDir);				
+		String warDir = request.getSession().getServletContext().getRealPath("/resources/image/profile/");		// -> tomcat 배포 war폴더
+		String saveDir = "D:\\DEV05\\middleProject_ict05\\DCShop\\src\\main\\webapp\\resources\\image\\profile\\";
+		File dir = new File(warDir);				
 		if (!dir.exists()) dir.mkdirs();			// 폴더 없으면 생성
 		
 	    String savedName = file.getOriginalFilename();		// 원본파일명 그대로 저장
-		file.transferTo(new File(saveDir, savedName));		// 저장!
+		file.transferTo(new File(warDir, savedName));		// 저장!
 			
 		Map<String, Object> map = new HashMap<>();
 		map.put("u_image", savedName);
@@ -301,16 +307,14 @@ public class MypageServiceImpl implements MypageService {
 
 		productTotalPrice = 0;
 		orderList.forEach(i -> {
-			i.getProductDto().forEach(j -> {
-				productTotalPrice += i.getO_Count() * j.getPdPrice();
-			});
+			productTotalPrice += i.getO_price();
 		});
 		
 		model.addAttribute("order", orderList);
 		model.addAttribute("productCountSum", productCountSum);
 		model.addAttribute("productTotalPrice", productTotalPrice);
 	}
-		
+	
 	private String mapSize(Double w) {
 	    if (w == null) return null;
 	    if (w < 4)  return "소형";
@@ -370,5 +374,123 @@ public class MypageServiceImpl implements MypageService {
 		map.put("u_password", pwd);
 		int deleteCtn = myDao.userInfoDelete(map);
 		return deleteCtn;
+	}
+
+
+	@Override
+	public void chooseRandomProduct(HttpServletRequest request, HttpServletResponse response, Model model) {
+		
+		Integer memberId = (Integer) request.getSession().getAttribute("session_u_member_id");
+		List<MyPetDTO> petInfo = myDao.userOfPets(memberId);
+		
+		System.out.println("petInfo" + petInfo);
+		
+		Map<String, Object> map = new HashMap<>();
+
+		// 주인이 타입 등록한 종류에 따른
+		petInfo.forEach(i -> {
+			if(i.getP_type().equals("고양이")) {
+				cat = 2;
+			}
+			if(i.getP_type().equals("강아지")) {
+				dog = 1;
+			}
+		});
+		
+		map.put("cat", cat);
+		map.put("dog", dog);
+		
+		List<ProductDTO> productList = myDao.productInfo(map);
+		Collections.shuffle(productList);
+		model.addAttribute("productList", productList);
+	}
+		
+		
+	// 주문내역 페이지에서 주문리스트 가져오기
+	@Override
+	public void orderListById(HttpServletRequest request, HttpServletResponse response, Model model) {
+		System.out.println("MypageServiceImpl => orderListById");
+		
+		int session_u_member_id = (Integer)request.getSession().getAttribute("session_u_member_id");
+		String pageNum = request.getParameter("pageNum");
+		String start_date = request.getParameter("start_date");
+		String end_date = request.getParameter("end_date");
+		String status = request.getParameter("status");
+		
+		Map<String, Object> orderList = new HashMap<String, Object>();
+		
+		orderList.put("u_member_id", session_u_member_id);
+		
+		// 변환할 날짜 형식 정의
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        // 1. String -> java.util.Date
+	    java.util.Date utilDate;
+        Date start_d = null;
+        Date end_d = null;
+		
+		if(start_date != null) {
+			try {
+				utilDate = sdf.parse(start_date);
+				
+				// 2. java.util.Date -> java.sql.Date
+				start_d = new Date(utilDate.getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			// orderListById.put("start_date", start_date);
+			orderList.put("start_date", start_d);
+			System.out.println(start_d);
+		}
+		
+		if(end_date != null) {
+			try {
+				utilDate = sdf.parse(end_date);
+				
+				// 2. java.util.Date -> java.sql.Date
+				end_d = new Date(utilDate.getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			// orderListById.put("end_date", end_date);
+			orderList.put("end_date", end_d);
+			System.out.println(end_d);
+		}
+		
+		if(status != null) {
+			orderList.put("status", status);
+			System.out.println(status);
+		}
+
+		// 전체 주문내역 갯수 카운트
+		Paging paging = new Paging(pageNum);
+		int total = myDao.orderListTotal(orderList);
+		System.out.println("total : " + total);
+		
+		paging.setTotalCount(total);
+		
+		int start = paging.getStartRow();
+		int end = paging.getEndRow();
+		
+		orderList.put("start", start);
+		orderList.put("end", end);
+		
+		List<OrderDTO> order = myDao.orderListById(orderList);
+		
+		model.addAttribute("order", order);
+		model.addAttribute("paging", paging);
+	}
+	
+	// 주문 상세 내역
+	@Override
+	public void orderDetailAction(HttpServletRequest request, HttpServletResponse response, Model model) {
+		System.out.println("MypageServiceImpl => orderDetailAction");
+		
+		Long o_num = Long.valueOf(request.getParameter("o_num"));
+		
+		List<OrderDTO> list = myDao.orderDetailAction(o_num);
+		
+		System.out.println("list : " + list);
+		
+		model.addAttribute("order", list);
 	}
 }

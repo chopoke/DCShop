@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.ui.Model;
 
+import com.spring.DCShop.shop.dto.QuestDTO;
+
 public interface AdminService {
 	
 	// 관리자메인
@@ -50,6 +52,12 @@ public interface AdminService {
 	public void adminQnaList(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws ServletException, IOException;
 	
+	// qna 답변 페이지
+	public QuestDTO adminQnaDetail(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException;
+	
+	public void answerSubmitAction(HttpServletRequest request, HttpServletResponse response, Model model) 
+			throws ServletException, IOException;
 	// 주문관리 - 목록
 	public void adminOrderList(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;

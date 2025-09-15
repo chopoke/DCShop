@@ -45,7 +45,7 @@
           <a href="${path}/admin_qna"     class="block py-2 px-3 rounded hover:bg-gray-100">문의관리</a>
           <a href="${path}/admin_review"  class="block py-2 px-3 rounded hover:bg-gray-100">리뷰관리</a>
           <a href="${path}/admin_user"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
-          <a href="${path}/logout" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+          <a href="${path}/logout.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
         </nav>
       </aside>
 
@@ -66,7 +66,7 @@
                   <h3 class="text-lg font-semibold">게시판관리</h3>
                   <span class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">바로가기</span>
                 </div>
-                <p class="text-sm text-gray-500 mt-2">게시글 목록/검색/삭제/상세 관리</p>
+                <p class="text-sm text-gray-500 mt-2">목록/검색/삭제/상세 관리</p>
                 <div class="mt-4 h-10 flex items-center justify-between">
                   <span class="text-3xl font-bold"><c:out value="${boardCount}" default="0"/></span>
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 opacity-70 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -134,7 +134,7 @@
                   <h3 class="text-lg font-semibold">리뷰관리</h3>
                   <span class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">바로가기</span>
                 </div>
-                <p class="text-sm text-gray-500 mt-2">리뷰 모니터링/필터/신고처리</p>
+                <p class="text-sm text-gray-500 mt-2">리뷰 모니터링/삭제처리</p>
                 <div class="mt-4 h-10 flex items-center justify-between">
                   <span class="text-3xl font-bold"><c:out value="${reviewCount}" default="0"/></span>
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 opacity-70 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -151,7 +151,7 @@
                   <h3 class="text-lg font-semibold">회원관리</h3>
                   <span class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">바로가기</span>
                 </div>
-                <p class="text-sm text-gray-500 mt-2">가입/권한/탈퇴/통계</p>
+                <p class="text-sm text-gray-500 mt-2">가입/탈퇴/통계</p>
                 <div class="mt-4 h-10 flex items-center justify-between">
                   <span class="text-3xl font-bold"><c:out value="${userCount}" default="0"/></span>
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 opacity-70 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
