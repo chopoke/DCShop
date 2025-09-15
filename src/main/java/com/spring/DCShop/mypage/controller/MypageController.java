@@ -238,7 +238,7 @@ public class MypageController {
 		if(sessionid == null) {
 			return "user/login/login_main";
 		}
-        //myService.findById(sessionid, model);
+        myService.findById(sessionid, model);
         
 		//myService.orderListInfo(req, res, model);
 		
