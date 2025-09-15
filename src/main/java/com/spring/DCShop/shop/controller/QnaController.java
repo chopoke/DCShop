@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.spring.DCShop.mypage.service.MypageService;
 import com.spring.DCShop.shop.dto.QuestDTO;
 import com.spring.DCShop.shop.service.QnaService;
 
@@ -23,6 +24,9 @@ public class QnaController {
 	
 	@Autowired
 	private QnaService service;
+	
+	@Autowired
+	private MypageService my; 
 	
 	//[문의 작성 처리]
 	@RequestMapping("/question_insert.qa")
@@ -52,6 +56,7 @@ public class QnaController {
 			throws ServletException, IOException {
 		logger.info("<<< url ==> /question_insert.qa >>>");
 		
+		String sessionid = (String)request.getSession().getAttribute("sessionid");
 		int q_num = Integer.parseInt(request.getParameter("q_num"));
 		logger.info("q_num"+q_num);
 		
@@ -61,7 +66,10 @@ public class QnaController {
 			return "redirect:/";	//글 작성자 본인이 아니라면 페이지 접근 불가.
 		}
 		
-		model.addAttribute("dto", dto);
+		
+		my.findById(sessionid, model);
+		
+		model.addAttribute("qna", dto);
 		
 		return "shop/question_update";
 	}

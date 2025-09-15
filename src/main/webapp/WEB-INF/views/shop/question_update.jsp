@@ -25,7 +25,7 @@
               sm: "4px",
               DEFAULT: "8px",
               md: "12px",
-              lg: "16px",
+              lg: "8px",
               xl: "20px",
               "2xl": "24px",
               "3xl": "32px",
@@ -141,23 +141,43 @@
 		    <div class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
 		      <!-- 사이드바 (네비게이션 건들지 않음) -->
 		      <aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
-		        <!-- 프로필 -->
-		        <img src="resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
-		        <h2 class="text-lg font-semibold">${session_u_nickname}</h2>
-		        <p class="text-gray-500 text-sm mb-4">${session_u_email}</p>
-		        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
-		
-		        <!-- 네비게이션 -->
-		        <nav class="w-full space-y-2 text-sm">
-		          <a href="#"   class="block py-2 px-3 rounded hover:bg-gray-100">게시판관리</a>
-		          <a href="#"   class="block py-2 px-3 rounded hover:bg-gray-100">주문관리</a>
-		          <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100">상품관리</a>
-		          <a href="./mypage_qna.do"     class="block py-2 px-3 rounded hover:bg-gray-100 bg-gray-50 font-semibold">문의관리</a>
-		          <a href="#"  class="block py-2 px-3 rounded hover:bg-gray-100">리뷰관리</a>
-		          <a href="#"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
-		          <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
-		        </nav>
-		      </aside>
+	             <!-- 프로필 -->
+	            <form id="avatarForm" action="${path}/mypage_imgUpload.do" method="post" enctype="multipart/form-data">
+				  	<input type="hidden" name="u_id" value="${sessionScope.sessionid}">
+				  	<input type="file" id="u_image" name="u_image" accept="image/*" style="display:none;">
+				</form>
+				<c:choose>
+					  <c:when test="${empty dto.u_image}">
+					    <c:url var="imgUrl" value="/resources/img_main/mypage_default.png" />
+					  </c:when>
+					  <c:otherwise>
+					    <c:url var="imgUrl" value="/resources/image/profile/${dto.u_image}" />
+					  </c:otherwise>
+				</c:choose>
+				
+				<img id="profileImg"
+				     src="${imgUrl}"
+				     alt="Profile"
+				     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
+				     
+				<h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+					<h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
+					<p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
+					<button
+						class="px-4 py-2 bg-black text-white !rounded-lg mb-6 hover:bg-blue-600"
+						onclick="window.location='${path}/mypage_pwdcheck.do'">정보수정</button>
+	
+					<!-- 네비게이션 -->
+					<nav class="w-full space-y-2 text-sm">
+		               <a href="${pageContext.request.contextPath}/mypage_editPet.do" class="block py-2 px-3 rounded hover:bg-gray-100 ">내 반려동물</a> 
+		               <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
+		               <a href="./wishList.do" class="block py-2 px-3 rounded hover:bg-gray-100">관심상품</a> 
+		               <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
+		               <a href="./mypage_qna.do" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
+		               <a href="./mypage/my_reviews.do" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
+		               <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+		            </nav>
+	         </aside>
 		      
 	      <!-- 메인 콘텐츠 -->
 	      <main class="flex-1 p-8 bg-gray-50">
@@ -172,10 +192,10 @@
 		              <label class="w-24 pt-2 text-sm font-medium text-gray-700">제목</label>
 		              <div class="flex-1">
 		              
-		              <input type="hidden" id="q_num" name="q_num" value="${dto.q_num}">
+		              <input type="hidden" id="q_num" name="q_num" value="${qna.q_num}">
 		              
 		                <input name="q_title" id="q_title" type="text" class="w-full px-3 h-10 bg-white border border-gray-300 rounded focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
-		                  placeholder="${dto.q_title}" value="${dto.q_title}"/>
+		                  placeholder="${qna.q_title}" value="${qna.q_title}"/>
 		              </div>
 		            </div>
 		            <div class="flex items-start space-x-4">
@@ -184,7 +204,7 @@
 		                <div class="relative">
 		                  <select name="q_category" id="q_category"
 		                    class="appearance-none w-32 px-3 h-10 bg-white border border-gray-300 rounded focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm pr-8">
-		                    <option value="${dto.q_category}">${dto.q_category}(기존) </option>
+		                    <option value="${qna.q_category}">${qna.q_category}(기존) </option>
 	                        <option value="교환">교환</option>
 	                        <option value="환불">환불</option>
 	                        <option value="배송">배송</option>
@@ -196,7 +216,7 @@
 		                </div>
 		                <label class="inline-flex items-center cursor-pointer">
 		                  <div class="relative">
-		                    <input type="checkbox" class="sr-only peer" name="q_secret" id="q_secret" <c:if test="${dto.q_secret == 'Y'}">checked</c:if>/>
+		                    <input type="checkbox" class="sr-only peer" name="q_secret" id="q_secret" <c:if test="${qna.q_secret == 'Y'}">checked</c:if>/>
 		                    <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full 
 		                    			rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white 
 		                    			after:content-[''] after:absolute after:top-[2px] after:start-[2px] 
@@ -214,7 +234,7 @@
 		                <textarea
 		                  class="w-full px-3 py-2 bg-white border border-gray-300 rounded focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm"
 		                  rows="10" name="q_content" id="q_content"
-		                  placeholder="${dto.q_content}">${dto.q_content}</textarea>
+		                  placeholder="${qna.q_content}">${qna.q_content}</textarea>
 		              </div>
 		            </div>
 		          </div>
