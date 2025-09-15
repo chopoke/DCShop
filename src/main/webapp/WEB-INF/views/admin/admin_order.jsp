@@ -253,7 +253,7 @@
                 <span class="px-3 py-2 rounded-lg bg-blue-600 text-white">${i}</span>
               </c:when>
               <c:otherwise>
-                <a class="px-3 py-2 border rounded-lg hover:bg-gray-50"
+                <a class="px-3 py-2 bg-gray-900 text-white border rounded-lg hover:bg-gray-50"
                    href="${path}/admin_order?pageNum=${i}&${pageQuery}">${i}</a>
               </c:otherwise>
             </c:choose>

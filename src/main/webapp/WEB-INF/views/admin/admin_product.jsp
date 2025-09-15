@@ -116,7 +116,7 @@
               <a href="${path}/admin_product_insert" class="inline-flex items-center justify-center h-10 px-4 py-0 rounded-lg border bg-sky-700 text-white hover:bg-blue-700 no-underline align-middle">상품등록</a>
 
               <!-- 상품수정 버튼 (체크된 1건 수정) -->
-              <button type="button" id="bulkEditBtn" class="inline-flex items-center justify-center h-10 px-4 py-0 rounded-lg border bg-blue-400 text-white hover:bg-yellow-700 align-middle">상품수정</button>
+              <button type="button" id="bulkEditBtn" class="inline-flex items-center justify-center h-10 px-4 py-0 rounded-lg border bg-blue-400 text-white hover:bg-blue-500 align-middle">상품수정</button>
             </div>
           </div>
         </section>
