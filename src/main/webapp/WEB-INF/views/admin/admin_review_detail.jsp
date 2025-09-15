@@ -8,65 +8,108 @@
   <meta charset="UTF-8">
   <title>리뷰 상세 | 독캣배송</title>
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <style>
+    .hero-section1{width:100%;background:white;padding:.5rem 0;padding-top:5rem}
+  </style>
 </head>
 <body class="bg-gray-100 text-[16px] leading-7">
-<%@ include file="../setting/header.jsp" %>
-<section class="pt-20"></section>
 
-<div class="max-w-5xl mx-auto p-6">
-  <div class="bg-white rounded-xl shadow border p-6">
-    <div class="flex items-center justify-between mb-4">
-      <h1 class="text-3xl font-bold">리뷰 상세</h1>
-      <a href="${path}/admin_review" class="px-3 py-2 border rounded-lg hover:bg-gray-50">목록으로</a>
-    </div>
+  <%@ include file="../setting/header.jsp" %>
+  <section class="hero-section1"></section>
 
-    <div class="grid grid-cols-2 gap-4 text-base">
-      <div class="p-3 bg-gray-50 rounded">
-        <div class="mb-1 text-gray-500">리뷰번호</div>
-        <div class="font-semibold"><c:out value="${detail.r_num}"/></div>
-      </div>
-      <div class="p-3 bg-gray-50 rounded">
-        <div class="mb-1 text-gray-500">상품번호</div>
-        <div class="font-semibold"><c:out value="${detail.pd_id}"/></div>
-      </div>
-      <div class="p-3 bg-gray-50 rounded">
-        <div class="mb-1 text-gray-500">상품명</div>
-        <div class="font-semibold"><c:out value="${detail.pd_name}"/></div>
-      </div>
-      <div class="p-3 bg-gray-50 rounded">
-        <div class="mb-1 text-gray-500">작성자(ID)</div>
-        <div class="font-semibold">
-          <c:out value="${detail.u_id}"/> (<c:out value="${detail.u_nickname}"/>)
+  <!-- 전체 컨테이너: 좌(사이드바) + 우(메인) -->
+  <div class="min-h-screen flex justify-center py-8">
+    <div class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
+
+      <!-- 사이드바 -->
+      <aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
+        <img src="${path}/resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
+        <h2 class="text-lg font-semibold">${session_u_nickname}</h2>
+        <p class="text-gray-500 text-sm mb-4">${session_u_email}</p>
+        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
+
+        <nav class="w-full space-y-2 text-sm">
+          <a href="${path}/admin_board"   class="block py-2 px-3 rounded hover:bg-gray-100">게시판관리</a>
+          <a href="${path}/admin_order"   class="block py-2 px-3 rounded hover:bg-gray-100">주문관리</a>
+          <a href="${path}/admin_product" class="block py-2 px-3 rounded hover:bg-gray-100">상품관리</a>
+          <a href="${path}/admin_qna"     class="block py-2 px-3 rounded hover:bg-gray-100">문의관리</a>
+          <a href="${path}/admin_review"  class="block py-2 px-3 rounded bg-gray-900 text-white">리뷰관리</a>
+          <a href="${path}/admin_user"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
+          <a href="${path}/logout.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+        </nav>
+      </aside>
+
+      <!-- 메인 -->
+      <main class="flex-1 min-w-0 p-8 bg-gray-50">
+        <div class="max-w-3xl mx-auto">
+          <div class="bg-white rounded-xl shadow border p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h1 class="text-3xl font-bold">리뷰 상세</h1>
+              <a href="${path}/admin_review" class="px-3 py-2 border rounded-lg hover:bg-gray-50">목록으로</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-base">
+              <div class="p-3 bg-gray-50 rounded">
+                <div class="mb-1 text-gray-500">리뷰번호</div>
+                <div class="font-semibold"><c:out value="${detail.r_num}"/></div>
+              </div>
+              <div class="p-3 bg-gray-50 rounded">
+                <div class="mb-1 text-gray-500">상품번호</div>
+                <div class="font-semibold"><c:out value="${detail.pd_id}"/></div>
+              </div>
+              <div class="p-3 bg-gray-50 rounded">
+                <div class="mb-1 text-gray-500">상품명</div>
+                <div class="font-semibold"><c:out value="${detail.pd_name}"/></div>
+              </div>
+              <div class="p-3 bg-gray-50 rounded">
+                <div class="mb-1 text-gray-500">작성자(ID)</div>
+                <div class="font-semibold">
+                  <c:out value="${detail.u_id}"/> (<c:out value="${detail.u_nickname}"/>)
+                </div>
+              </div>
+              <div class="p-3 bg-gray-50 rounded">
+                <div class="mb-1 text-gray-500">평점</div>
+                <div class="font-semibold"><c:out value="${detail.r_rate}"/> 점</div>
+              </div>
+              <div class="p-3 bg-gray-50 rounded">
+                <div class="mb-1 text-gray-500">작성일</div>
+                <div class="font-semibold">
+                  <fmt:formatDate value="${detail.r_regdate}" pattern="yyyy-MM-dd"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <div class="mb-2 font-semibold">내용</div>
+              <div class="p-4 border rounded bg-white whitespace-pre-wrap">
+                <c:out value="${detail.r_content}"/>
+              </div>
+            </div>
+
+            <c:if test="${not empty detail.r_img}">
+              <div class="mt-6">
+                <div class="mb-2 font-semibold">이미지</div>
+                <!-- 내부 경로/외부 URL 모두 대응 -->
+                <c:set var="rv_img" value="${detail.r_img}" />
+                <c:choose>
+                  <c:when test="${fn:startsWith(rv_img,'http://') or fn:startsWith(rv_img,'https://') or fn:startsWith(rv_img,'//')}">
+                    <c:set var="imgSrc" value="${rv_img}" />
+                  </c:when>
+                  <c:otherwise>
+                    <c:url var="imgSrc" value="${rv_img}" />
+                  </c:otherwise>
+                </c:choose>
+                <img src="${imgSrc}" alt="리뷰 이미지"
+                     class="mx-auto max-w-full h-auto rounded-lg shadow"
+                     onerror="this.src='${path}/resources/img_main/mypage_default.png'">
+              </div>
+            </c:if>
+          </div>
         </div>
-      </div>
-      <div class="p-3 bg-gray-50 rounded">
-        <div class="mb-1 text-gray-500">평점</div>
-        <div class="font-semibold"><c:out value="${detail.r_rate}"/> 점</div>
-      </div>
-      <div class="p-3 bg-gray-50 rounded">
-        <div class="mb-1 text-gray-500">작성일</div>
-        <div class="font-semibold">
-          <fmt:formatDate value="${detail.r_regdate}" pattern="yyyy-MM-dd"/>
-        </div>
-      </div>
+      </main>
     </div>
-
-    <div class="mt-6">
-      <div class="mb-2 font-semibold">내용</div>
-      <div class="p-4 border rounded bg-white whitespace-pre-wrap">
-        <c:out value="${detail.r_content}"/>
-      </div>
-    </div>
-
-    <c:if test="${not empty detail.r_img}">
-      <div class="mt-6">
-        <div class="mb-2 font-semibold">이미지</div>
-        <img src="${pageContext.request.contextPath}${detail.r_img}" alt="리뷰 이미지" class="mx-auto max-w-full h-auto rounded-lg shadow">
-      </div>
-    </c:if>
   </div>
-</div>
 
-<%@ include file="../setting/footer.jsp" %>
+  <%@ include file="../setting/footer.jsp" %>
 </body>
 </html>

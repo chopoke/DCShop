@@ -30,7 +30,7 @@
         <img src="${path}/resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
         <h2 class="text-lg font-semibold">${session_u_nickname}</h2>
         <p class="text-gray-500 text-sm mb-4">${session_u_email}</p>
-        <a href="${path}/mypage/profile" class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</a>
+        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
 
         <nav class="w-full space-y-2 text-sm">
           <a href="${path}/admin_board"   class="block py-2 px-3 rounded hover:bg-gray-100">게시판관리</a>
@@ -150,34 +150,36 @@
                           <input name="rowCheck" value="${p.pd_id}" type="checkbox" class="rowCheck accent-gray-800" />
                         </td>
 
-                        <!-- 썸네일: 내부/외부 URL 모두 안전 처리 -->
-                        <td class="px-4 py-3">
-                          <c:choose>
-                            <c:when test="${not empty p.pd_image_url}">
-                              <c:set var="__raw" value="${p.pd_image_url}" />
-                              <c:choose>
-                                <c:when test="${fn:startsWith(__raw,'http://') or fn:startsWith(__raw,'https://') or fn:startsWith(__raw,'//')}">
-                                  <c:set var="__img" value="${__raw}" />
-                                </c:when>
-                                <c:otherwise>
-                                  <c:choose>
-                                    <c:when test="${fn:startsWith(__raw,'/')}">
-                                      <c:url var="__img" value="${__raw}" />
-                                    </c:when>
-                                    <c:otherwise>
-                                      <c:url var="__img" value="/${__raw}" />
-                                    </c:otherwise>
-                                  </c:choose>
-                                </c:otherwise>
-                              </c:choose>
-                              <img src="${__img}" alt="thumb" class="w-14 h-14 object-cover rounded"
-                                   onerror="this.src='${path}/resources/img_main/mypage_default.png'"/>
-                            </c:when>
-                            <c:otherwise>
-                              <div class="w-14 h-14 bg-gray-100 border rounded grid place-items-center">-</div>
-                            </c:otherwise>
-                          </c:choose>
-                        </td>
+                        <!-- 썸네일: 내부(/resources/...)은 ${path}를 앞에 붙이고, 외부(http/https)는 그대로 -->
+						<td class="px-4 py-3">
+						  <c:choose>
+						    <c:when test="${not empty p.pd_image_url}">
+						      <c:set var="__raw" value="${p.pd_image_url}" />
+						      <c:choose>
+						        <c:when test="${fn:startsWith(__raw,'http://') or fn:startsWith(__raw,'https://') or fn:startsWith(__raw,'//')}">
+						          <c:set var="__img" value="${__raw}" />
+						        </c:when>
+						        <c:otherwise>
+						          <c:set var="__clean" value="${__raw}" />
+						          <c:if test="${fn:startsWith(__clean, path)}">
+						            <c:set var="__clean" value="${fn:substring(__clean, fn:length(path), fn:length(__clean))}" />
+						          </c:if>
+						          <c:if test="${not fn:startsWith(__clean,'/')}">
+						            <c:set var="__clean" value='/${__clean}' />
+						          </c:if>
+						          <c:set var="__img" value="${path}${__clean}" />
+						        </c:otherwise>
+						      </c:choose>
+						
+						      <img src="${__img}" alt="thumb" class="w-14 h-14 object-cover rounded"
+						           onerror="this.src='${path}/resources/img_main/mypage_default.png'"/>
+						    </c:when>
+						
+						    <c:otherwise>
+						      <div class="w-14 h-14 bg-gray-100 border rounded grid place-items-center">-</div>
+						    </c:otherwise>
+						  </c:choose>
+						</td>
 
                         <!-- 상품번호 -->
                         <td class="px-4 py-3 text-gray-600 whitespace-nowrap">${p.pd_id}</td>
