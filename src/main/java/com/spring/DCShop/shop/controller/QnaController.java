@@ -57,6 +57,7 @@ public class QnaController {
 		logger.info("<<< url ==> /question_update.qa >>>");
 		
 		
+		String sessionid = (String)request.getSession().getAttribute("sessionid");
 		int q_num = Integer.parseInt(request.getParameter("q_num"));
 		logger.info("q_num"+q_num);
 		
@@ -66,7 +67,8 @@ public class QnaController {
 			return "redirect:/";	//글 작성자 본인이 아니라면 페이지 접근 불가.
 		}
 		
-		model.addAttribute("quest", dto);
+		my.findById(sessionid, model);
+		model.addAttribute("qna", dto);
 		
 		return "shop/question_update";
 	}

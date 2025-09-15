@@ -30,7 +30,7 @@
         <img src="${path}/resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
         <h2 class="text-lg font-semibold">${session_u_nickname}</h2>
         <p class="text-gray-500 text-sm mb-4">${session_u_email}</p>
-        <a href="${path}/mypage/profile" class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</a>
+        <%-- <a href="${path}/mypage/profile" class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</a> --%>
 
         <nav class="w-full space-y-2 text-sm">
           <a href="${path}/admin_board"   class="block py-2 px-3 rounded hover:bg-gray-100">게시판관리</a>
@@ -52,38 +52,43 @@
           <div class="p-4">
 			<p class="text-gray-500 mb-6">상품을 검색하고 상태를 일괄 변경하거나 등록/수정/삭제할 수 있습니다.</p>
             <!-- 검색줄 -->
-            <form action="${path}/admin_product" method="get" class="flex gap-2 w-full mb-3 flex-wrap">
-              <!-- 상태 필터 -->
-              <select name="status" class="w-36 border rounded-lg px-3 py-2">
-                <option value="">상태 전체</option>
-                <option value="ON"   ${param_status == 'ON'   ? 'selected' : ''}>판매중</option>
-                <option value="OFF"  ${param_status == 'OFF'  ? 'selected' : ''}>품절</option>
-                <option value="WAIT" ${param_status == 'WAIT' ? 'selected' : ''}>재입고대기</option>
-              </select>
-
-              <!-- 카테고리 필터 -->
-              <select name="category" class="w-72 border rounded-lg px-3 py-2">
-                <option value="">카테고리 전체</option>
-                <optgroup label="강아지">
-                  <option value="1100" ${param_category=='1100'?'selected':''}>의류</option>
-                  <option value="1200" ${param_category=='1200'?'selected':''}>미용/위생</option>
-                  <option value="1300" ${param_category=='1300'?'selected':''}>화장실</option>
-                  <option value="1400" ${param_category=='1400'?'selected':''}>장난감</option>
-                  <option value="1500" ${param_category=='1500'?'selected':''}>목줄/리드줄</option>
-                </optgroup>
-                <optgroup label="고양이">
-                  <option value="2100" ${param_category=='2100'?'selected':''}>의류</option>
-                  <option value="2200" ${param_category=='2200'?'selected':''}>미용/위생</option>
-                  <option value="2300" ${param_category=='2300'?'selected':''}>모래</option>
-                  <option value="2400" ${param_category=='2400'?'selected':''}>장난감</option>
-                  <option value="2500" ${param_category=='2500'?'selected':''}>스크래쳐</option>
-                </optgroup>
-              </select>
-
-              <!-- 검색창 -->
-              <input type="text" name="q" value="${fn:escapeXml(param_q)}" placeholder="상품명/브랜드 검색" class="flex-1 md:w-72 border rounded-lg px-3 py-2" />
-              <button type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-black">검색</button>
-            </form>
+            <form action="${path}/admin_product" method="get" class="flex items-center gap-2 w-full mb-3 flex-nowrap whitespace-nowrap overflow-x-auto">
+			
+			  <!-- 상태 필터 -->
+			  <select name="status" class="w-28 border rounded-lg px-3 py-2 shrink-0">
+			    <option value="">상태 전체</option>
+			    <option value="ON"   ${param_status == 'ON'   ? 'selected' : ''}>판매중</option>
+			    <option value="OFF"  ${param_status == 'OFF'  ? 'selected' : ''}>품절</option>
+			    <option value="WAIT" ${param_status == 'WAIT' ? 'selected' : ''}>재입고대기</option>
+			  </select>
+			
+			  <!-- 카테고리 필터 (폭 축소) -->
+			  <select name="category" class="w-48 border rounded-lg px-3 py-2 shrink-0">
+			    <option value="">카테고리 전체</option>
+			    <optgroup label="강아지">
+			      <option value="1100" ${param_category=='1100'?'selected':''}>의류</option>
+			      <option value="1200" ${param_category=='1200'?'selected':''}>미용/위생</option>
+			      <option value="1300" ${param_category=='1300'?'selected':''}>화장실</option>
+			      <option value="1400" ${param_category=='1400'?'selected':''}>장난감</option>
+			      <option value="1500" ${param_category=='1500'?'selected':''}>목줄/리드줄</option>
+			    </optgroup>
+			    <optgroup label="고양이">
+			      <option value="2100" ${param_category=='2100'?'selected':''}>의류</option>
+			      <option value="2200" ${param_category=='2200'?'selected':''}>미용/위생</option>
+			      <option value="2300" ${param_category=='2300'?'selected':''}>모래</option>
+			      <option value="2400" ${param_category=='2400'?'selected':''}>장난감</option>
+			      <option value="2500" ${param_category=='2500'?'selected':''}>스크래쳐</option>
+			    </optgroup>
+			  </select>
+			
+			  <!-- 검색창 (고정폭) -->
+			  <input type="text" name="q" value="${fn:escapeXml(param_q)}"
+			         placeholder="상품명/브랜드 검색"
+			         class="w-64 md:w-72 border rounded-lg px-3 py-2 shrink-0" />
+			
+			  <!-- 검색 버튼 -->
+			  <button type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-black shrink-0">검색</button>
+			</form>
 
             <!-- 버튼 줄 -->
             <div class="flex flex-wrap gap-2 mb-3">
@@ -111,7 +116,7 @@
               <a href="${path}/admin_product_insert" class="inline-flex items-center justify-center h-10 px-4 py-0 rounded-lg border bg-sky-700 text-white hover:bg-blue-700 no-underline align-middle">상품등록</a>
 
               <!-- 상품수정 버튼 (체크된 1건 수정) -->
-              <button type="button" id="bulkEditBtn" class="inline-flex items-center justify-center h-10 px-4 py-0 rounded-lg border bg-blue-400 text-white hover:bg-yellow-700 align-middle">상품수정</button>
+              <button type="button" id="bulkEditBtn" class="inline-flex items-center justify-center h-10 px-4 py-0 rounded-lg border bg-blue-400 text-white hover:bg-blue-500 align-middle">상품수정</button>
             </div>
           </div>
         </section>
@@ -145,34 +150,36 @@
                           <input name="rowCheck" value="${p.pd_id}" type="checkbox" class="rowCheck accent-gray-800" />
                         </td>
 
-                        <!-- 썸네일: 내부/외부 URL 모두 안전 처리 -->
-                        <td class="px-4 py-3">
-                          <c:choose>
-                            <c:when test="${not empty p.pd_image_url}">
-                              <c:set var="__raw" value="${p.pd_image_url}" />
-                              <c:choose>
-                                <c:when test="${fn:startsWith(__raw,'http://') or fn:startsWith(__raw,'https://') or fn:startsWith(__raw,'//')}">
-                                  <c:set var="__img" value="${__raw}" />
-                                </c:when>
-                                <c:otherwise>
-                                  <c:choose>
-                                    <c:when test="${fn:startsWith(__raw,'/')}">
-                                      <c:url var="__img" value="${__raw}" />
-                                    </c:when>
-                                    <c:otherwise>
-                                      <c:url var="__img" value="/${__raw}" />
-                                    </c:otherwise>
-                                  </c:choose>
-                                </c:otherwise>
-                              </c:choose>
-                              <img src="${__img}" alt="thumb" class="w-14 h-14 object-cover rounded"
-                                   onerror="this.src='${path}/resources/img_main/mypage_default.png'"/>
-                            </c:when>
-                            <c:otherwise>
-                              <div class="w-14 h-14 bg-gray-100 border rounded grid place-items-center">-</div>
-                            </c:otherwise>
-                          </c:choose>
-                        </td>
+                        <!-- 썸네일: 내부(/resources/...)은 ${path}를 앞에 붙이고, 외부(http/https)는 그대로 -->
+						<td class="px-4 py-3">
+						  <c:choose>
+						    <c:when test="${not empty p.pd_image_url}">
+						      <c:set var="__raw" value="${p.pd_image_url}" />
+						      <c:choose>
+						        <c:when test="${fn:startsWith(__raw,'http://') or fn:startsWith(__raw,'https://') or fn:startsWith(__raw,'//')}">
+						          <c:set var="__img" value="${__raw}" />
+						        </c:when>
+						        <c:otherwise>
+						          <c:set var="__clean" value="${__raw}" />
+						          <c:if test="${fn:startsWith(__clean, path)}">
+						            <c:set var="__clean" value="${fn:substring(__clean, fn:length(path), fn:length(__clean))}" />
+						          </c:if>
+						          <c:if test="${not fn:startsWith(__clean,'/')}">
+						            <c:set var="__clean" value='/${__clean}' />
+						          </c:if>
+						          <c:set var="__img" value="${path}${__clean}" />
+						        </c:otherwise>
+						      </c:choose>
+						
+						      <img src="${__img}" alt="thumb" class="w-14 h-14 object-cover rounded"
+						           onerror="this.src='${path}/resources/img_main/mypage_default.png'"/>
+						    </c:when>
+						
+						    <c:otherwise>
+						      <div class="w-14 h-14 bg-gray-100 border rounded grid place-items-center">-</div>
+						    </c:otherwise>
+						  </c:choose>
+						</td>
 
                         <!-- 상품번호 -->
                         <td class="px-4 py-3 text-gray-600 whitespace-nowrap">${p.pd_id}</td>
