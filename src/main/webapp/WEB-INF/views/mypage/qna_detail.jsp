@@ -89,7 +89,8 @@
 	          data: param,
 	          success: function() {  // 콜백함수(6) => 문의삭제가 완료되면 서버에서 콜백함수 호출
 	         	alert('답변이 등록되었습니다.');
-	         	window.location.href='${path}/admin_qna';
+	         	window.location.reload();
+	         	history.back();
 	          },
 	          error: function() {
 	            alert('답변이 등록되지 않았습니다.');
@@ -154,23 +155,23 @@
 	      <main class="flex-1 p-8 bg-gray-50">
 	<div class="max-w-4xl mx-auto p-6">
 		<div class="bg-white rounded-lg shadow-sm p-6 min-h-screen">
-			<h1 class="text-2xl font-semibold text-gray-900 mb-6">답변 페이지</h1>
+			<h1 class="text-2xl font-semibold text-gray-900 mb-6">상세 페이지</h1>
 
 			<div class="space-y-6">
 				<div class="flex items-start space-x-4">
 					<label class="w-24 pt-2 text-sm font-medium text-gray-700">문의 제목</label>
 					<div class="flex-1">
 						<div class="px-3 py-2 bg-gray-100 rounded-md text-gray-800">
-							${dto.q_title}
+							${qna.q_title}
 						</div>
-						<input type="hidden" id="q_num" name="q_num" value="${dto.q_num}">
+						<input type="hidden" id="q_num" name="q_num" value="${qna.q_num}">
 					</div>
 				</div>
 				<div class="flex items-start space-x-4">
 					<label class="w-24 pt-2 text-sm font-medium text-gray-700">문의유형</label>
 					<div class="flex items-center space-x-4">
 						<c:set var="category"
-							value="${empty dto.q_category ? '기타' : fn:trim(dto.q_category)}" />
+							value="${empty qna.q_category ? '기타' : fn:trim(qna.q_category)}" />
 						<c:choose>
 							<c:when test="${category eq '반품'}">
 								<c:set var="bg" value="bg-yellow-100" />
@@ -208,7 +209,7 @@
 						<textarea disabled class="w-full px-3 py-2 bg-gray-100 
 												border border-gray-300 rounded 
 												focus:outline-none text-xm min-h-[150px]"
-						>${dto.q_content}</textarea>
+						>${qna.q_content}</textarea>
 					</div>
 				</div>
 				
@@ -217,11 +218,14 @@
 				<div class="flex items-start space-x-4">
 					<label for="a_answer" class="w-24 pt-2 text-sm font-medium text-gray-700">답변 내용</label>
 					<div class="flex-1">
-						<textarea id="a_answer" name="a_answer" placeholder="답변 내용을 입력해주세요."
-							class="w-full px-3 py-2 border border-gray-300 
-								rounded-md focus:outline-none focus:ring 
-								focus:ring-primary min-h-[200px]"
+					
+						<textarea disabled class="w-full px-3 py-2 bg-gray-100 
+												border border-gray-300 rounded 
+												focus:outline-none text-xm min-h-[150px]"
+						><c:if test="${empty qna.a_answer}">답변이 존재하지않습니다.</c:if
+						><c:if test="${not empty qna.a_answer}">${qna.a_answer}</c:if
 						></textarea>
+					
 					</div>
 				</div>
 			</div>
@@ -231,10 +235,18 @@
 					class="px-6 h-10 !bg-gray-500 text-white !rounded-button hover:!bg-gray-600 transition-colors !whitespace-nowrap !mr-3">
 					뒤로가기
 				</button>
-				<button id="answerSubmitBtn"
-					class="px-6 h-10 !bg-blue-500 text-white !rounded-button hover:!bg-blue-600 transition-colors !whitespace-nowrap">
-					답변 작성
-				</button>
+				<c:if test="${sessionScope.session_u_role == 'ADMIN'}">
+					<button onclick="window.location.href='${path}/qna_answer?q_num=${qna.q_num}'"
+						class="px-6 h-10 !bg-blue-500 text-white !rounded-button hover:!bg-blue-600 transition-colors !whitespace-nowrap !mr-3">
+						답변 달기
+					</button>
+				</c:if>
+				<c:if test="${sessionScope.session_u_member_id == qna.u_member_id}">
+					<button onclick="window.location.href='${path}/question_update.qa?q_num=${qna.q_num}'"
+						class="px-6 h-10 !bg-blue-500 text-white !rounded-button hover:!bg-blue-600 transition-colors !whitespace-nowrap">
+						수정하기
+					</button>
+				</c:if>
 			</div>
 		</div>
 	</div>

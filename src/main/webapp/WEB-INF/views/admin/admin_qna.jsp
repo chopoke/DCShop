@@ -197,7 +197,7 @@
                     <td class="py-2 px-3 align-top">
                       <div class="ellipsis" title="${q.q_title}">
                         <a href="javascript:void(0)" class="text-blue-600 hover:underline"
-                           onclick="window.location='${path}/qna_answer?q_num=${q.q_num}'">${q.q_title}</a>
+                           onclick="window.location='${path}/question_detailAction.qa?q_num=${q.q_num}'">${q.q_title}</a>
                       </div>
                     </td>
                     <td class="py-2 px-3 align-top ellipsis" title="${q.u_id}">${q.u_id}</td>

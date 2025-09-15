@@ -202,19 +202,19 @@
                     <td class="py-2 px-3 align-center">
                       <div class="ellipsis" title="${q.q_title}">
                         <a href="javascript:void(0)" class="text-blue-600 hover:underline"
-                           onclick="window.location.href='${path}/question_update.qa?q_num=${q.q_num}'">${q.q_title}</a>
+                           onclick="window.location='${path}/question_detailAction.qa?q_num=${q.q_num}'">${q.q_title}</a>
                       </div>
                       <%-- <div class="text-gray-400 text-xs ellipsis" title="${q.preview}">${q.preview}</div> --%>
                     </td>
                     <td class="py-2 px-3 align-center ellipsis" title="${q.u_id}">${q.u_id}</td>
                     <td class="py-2 px-3 align-center"><fmt:formatDate value="${q.q_regDate}" pattern="yyyy-MM-dd" /></td>
                     <td class="py-2 px-3 align-center">
-                      <%-- <c:choose>	처리일
-                        <c:when test="${not empty q.completed_at}">
-                          <fmt:formatDate value="${q.completed_at}" pattern="yyyy-MM-dd" />
+                      <c:choose>
+                        <c:when test="${not empty q.a_regdate}">
+                          ${q.a_regdate}
                         </c:when>
                         <c:otherwise>-</c:otherwise>
-                      </c:choose> --%>
+                      </c:choose>
                     </td>
                     <c:if test="${not (q.q_answer eq 'Y')}">
 						<td class="text-center">
