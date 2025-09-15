@@ -16,14 +16,6 @@ public interface AdminService {
 	public void adminMain(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
 	
-	// 회원관리 - 회원목록-가입자5건조회
-	public void adminUser(HttpServletRequest request, HttpServletResponse response, Model model)
-		throws ServletException, IOException;
-	
-	// 회원관리 - 펫통계
-	public void adminUserPet(HttpServletRequest request, HttpServletResponse response, Model model)
-		throws ServletException, IOException;
-	
 	// 게시판관리 - 게시판목록
 	public void adminBoardList(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
@@ -93,6 +85,19 @@ public interface AdminService {
 	// 리뷰관리 - 선택 일괄 삭제
 	public void adminReviewDelete(HttpServletRequest request, HttpServletResponse response, Model model)
 		throws ServletException, IOException;
+	
+	// 회원관리 - 회원목록-가입자5건조회
+	public void adminUser(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+	
+	// 회원관리 - 펫통계
+	public void adminUserPet(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+		
+	// 회원관리 - 회원목록-탈퇴자5건조회
+	public void adminUserDelete(HttpServletRequest request, HttpServletResponse response, Model model)
+		throws ServletException, IOException;
+		
 }
 
 
