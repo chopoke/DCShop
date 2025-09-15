@@ -68,7 +68,7 @@
           <a href="${path}/admin_qna"     class="block py-2 px-3 rounded hover:bg-gray-100">문의관리</a>
           <a href="${path}/admin_review"  class="block py-2 px-3 rounded hover:bg-gray-100">리뷰관리</a>
           <a href="${path}/admin_user"    class="block py-2 px-3 rounded bg-gray-900 text-white">회원관리</a>
-          <a href="${path}/logout" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+          <a href="${path}/logout.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
         </nav>
       </aside>
 
@@ -197,22 +197,20 @@
                   <th class="border border-gray-200 px-3 py-2">이메일</th>
                   <th class="border border-gray-200 px-3 py-2">생년월일</th>
                   <th class="border border-gray-200 px-3 py-2">닉네임</th>
-                  <th class="border border-gray-200 px-3 py-2">가입일</th>
                   <th class="border border-gray-200 px-3 py-2">탈퇴일</th>
                 </tr>
               </thead>
               <tbody>
-                <c:forEach var="dto" items="${list}">
+                <c:forEach var="dto2" items="${list2}">
                 <tr>
-                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto.u_member_id}</div></td>
-                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto.u_id}</div></td>
-                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto.u_name}</div></td>
-                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto.u_address}</div></td>
-                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto.u_email}</div></td>
-                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto.u_birthday}</div></td>
-                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto.u_nickname}</div></td>
-                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto.u_regdate}</div></td>
-                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">null</div></td>
+                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto2.u_member_id}</div></td>
+                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto2.u_id}</div></td>
+                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto2.u_name}</div></td>
+                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto2.u_address}</div></td>
+                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto2.u_email}</div></td>
+                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto2.u_birthday}</div></td>
+                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto2.u_nickname}</div></td>
+                  <td class="border border-gray-200 px-3 py-2"><div class="cell-scroll">${dto2.u_regdate}</div></td>
                 </tr>
                 </c:forEach>
               </tbody>

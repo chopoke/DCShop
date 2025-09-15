@@ -46,20 +46,6 @@ public class AdminDAOImpl implements AdminDAO{
 	}
 	// ------------------------------------------------------
 	
-	// 회원목록-최신가입자5건조회
-	@Override
-	public List<UserDTO> adminUserList1() {
-		List<UserDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.AdminDAO.adminUserList1");
-		return list;
-	}
-	
-	// 회원목록 - 펫통계
-	@Override
-	public Map<String, Object> adminUserPet() {
-		Map<String, Object> map = sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.adminUserPet");
-		return map;
-	}
-
 	// 게시판목록
 	@Override
 	public List<BoardDTO> adminBoardList(Map<String, Object> param) {
@@ -239,6 +225,26 @@ public class AdminDAOImpl implements AdminDAO{
 		return sqlSession.selectList("com.spring.DCShop.mypage.dao.AdminDAO.adminQnaList", map);
 	}
 	
+	// 회원목록-최신가입자5건조회
+	@Override
+	public List<UserDTO> adminUserList1() {
+		List<UserDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.AdminDAO.adminUserList1");
+		return list;
+	}
+	
+	// 회원목록 - 펫통계
+	@Override
+	public Map<String, Object> adminUserPet() {
+		Map<String, Object> map = sqlSession.selectOne("com.spring.DCShop.mypage.dao.AdminDAO.adminUserPet");
+		return map;
+	}
+	
+	// 회원목록 - 탈퇴회원5건조회
+	@Override
+	public List<UserDTO> adminUserList2() {
+		List<UserDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.AdminDAO.adminUserList2");
+		return list;
+	}
 	// 문의관리 - 답변페이지
 	@Override
 	public QuestDTO questDetail(int q_num) {

@@ -38,6 +38,7 @@
   <%@ include file="../setting/header.jsp" %>
   <section class="hero-section1"></section>
 
+  <!-- 전체 컨테이너: 좌(사이드바) + 우(메인) -->
   <div class="min-h-screen flex justify-center py-8">
     <div class="w-full max-w-6xl bg-white shadow rounded-xl overflow-hidden flex">
 
@@ -56,7 +57,7 @@
           <a href="${path}/admin_qna"     class="block py-2 px-3 rounded hover:bg-gray-100">문의관리</a>
           <a href="${path}/admin_review"  class="block py-2 px-3 rounded bg-gray-900 text-white">리뷰관리</a>
           <a href="${path}/admin_user"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
-          <a href="${path}/logout" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+          <a href="${path}/logout.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
         </nav>
       </aside>
 
@@ -118,13 +119,10 @@
 		    </c:if>
 		  </div>
 		</div>
-
-        
       </main>
     </div>
   </div>
 
   <%@ include file="../setting/footer.jsp" %>
-
 </body>
 </html>
