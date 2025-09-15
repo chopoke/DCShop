@@ -195,7 +195,7 @@
 								<a class="click_card"
 									href="${path}/ad_shop_detailAction.pd?pdId=${product.pd_id}">
 									<div class="product-image">
-										<img src="${path}${product.pd_image_url}"
+										<img src="${product.pd_image_url}"
 											alt="${product.pd_name}" class="d-block w-100">
 									</div>
 									<h3 class="product-card-title">${product.pd_name}</h3>
@@ -472,7 +472,7 @@
 								<a class="click_card"
 									href="${path}/ad_shop_detailAction.pd?pdId=${product.pd_id}">
 									<div class="product-image">
-										<img src="${path}${product.pd_image_url}"
+										<img src="${product.pd_image_url}"
 											alt="${product.pd_name}" class="d-block w-100">
 									</div>
 									<h3 class="product-card-title">${product.pd_name}</h3>

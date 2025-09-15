@@ -79,6 +79,26 @@ function selectEmailChk(selectElem) {
 // onSubmit(제출)
 function singleCheck(e) {
 
+	// 특수문자 유효성 검사
+	var specialRule = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+    if(!specialRule.test(document.inputform.u_password.value)) {
+        alert("특수문자 포함되어 있지않습니다.");
+        return false;
+    }
+    
+    // 비밀번호 글자수 체크 유효성 검사
+    if(document.inputform.u_password.value.length > 10) {
+    	alert("특수문자, 숫자, 문자 포함 10글자 이상입력하여 아이디를 입력해주세요.");
+    	return false;
+    }
+    
+    // 아이디 글자수 체크 유효성 검사
+    const userId = document.getElementById('u_id');
+	if (userId.value.length > 10) {
+		alert("숫자, 문자 포함 10글자 이상입력하여 아이디를 입력해주세요.");
+    	return false;
+	}
+    
     // 아이디 중복체크
 	if (document.inputform.hiddenUserid.value == "0") {
 		alert("아이디 중복확인 해주세요.!!");
@@ -93,12 +113,6 @@ function singleCheck(e) {
 		return false;
 	}
 	
-	var specialRule = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
-    if(!specialRule.test(document.inputform.u_password.value)) {
-        alert("특수문자 포함되어 있지않습니다.");
-        return false;
-    }
-
 	// [필수] - 비밀번호 불일치 => 과제
 	if (document.inputform.u_password.value != document.inputform.re_password.value) {
 		alert("비밀번호가 불이치합니다.");

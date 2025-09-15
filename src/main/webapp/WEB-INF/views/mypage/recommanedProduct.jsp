@@ -120,7 +120,7 @@
 								<div
 									class="card w-32 h-48 flex items-center justify-center rounded-lg overflow-hidden bg-white"
 									data-desc="상품명 : ${p.pdName}&#10;상품 가격 : <fmt:formatNumber value='${p.pdPrice}' pattern='#,###'/>원&#10;상품 할인된 가격 : <fmt:formatNumber value='${p.pdPrice * (1 - p.pdDiscountRate/100)}' pattern='#,###'/>원">
-									<img src="${path}/${p.pdImageUrl}" alt="${p.pdName}"
+									<img src="${p.pdImageUrl}" alt="${p.pdName}"
 										class="w-auto h-auto max-w-full max-h-full object-contain" />
 								</div>
 							</a>

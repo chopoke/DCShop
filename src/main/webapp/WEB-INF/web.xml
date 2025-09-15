@@ -28,6 +28,14 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 		
+	<!-- ★ 표준 멀티파트 활성화 (업로드 한도 5MB/요청 10MB 예시) -->
+	<multipart-config>
+		<location></location>
+		<max-file-size>5242880</max-file-size>        <!-- 5MB -->
+		<max-request-size>10485760</max-request-size> <!-- 10MB -->
+		<file-size-threshold>0</file-size-threshold>
+	</multipart-config>	
+		
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
