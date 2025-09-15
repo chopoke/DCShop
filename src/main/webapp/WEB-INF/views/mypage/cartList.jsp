@@ -540,10 +540,9 @@ tailwind.config = {
                                  maxFractionDigits="0" />
                            </div>
                         </div>
-                        <form name="payMent" method="post"
-                           class="btn btn-primary btn-lg ms-sm-2 mt-2 mt-sm-0">
+                        <form name="payMent" method="post" class="mt-3">
                            <input type="button" onclick="checkout()"
-                              class="btn btn-primary w-100" value="결제하기" />
+                              class="btn bg-black text-white btn-lg" value="결제하기" />
                         </form>
                      </div>
                   </div>

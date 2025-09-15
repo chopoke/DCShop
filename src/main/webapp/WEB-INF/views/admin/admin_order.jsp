@@ -125,7 +125,7 @@
             </div>
 
             <div class="md:col-span-3 flex gap-2">
-              <button type="submit" class="w-full h-10 rounded-lg bg-blue-600 text-white hover:bg-blue-700">검색</button>
+              <button type="submit" class="w-full h-10 rounded-lg bg-black text-white hover:bg-blue-700">검색</button>
             </div>
           </div>
         </form>
