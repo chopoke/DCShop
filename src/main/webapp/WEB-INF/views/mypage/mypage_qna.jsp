@@ -142,7 +142,7 @@
                      class="w-full border rounded px-3 py-2" />
             </div>
             <div class="md:col-span-3 flex items-end gap-2">
-              <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">검색</button>
+              <button type="submit" class="w-full px-4 py-2 bg-black text-white rounded hover:bg-blue-700">검색</button>
             </div>
           </div>
         </form>
@@ -254,7 +254,7 @@
             <c:forEach var="i" begin="${paging.startPage}" end="${paging.endPage}">
 	            <c:if test="${num != 0}">
 	              <a href="${path}/mypage_qna.do?pageNum=${i}"
-	                 class="px-3 py-2 text-sm border-r <c:if test='${paging.currentPage==i}'>bg-blue-600 text-white</c:if>">
+	                 class="px-3 py-2 text-sm border-r <c:if test='${paging.currentPage==i}'>bg-black text-white</c:if>">
 	                ${i}
 	              </a>
 	             </c:if>
