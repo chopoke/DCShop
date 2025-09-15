@@ -111,14 +111,14 @@
 				class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
 				<c:forEach var="dto" items="${list}">
 					<c:if test="${!eventMode or dto.pd_discount_rate gt 0}">
-					<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+					<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow relative h-full">
 						<a href="#" onclick="return openCheckout(this)" data-pd-id="${dto.pd_id}" style="text-decoration: none">
 							<div class="aspect-square bg-gray-100 relative overflow-hidden">
 								<img src="<c:url value='${dto.pd_image_url}'/>"
 									alt="Rachael Ray Nutrish"
 									class="w-full h-full object-cover object-top" />
 							</div>
-							<div class="p-3">
+							<div class="p-3 pb-12 flex flex-col gap-2">
 								<div class="text-sm text-gray-600 mb-1 p-4 flex flex-col flex-1"></div>
 								<h4 class="font-medium text-gray-900 mb-2" id="pd_name">${dto.pd_name}</h4>
 								
@@ -161,7 +161,7 @@
 								</div> 
 								<div class="mt-auto flex justify-end">  
 							    <span 
-							    class="inline-flex items-center h-10 px-4 rounded-lg bg-blue-300 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 active:scale-[.99] transition"
+							    class="absolute bottom-5 right-3 inline-flex items-center h-10 px-4 rounded-lg bg-blue-300 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 active:scale-[.99] transition"
 							    data-pd-id="${dto.pd_id}" role="button" onclick="return addToCart(event, ${dto.pd_id})" tabindex="0">
 							      담기
 							    </span>
