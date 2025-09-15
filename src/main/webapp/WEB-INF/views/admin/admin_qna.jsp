@@ -228,7 +228,7 @@
                       <div class="flex flex-wrap gap-1">
                         <button type="button" class="px-2 py-1 border rounded hover:bg-gray-50"
                                 onclick="openModal(${q.q_num})">보기</button>
-                        <a href="${path}/admin_qna/replyForm?q_num=${q.q_num}"
+                        <a href="${path}/qna_answer?q_num=${q.q_num}"
                            class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">답변</a>
                         <a href="${path}/admin_qna/delete?q_num=${q.q_num}"
                            class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"

@@ -37,7 +37,7 @@
  			 , #{o_phone}
  			 , SYSDATE
  			 , #{o_price}
- 			 , '배송준비중'
+ 			 , '배송준비'
  			 , #{o_count}
  			 , #{o_payment}
  			 , #{o_address}
