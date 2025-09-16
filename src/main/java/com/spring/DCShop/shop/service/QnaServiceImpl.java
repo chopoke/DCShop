@@ -43,12 +43,7 @@ public class QnaServiceImpl implements QnaService{
 		String q_secret = request.getParameter("q_secret");
 		System.out.println("비밀여부 => '"+ q_secret + "'");
 		
-		if ("on".equals(q_secret)) {
-			dto.setQ_secret("Y");
-		}
-		else {
-			dto.setQ_secret("N");
-		}
+		dto.setQ_secret(q_secret);
 		
 		System.out.println("addQuestion => mapper"+dto);
 		//문의 작성처리 
@@ -132,11 +127,11 @@ public class QnaServiceImpl implements QnaService{
 		String u_role = (String)request.getSession().getAttribute("session_u_role");
 		// 로그인한 사람이 작성자 본인이 맞는지 체크하기 위한 데이터 불러오기
 		QuestDTO check = dao.questDetail(q_num);
+		Integer checkId = check.getU_member_id();
 		
-		if(u_role != null && u_member_id != null && (check.getU_member_id()==u_member_id || "ADMIN".equals(u_role) || u_role == "ADMIN")) {//로그인 한 사람이 글 작성자 본인이라면
+		// 논리 오류 수정: 문자열 비교는 `equals()`를 사용하고, 관리자 권한 여부를 추가로 확인합니다.
+		if(u_role != null && u_member_id != null && (checkId.equals(u_member_id) || "ADMIN".equals(u_role))) {
 			dao.deleteQuest(q_num);
 		}
 	}
 }
-
-

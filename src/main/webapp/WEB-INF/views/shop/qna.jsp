@@ -152,8 +152,7 @@
                           type="checkbox"
                           name="q_secret"
                           id="q_secret"
-                          class="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary"
-                          value="Y"/>
+                          class="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary"/>
                         <label for="q_secret" class="text-sm text-gray-700">비밀글 여부</label>
                       </div>
                     </td>
