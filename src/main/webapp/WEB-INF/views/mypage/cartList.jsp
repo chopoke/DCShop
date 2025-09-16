@@ -354,7 +354,7 @@ tailwind.config = {
          <main class="flex-1 p-8 bg-gray-50">
 
             <h1 class="text-3xl font-bold text-gray-900 mb-2">장바구니</h1>
-            <c:out value="${hasFreeShipping}">dd</c:out>
+            <c:out value="${hasFreeShipping}"></c:out>
             <div class="d-flex justify-content-between align-items-center mb-3">
                <div class="text-secondary small">
                   주문한 상품 총: <strong id="totalItemsCount">${cartCountSum}</strong>개
