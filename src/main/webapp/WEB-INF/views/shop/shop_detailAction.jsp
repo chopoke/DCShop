@@ -57,7 +57,6 @@
     location.href = '${path}/cartTOPay.do?pdId=' + pdId + '&qty=' + qty;
   }
 </script>
-<<<<<<< HEAD
 <script type="text/javascript">
 $(function(){
 	  // 로그인 여부  true:로구인 false:비로그인

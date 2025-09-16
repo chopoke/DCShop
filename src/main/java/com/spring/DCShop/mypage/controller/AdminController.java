@@ -46,9 +46,7 @@ public class AdminController {
 	public String deleteSelected(HttpServletRequest request, HttpServletResponse response, Model model) 
 			throws ServletException, IOException {
 	    logger.info("=== url -> admin_board/delete ===");
-
 	    service.adminBoardDelete(request, response, model);
-
 	    return "redirect:/admin_board";
 	}
 	
