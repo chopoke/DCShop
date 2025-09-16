@@ -90,7 +90,7 @@
 				        </c:when>
 				        <%-- 일반 유저일 때 --%>
 				        <c:otherwise>
-				            <a href="#" class="nav-link1" onclick="window.location='${path}/mypage_main.do'">나의 정보</a>
+				            <a href="${path}/mypage_main.do" class="nav-link1" onclick="window.location='${path}/mypage_main.do'">나의 정보</a>
 				        </c:otherwise>
 				    </c:choose>
 				</c:if>

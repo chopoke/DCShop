@@ -39,12 +39,12 @@
           <a href="${path}/admin_qna"     class="block py-2 px-3 rounded hover:bg-gray-100">문의관리</a>
           <a href="${path}/admin_review"  class="block py-2 px-3 rounded hover:bg-gray-100">리뷰관리</a>
           <a href="${path}/admin_user"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
-          <a href="${path}/logout" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+          <a href="${path}/logout.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
         </nav>
       </aside>
 
       <!-- 메인 콘텐츠 -->
-      <main class="flex-1 p-8 bg-gray-50">
+      <main class="flex-1 p-8 bg-gray-50 max-w-[864px]">
         <h1 class="text-2xl font-bold mb-2">상품관리</h1><br>
         
 
@@ -55,7 +55,7 @@
             <form action="${path}/admin_product" method="get" class="flex items-center gap-2 w-full mb-3 flex-nowrap whitespace-nowrap overflow-x-auto">
 			
 			  <!-- 상태 필터 -->
-			  <select name="status" class="w-28 border rounded-lg px-3 py-2 shrink-0">
+			  <select name="status" class="w-30 border rounded-lg px-3 py-2 shrink-0">
 			    <option value="">상태 전체</option>
 			    <option value="ON"   ${param_status == 'ON'   ? 'selected' : ''}>판매중</option>
 			    <option value="OFF"  ${param_status == 'OFF'  ? 'selected' : ''}>품절</option>
