@@ -239,9 +239,10 @@
 		            </div>
 		          </div>
 		          <div class="flex justify-end pt-4">
-		            <button onclick="history.back()" class="px-6 h-10 !bg-black text-white !rounded-button hover:!bg-blue-200 transition-colors !whitespace-nowrap !mr-3">
+		            <!-- <button onclick="history.back()" class="px-6 h-10 !bg-black text-white !rounded-button hover:!bg-blue-200 transition-colors !whitespace-nowrap !mr-3">
 		              뒤로가기
-		            </button>
+		            </button> -->
+		            <a href="${path}/login_main.do">뒤로가기</a>
 		            <button type="reset" class="px-6 h-10 !bg-gray-100 !text-gray-600 !rounded-button hover:!bg-gray-200 !transition-colors !whitespace-nowrap !mr-3">
 		              취소
 		            </button>

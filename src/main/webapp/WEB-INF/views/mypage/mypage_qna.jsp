@@ -233,7 +233,7 @@
                     <td class="py-2 px-3 align-center">
                       <div class="flex flex-wrap gap-1">
                         <button type="button" class="px-2 py-1 border rounded hover:bg-gray-50"
-                                onclick="window.location.href='${path}/question_update.qa?q_num=${q.q_num}'">수정</button>
+                                onclick="window.location='${path}/question_update.qa?q_num=${q.q_num}'">수정</button>
                         <a class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
                            onclick="question_delete(${q.q_num})">삭제</a>
                       </div>
