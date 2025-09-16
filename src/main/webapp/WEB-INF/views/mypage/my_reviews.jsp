@@ -103,15 +103,26 @@
 					             <c:param name='r_num' value='${r["R_NUM"]}'/>
 					           </c:url>">
 					    <%-- 썸네일 --%>
-					    <c:set var="imgPath" value='${r["PD_IMAGE_URL"]}'/>
-					    <c:choose>
-					      <c:when test='${not empty imgPath && fn:startsWith(imgPath, "/")}'>
-					        <img src="<c:url value='${imgPath}'/>" class="w-12 h-12 object-cover rounded" alt="">
-					      </c:when>
-					      <c:otherwise>
-					        <img src="<c:url value='/${imgPath}'/>" class="w-12 h-12 object-cover rounded" alt="">
-					      </c:otherwise>
-					    </c:choose>
+	                   <c:set var="imgPath" value='${r["PD_IMAGE_URL"]}'/>
+	
+	                  <c:choose>
+	                    <%-- 1) 절대 URL(http/https)인 경우: 그대로 사용 --%>
+	                    <c:when test='${not empty imgPath 
+	                                   && (fn:startsWith(imgPath, "http://") 
+	                                       or fn:startsWith(imgPath, "https://"))}'>
+	                      <img src="${imgPath}" class="w-12 h-12 object-cover rounded" alt="">
+	                    </c:when>
+	                  
+	                    <%-- 2) 앱 루트로 시작하는 경우: c:url로 컨텍스트 붙이기 --%>
+	                    <c:when test='${not empty imgPath && fn:startsWith(imgPath, "/")}'>
+	                      <img src="<c:url value='${imgPath}'/>" class="w-12 h-12 object-cover rounded" alt="">
+	                    </c:when>
+	                  
+	                    <%-- 3) 그 외(상대 경로 문자열): 앞에 / 붙여서 c:url --%>
+	                    <c:otherwise>
+	                      <img src="<c:url value='/${imgPath}'/>" class="w-12 h-12 object-cover rounded" alt="">
+	                    </c:otherwise>
+	                  </c:choose>
 					
 					    <div class="font-medium"><c:out value='${r["PD_NAME"]}'/></div>
 					  </a>

@@ -168,15 +168,6 @@
 	    
 	    if (catInput) catInput.value = category;
 	    
-	    document.querySelectorAll("#filter-menu a").forEach(a =>
-	    	a.addEventListener("click", function(e){
-	    		e.preventDefault();
-	    		catInput.value = this.dataset.cat;
-	    	      form.action = "${pageContext.request.contextPath}/board_list?pageNum=1";		// 카테고리 변경시 페이지 번호 1
-	    	      form.submit();
-	    	})
-	    )
-	    
 	    const cur = new URL(location.href);
 	    document.querySelectorAll(".pagination a").forEach(a => {
 	      	const target = new URL(a.getAttribute("href"), location.origin);

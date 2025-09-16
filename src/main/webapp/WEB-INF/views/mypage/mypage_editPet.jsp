@@ -105,7 +105,7 @@
          <main class="flex-1 p-8 bg-gray-50">
          	<h1 class="text-3xl font-bold text-gray-900 mb-2">내 반려동물</h1>
             <!-- 반려동물 목록 -->
-			<section class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 mt-8">
+			<section class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 mt-0">
 			  	<div class="flex items-center justify-between">
 				    <h3 class="text-lg font-semibold text-gray-900">내 반려동물</h3>
 				    <button id="btnOpenAdd" type="button"

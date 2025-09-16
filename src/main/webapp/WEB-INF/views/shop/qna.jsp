@@ -78,7 +78,7 @@
          "pd_id" : ${param.pd_id}, //상품 상세페이지에서 받은 삼품번호 파라미터로 넘기기
          "q_title" : $('#q_title').val(),		//문의 제목
          "q_content" : $('#q_content').val(),	//문의 내용
-         "q_secret" : $('#q_secret').val(),
+         "q_secret": $('#q_secret').prop('checked') ? 'Y' : 'N',
          "q_category" : $('#q_category').val(),
       }
       $.ajax({
