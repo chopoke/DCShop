@@ -2,6 +2,7 @@
 <%@ include file="/WEB-INF/views/setting/setting.jsp"%>
 <%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn"  uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -46,7 +47,7 @@ tailwind.config = {
         <img src="${path}/resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
         <h2 class="text-lg font-semibold">${session_u_nickname}</h2>
         <p class="text-gray-500 text-sm mb-4">${session_u_email}</p>
-        <button class="px-4 py-2 bg-stone-950 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
+        <!-- <button class="px-4 py-2 bg-stone-950 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button> -->
 
         <nav class="w-full space-y-2 text-sm">
           <a href="${path}/admin_board"   class="block py-2 px-3 rounded hover:bg-gray-100">게시판관리</a>
@@ -55,7 +56,7 @@ tailwind.config = {
           <a href="${path}/admin_qna"     class="block py-2 px-3 rounded hover:bg-gray-100">문의관리</a>
           <a href="${path}/admin_review"  class="block py-2 px-3 rounded hover:bg-gray-100">리뷰관리</a>
           <a href="${path}/admin_user"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
-          <a href="${path}/logout"        class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+          <a href="${path}/logout.do"     class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
         </nav>
       </aside>
 
@@ -80,7 +81,7 @@ tailwind.config = {
             <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-6">
               <div>
                 <div class="text-sm text-gray-500">주문번호</div>
-                <div class="text-lg font-medium" id="orderNo">${o_num}</div>
+                <div class="text-lg font-medium" id="orderNo"><c:out value="${o_num}" /></div>
               </div>
 
               <div class="flex items-center gap-3">
@@ -147,7 +148,7 @@ tailwind.config = {
                       </span>
                     </span>
 
-                    <!-- 배송상태 변경 드롭다운 (주문상태 버튼 아래 요구사항) -->
+                    <!-- 배송상태 변경 드롭다운 -->
                     <div class="relative">
                       <button id="shipBtn" type="button" class="px-3 py-1.5 text-xs bg-gray-900 text-white rounded-md hover:bg-gray-800">
                         배송상태 변경
@@ -167,7 +168,6 @@ tailwind.config = {
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                       </c:if>
                     </form>
-                    <!-- ▲ 배송상태 변경 -->
                   </div>
 
                   <div class="flex"><span class="w-28 text-sm text-gray-500">배송주소</span><span class="text-sm"><c:out value="${info.recv_addr}" /></span></div>
@@ -206,17 +206,35 @@ tailwind.config = {
                   </c:if>
 
                   <c:forEach var="it" items="${items}">
+                    <%-- 이미지 경로 보정: 항상 절대경로로 만들기 --%>
+                    <c:set var="imgRaw" value="${it.pd_image_url}" />
+                    <c:choose>
+                      <c:when test="${empty imgRaw}">
+                        <c:set var="imgSrc" value="${path}/resources/img/common/no-image.png" />
+                      </c:when>
+                      <c:when test="${fn:startsWith(imgRaw, 'http://') or fn:startsWith(imgRaw, 'https://')}">
+                        <c:set var="imgSrc" value="${imgRaw}" />
+                      </c:when>
+                      <c:when test="${fn:startsWith(imgRaw, '/')}">
+                        <c:set var="imgSrc" value="${path}${imgRaw}" />
+                      </c:when>
+                      <c:otherwise>
+                        <c:set var="imgSrc" value="${path}/${imgRaw}" />
+                      </c:otherwise>
+                    </c:choose>
+
                     <tr>
                       <td class="px-6 py-4">
                         <div class="flex items-center">
                           <div class="h-16 w-16 flex-shrink-0 rounded-lg bg-gray-100 overflow-hidden">
-                            <c:if test="${not empty it.pd_image_url}">
-                              <img alt="" src="${it.pd_image_url}" class="w-full h-full object-cover">
-                            </c:if>
+                            <img alt="상품이미지" src="${imgSrc}" class="w-full h-full object-cover"
+                                 onerror="this.onerror=null; this.src='${path}/resources/img/common/no-image.png';">
                           </div>
                           <div class="ml-4">
                             <div class="text-sm font-medium text-gray-900"><c:out value="${it.pd_name}" /></div>
                             <div class="text-xs text-gray-500">PD_ID: <c:out value="${it.pd_id}" /></div>
+                            <%-- 디버깅용(필요시 주석 해제) : 원본 경로 확인 --%>
+                            <%-- <div class="text-[10px] text-gray-400 break-all">raw: <c:out value="${it.pd_image_url}" /></div> --%>
                           </div>
                         </div>
                       </td>

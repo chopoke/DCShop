@@ -14,34 +14,6 @@
 	<select id="countReview"  resultType="int">SELECT COUNT(*) FROM review_tbl</select>
 	<select id="countUser"    resultType="int">SELECT COUNT(*) FROM user_tbl</select>
 	
-	
-	<!-- 회원가입자 최신 5건 조회 -->
-	<select id="adminUserList1" resultType="com.spring.DCShop.user.dto.UserDTO">
-		<![CDATA[
-	    SELECT A.*
-	    	 , ROWNUM
-	    FROM (
-	        SELECT u_member_id, u_id, u_name, u_address, u_email, u_birthday, u_nickname, u_regdate
-	        FROM user_tbl
-	        ORDER BY u_regdate DESC
-	    ) A
-	    WHERE ROWNUM <= 5
-	    ]]>
-	</select>
-	
-	<!-- 회원관리 - 펫통계 -->
-	<select id="adminUserPet" resultType="hashmap">
-		<![CDATA[
-		SELECT
-		    NVL(SUM(CASE WHEN p_type   = '강아지' THEN 1 ELSE 0 END), 0) AS "dog_count",
-		    NVL(SUM(CASE WHEN p_type   = '고양이' THEN 1 ELSE 0 END), 0) AS "cat_count",
-		    NVL(SUM(CASE WHEN p_gender = 'M'     THEN 1 ELSE 0 END), 0) AS "male_count",
-		    NVL(SUM(CASE WHEN p_gender = 'F'     THEN 1 ELSE 0 END), 0) AS "female_count",
-		    NVL(SUM(CASE WHEN p_neutered = 'Y'   THEN 1 ELSE 0 END), 0) AS "neutered_count"
-		FROM pet_tbl
-	    ]]>
-	</select>
-	
 	<!-- Board 목록 매핑: BoardDTO + 작성자(UserDTO) 리스트 -->
 	<resultMap id="BoardListMap" type="com.spring.DCShop.board.dto.BoardDTO">
 	    <id     property="b_num"        column="b_num"/>
@@ -304,7 +276,7 @@
 	      pd_pet_category, pd_subcategory, pd_created, pd_updated
 	  	)VALUES (
 	      #{pd_id}, #{pd_name}, #{pd_description}, #{pd_price}, #{pd_stock}, 
-	      #{pd_category}, #{pd_brand}, #{pd_image_url}, #{pd_shipping_fee}, 
+	      #{pd_category}, #{pd_brand}, #{pd_image_url, jdbcType=VARCHAR}, #{pd_shipping_fee}, 
 	      #{pd_discount_rate}, #{pd_status}, #{pd_option}, 
 	      #{pd_pet_category}, #{pd_subcategory}, SYSDATE, SYSDATE
   		)
@@ -702,6 +674,48 @@
 		ORDER BY rn ASC
 	  </select>
 	  
+	<!-- 회원가입자 최신 5건 조회 -->
+	<select id="adminUserList1" resultType="com.spring.DCShop.user.dto.UserDTO">
+		<![CDATA[
+	    SELECT A.*
+	    	 , ROWNUM
+	    FROM (
+	        SELECT u_member_id, u_id, u_name, u_address, u_email, u_birthday, u_nickname, u_regdate
+	        FROM user_tbl
+	        WHERE u_show='Y'
+	        ORDER BY u_regdate DESC
+	    ) A
+	    WHERE ROWNUM <= 5
+	    ]]>
+	</select>
+	
+	<!-- 회원관리 - 펫통계 -->
+	<select id="adminUserPet" resultType="hashmap">
+		<![CDATA[
+		SELECT
+		    NVL(SUM(CASE WHEN p_type   = '강아지' THEN 1 ELSE 0 END), 0) AS "dog_count",
+		    NVL(SUM(CASE WHEN p_type   = '고양이' THEN 1 ELSE 0 END), 0) AS "cat_count",
+		    NVL(SUM(CASE WHEN p_gender = 'M'     THEN 1 ELSE 0 END), 0) AS "male_count",
+		    NVL(SUM(CASE WHEN p_gender = 'F'     THEN 1 ELSE 0 END), 0) AS "female_count",
+		    NVL(SUM(CASE WHEN p_neutered = 'Y'   THEN 1 ELSE 0 END), 0) AS "neutered_count"
+		FROM pet_tbl
+	    ]]>
+	</select>
+	
+	<!-- 회원탈퇴자 최신 5건 조회 -->
+	<select id="adminUserList2" resultType="com.spring.DCShop.user.dto.UserDTO">
+		<![CDATA[
+	    SELECT A.*
+	    	 , ROWNUM
+	    FROM (
+	        SELECT u_member_id, u_id, u_name, u_address, u_email, u_birthday, u_nickname, u_regdate
+	        FROM user_tbl
+	        WHERE u_show='N'
+	        ORDER BY u_regdate DESC
+	    ) A
+	    WHERE ROWNUM <= 5 
+	    ]]>
+	</select>
 	  <!-- qna상세페이지 -->
 	  <select id="questDetail" parameterType="int" resultType="com.spring.DCShop.shop.dto.QuestDTO">
 		SELECT q.*

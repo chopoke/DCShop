@@ -46,7 +46,7 @@
         <img src="resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
         <h2 class="text-lg font-semibold">${session_u_nickname}</h2>
         <p class="text-gray-500 text-sm mb-4">${session_u_email}</p>
-        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
+        <!-- <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button> -->
         
         <!-- 네비게이션(수정금지) -->
         <nav class="w-full space-y-2 text-sm">
@@ -56,7 +56,7 @@
           <a href="${path}/admin_qna"     class="block py-2 px-3 rounded hover:bg-gray-100">문의관리</a>
           <a href="${path}/admin_review"  class="block py-2 px-3 rounded bg-gray-900 text-white">리뷰관리</a>
           <a href="${path}/admin_user"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
-          <a href="${path}/logout" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+          <a href="${path}/logout.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
         </nav>
       </aside>
 
@@ -106,7 +106,7 @@
 		             placeholder="상품명 / 작성자 / 내용 검색" class="form-ctl">
 		    </div>
 		    <div class="md:col-span-3 flex items-end">
-		      <button type="submit" class="px-12 py-2 bg-black rounded-lg text-white rounded-button text-sm font-medium hover:bg-blue-600 transition-colors whitespace-nowrap !rounded-button">검색</button>
+		      <button type="submit" class="w-full h-12 px-4 py-2 bg-black text-white rounded hover:bg-blue-700 !rounded-button">검색</button>
 		    </div>
 		
 		  </div>

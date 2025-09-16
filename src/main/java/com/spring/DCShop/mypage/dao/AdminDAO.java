@@ -23,12 +23,6 @@ public interface AdminDAO {
 	// 관리자메인 - 회원건수
 	public int countUser();
 	
-	// 회원목록-최신가입자5건조회
-	public List<UserDTO> adminUserList1();
-	
-	// 회원목록 - 펫통계
-	public Map<String, Object> adminUserPet();
-	
 	// 게시판목록
 	public List<BoardDTO> adminBoardList(Map<String, Object> params);
 	
@@ -109,4 +103,12 @@ public interface AdminDAO {
 	
 	// 리뷰관리 - 선택 삭제
 	public int adminReviewDelete(List<Integer> ids);
+	// 회원목록-최신가입자5건조회
+	public List<UserDTO> adminUserList1();
+	
+	// 회원목록 - 펫통계
+	public Map<String, Object> adminUserPet();
+	
+	// 회원목록 - 탈퇴회원5건조회
+	public List<UserDTO> adminUserList2();
 }

@@ -31,7 +31,7 @@
         <img src="${path}/resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
         <h2 class="text-lg font-semibold"><c:out value="${session_u_nickname}"/></h2>
         <p class="text-gray-500 text-sm mb-4"><c:out value="${session_u_email}"/></p>
-        <a href="${path}/mypage/profile" class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600 inline-block">정보수정</a>
+        <%-- <a href="${path}/mypage/profile" class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600 inline-block">정보수정</a> --%>
 
         <!-- 네비게이션 -->
         <nav class="w-full space-y-2 text-sm">
@@ -41,13 +41,13 @@
           <a href="${path}/admin_qna"     class="block py-2 px-3 rounded hover:bg-gray-100">문의관리</a>
           <a href="${path}/admin_review"  class="block py-2 px-3 rounded hover:bg-gray-100">리뷰관리</a>
           <a href="${path}/admin_user"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
-          <a href="${path}/logout" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+          <a href="${path}/logout.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
         </nav>
       </aside>
 
       <!-- 메인 콘텐츠 -->
       <main class="flex-1 p-8 bg-gray-50">
-        <h2 class="text-xl font-semibold mb-4">게시판관리</h2>
+        <h2 class="text-2xl font-bold mb-6">게시판관리</h2>
 
         <!-- 검색/필터 바 -->
         <form method="get" action="${path}/admin_board" class="mb-4 grid grid-cols-12 gap-2">

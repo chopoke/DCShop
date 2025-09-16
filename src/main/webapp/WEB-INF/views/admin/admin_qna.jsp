@@ -68,7 +68,7 @@
         <img src="resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
         <h2 class="text-lg font-semibold">${session_u_nickname}</h2>
         <p class="text-gray-500 text-sm mb-4">${session_u_email}</p>
-        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
+        <!-- <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button> -->
 
         <!-- 네비게이션 -->
         <nav class="w-full space-y-2 text-sm">
@@ -78,7 +78,7 @@
           <a href="${path}/admin_qna"     class="block py-2 px-3 rounded bg-gray-900 text-white">문의관리</a>
           <a href="${path}/admin_review"  class="block py-2 px-3 rounded hover:bg-gray-100">리뷰관리</a>
           <a href="${path}/admin_user"    class="block py-2 px-3 rounded hover:bg-gray-100">회원관리</a>
-          <a href="${path}/logout" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+          <a href="${path}/logout.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
         </nav>
       </aside>
 
@@ -124,7 +124,7 @@
                      class="w-full border rounded px-3 py-2" />
             </div>
             <div class="md:col-span-3 flex items-end gap-2">
-              <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">검색</button>
+              <button type="submit" class="w-full px-4 py-2 bg-black text-white rounded hover:bg-blue-700">검색</button>
             </div>
           </div>
         </form>
@@ -132,13 +132,13 @@
         <!-- 일괄 처리 버튼 -->
         <form id="bulkForm" action="${path}/admin_qna/bulk" method="post" class="mb-3">
           <input type="hidden" name="action" id="bulkAction" value="">
-          <div class="flex flex-wrap items-center gap-2">
+          <!-- <div class="flex flex-wrap items-center gap-2">
             <button type="button" onclick="setBulk('DONE')" class="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700">선택 완료처리</button>
             <button type="button" onclick="setBulk('WAIT')" class="px-3 py-2 bg-amber-500 text-white rounded hover:bg-amber-600">선택 대기로</button>
             <button type="button" onclick="setBulk('HOLD')" class="px-3 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">선택 보류</button>
             <button type="button" onclick="setBulk('DELETE')" class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700">선택 삭제</button>
             <span class="text-sm text-gray-500 ml-1">체크 후 일괄 처리하세요.</span>
-          </div>
+          </div> -->
 
           <!-- 목록 -->
           <div class="mt-3 bg-white border rounded-lg overflow-x-auto">
@@ -197,7 +197,7 @@
                     <td class="py-2 px-3 align-top">
                       <div class="ellipsis" title="${q.q_title}">
                         <a href="javascript:void(0)" class="text-blue-600 hover:underline"
-                           onclick="window.location='${path}/qna_answer?q_num=${q.q_num}'">${q.q_title}</a>
+                           onclick="window.location='${path}/question_detailAction.qa?q_num=${q.q_num}'">${q.q_title}</a>
                       </div>
                     </td>
                     <td class="py-2 px-3 align-top ellipsis" title="${q.u_id}">${q.u_id}</td>
@@ -226,12 +226,12 @@
 					</c:if>
                     <td class="py-2 px-3 align-top">
                       <div class="flex flex-wrap gap-1">
-                        <button type="button" class="px-2 py-1 border rounded hover:bg-gray-50"
-                                onclick="openModal(${q.q_num})">보기</button>
+                       <%--  <button type="button" class="px-2 py-1 border rounded hover:bg-gray-50"
+                                onclick="openModal(${q.q_num})">보기</button> --%>
                         <a href="${path}/qna_answer?q_num=${q.q_num}"
-                           class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">답변</a>
+                           class="px-2 py-1 bg-stone-500 text-white rounded hover:bg-blue-700">답변</a>
                         <a href="${path}/admin_qna/delete?q_num=${q.q_num}"
-                           class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                           class="px-2 py-1 bg-red-400 text-white rounded hover:bg-red-700"
                            onclick="question_delete(${q.q_num})">삭제</a>
                       </div>
                     </td>
@@ -251,7 +251,7 @@
             <c:forEach var="i" begin="${paging.startPage}" end="${paging.endPage}">
 	            <c:if test="${num != 0}">
 	              <a href="${path}/admin_qna?pageNum=${i}"
-	                 class="px-3 py-2 text-sm border-r <c:if test='${paging.currentPage==i}'>bg-blue-600 text-white</c:if>">
+	                 class="px-3 py-2 text-sm border-r <c:if test='${paging.currentPage==i}'>bg-black text-white</c:if>">
 	                ${i}
 	              </a>
 	             </c:if>
