@@ -149,7 +149,6 @@ public class AdminServiceImpl implements AdminService{
 		String category = request.getParameter("category");
 		String q = request.getParameter("q");
 		String pageNum = request.getParameter("pageNum");
-		String pageSizeStr = request.getParameter("pageSize");
 		
 		// 2) 카테고리 분류 방법
 		Integer catFrom = null;
