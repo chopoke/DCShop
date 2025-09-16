@@ -253,7 +253,8 @@
 
 	<!-- modal -->
 	<script>
-    // 날짜 포맷(백엔드가 ISO로 주면 로컬 포맷으로)
+    // 현재 로그인한 사용자의 역할이 'ADMIN'인지 확인하는 변수입니다.
+    const isAdmin = '${sessionScope.session_u_role}' === 'ADMIN';
 
     // DOM 캐시
     const modal = document.getElementById("questionDetailModal");
@@ -294,7 +295,7 @@
                 method: 'GET',
                 headers: { 'Accept': 'application/json' }
             });
-
+			/* Controller과 통신하여 상태코드에 따른 문구 호출 */
             if (res.status === 404) {
                 alert('해당 문의를 찾을 수 없습니다.');
                 return closeQuestionDetail();
@@ -316,19 +317,16 @@
             const sessionUserId = '${sessionScope.session_u_member_id}';
             const isAuthor = (dto.u_member_id == sessionUserId);
             
-            // 작성자만 수정/삭제 버튼 보이기
-            if (isAuthor) {
+            // 작성자 또는 관리자만 수정/삭제 버튼 보이기
+            if (isAuthor || isAdmin) {
                 editButton.style.display = 'block';
                 deleteButton.style.display = 'block';
             }
 			
             // 답변 상태에 따라 관리자 답변 영역 표시
-            // ++ 어드민
             if (dto.q_answer === 'Y') {
                 adminReplyContent.style.display = 'block';
-                // dto에 a_regDate와 a_content 필드가 있다는 가정 하에 작성
-                // dto.a_regDate와 dto.a_content가 DTO에 없으면 백엔드 DTO에 추가 필요
-                if (dto.a_regdate) {	//타임스탬프로 값이 변형된 날짜 데이터를 사람이 알아볼 수 있도록 포매팅
+                if (dto.a_regdate) {
 	                const date = new Date(dto.a_regdate);
 	                const formatted = date.getFullYear() + '-' +
                     String(date.getMonth() + 1).padStart(2, '0') + '-' +
@@ -338,9 +336,7 @@
 	            	adminReplyDate.textContent = '';
 	            }
                 
-                // 관리자의 답변에 대한 컬럼이 추가 되었을 경우 아래 코드 주석 해제.
-                adminReplyMessage.textContent = dto.a_answer;	//답변 내용
-                
+                adminReplyMessage.textContent = dto.a_answer;
                 
             } else if (isAdmin) { // 답변이 없지만, 관리자일 경우
                 adminReplyForm.style.display = 'block';
@@ -352,9 +348,9 @@
             elContent.textContent = dto.q_content || '';
             const cat = (dto.q_category && dto.q_category.trim()) || '기타';
             elCategoryBadge.textContent = '분류 : ' + cat;
-            document.getElementById("modalqNum").value = qNum; // DTO에서 가져온 qNum을 hidden 필드에 저장
+            document.getElementById("modalqNum").value = qNum;
             
-            if (dto.q_regDate) {	//타임스탬프로 값이 변형된 날짜 데이터를 사람이 알아볼 수 있도록 포매팅
+            if (dto.q_regDate) {
                 const date = new Date(dto.q_regDate);
                 const formattedDate = date.getFullYear() + '-' +
                                      String(date.getMonth() + 1).padStart(2, '0') + '-' +
@@ -363,8 +359,6 @@
             } else {
                 elDate.textContent = '';
             }
-            
-            
             
         } catch (e) {
             console.error(e);
@@ -381,21 +375,20 @@
 
     window.editQuestion = function () {
         if (confirm("문의를 수정하시겠습니까?")) {
-            // TODO: 수정 페이지로 이동
             window.location.href = '${path}/question_update.qa?q_num='+document.getElementById("modalqNum").value;
         }
     };
 
-    window.deleteQuestion = function () {	//;
-        if (confirm("문의를 삭제하시겠습니까?")) {	//바로 삭제
-        	let param = {	//문의자는 session이므로 controller에서 request로 직접받음.
+    window.deleteQuestion = function () {
+        if (confirm("문의를 삭제하시겠습니까?")) {
+        	let param = {
    	   		 "q_num": document.getElementById("modalqNum").value,
 	   	      }
 	   	      $.ajax({
-	   	          url: '${path}/question_deleteAction.qa',  // 컨트롤러 이동(3)
+	   	          url: '${path}/question_deleteAction.qa',
 	   	          type: 'POST',
 	   	          data: param,
-	   	          success: function() {  // 콜백함수(6) => 문의삭제가 완료되면 서버에서 콜백함수 호출
+	   	          success: function() {
 	   	         	alert('문의가 삭제되었습니다.');
 	   	         	window.location.reload();
 	   	          },
@@ -415,7 +408,7 @@
         // TODO: POST /api/qna/{qNum}/answer
     };
 
-    // 오버레이 바깥 클릭 시 닫기
+    // 오버레이(바깥쪽) 클릭 시 닫기
     modal.addEventListener("click", function (e) {
         if (e.target === modal) closeQuestionDetail();
     });
