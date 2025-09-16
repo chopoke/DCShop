@@ -264,8 +264,8 @@ public class MypageServiceImpl implements MypageService {
 		productListInfo.put("u_member_id", session_u_member_id);
 		
 		List<CartDTO> cartList = myDao.getMyCartList(productListInfo);
-
-		System.out.println("cart" + cartList);
+		
+		System.out.println("cartList" + cartList);
 		
 		cartCountSum = 0;
 		cartList.forEach(i -> {

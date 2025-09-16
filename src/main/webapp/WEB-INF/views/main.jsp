@@ -195,8 +195,14 @@
 								<a class="click_card"
 									href="${path}/ad_shop_detailAction.pd?pdId=${product.pd_id}">
 									<div class="product-image">
+										<c:if test="${fn:contains(product.pd_image_url, '/resources')}">
+										<img src="${path}${product.pd_image_url}"
+											alt="${product.pd_name}" class="d-block w-100">
+										</c:if>
+										<c:if test="${!fn:contains(product.pd_image_url, '/resources')}">
 										<img src="${product.pd_image_url}"
 											alt="${product.pd_name}" class="d-block w-100">
+										</c:if>
 									</div>
 									<h3 class="product-card-title">${product.pd_name}</h3>
 									<p class="product-card-description">
@@ -472,8 +478,14 @@
 								<a class="click_card"
 									href="${path}/ad_shop_detailAction.pd?pdId=${product.pd_id}">
 									<div class="product-image">
+										<c:if test="${fn:contains(product.pd_image_url, '/resources')}">
+										<img src="${path}${product.pd_image_url}"
+											alt="${product.pd_name}" class="d-block w-100">
+										</c:if>
+										<c:if test="${!fn:contains(product.pd_image_url, '/resources')}">
 										<img src="${product.pd_image_url}"
 											alt="${product.pd_name}" class="d-block w-100">
+										</c:if>
 									</div>
 									<h3 class="product-card-title">${product.pd_name}</h3>
 									<p class="product-card-description">
