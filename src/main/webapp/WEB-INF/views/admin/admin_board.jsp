@@ -47,7 +47,7 @@
 
       <!-- 메인 콘텐츠 -->
       <main class="flex-1 p-8 bg-gray-50">
-        <h2 class="text-xl font-semibold mb-4">게시판관리</h2>
+        <h2 class="text-2xl font-bold mb-6">게시판관리</h2>
 
         <!-- 검색/필터 바 -->
         <form method="get" action="${path}/admin_board" class="mb-4 grid grid-cols-12 gap-2">
