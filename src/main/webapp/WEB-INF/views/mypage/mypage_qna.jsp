@@ -94,9 +94,9 @@
            <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
            <a href="./wishList.do" class="block py-2 px-3 rounded hover:bg-gray-100">관심상품</a> 
            <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
-           <a href="./mypage_qna.do" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
+           <a href="./mypage_qna.do" class="block py-2 px-3 bg-gray-900 text-white rounded hover:bg-gray-100">Q&A</a> 
            <a href="./mypage/my_reviews.do" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a>
-           <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
+           <!-- <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a> -->
         </nav>
       </aside>
 
@@ -202,19 +202,19 @@
                     <td class="py-2 px-3 align-center">
                       <div class="ellipsis" title="${q.q_title}">
                         <a href="javascript:void(0)" class="text-blue-600 hover:underline"
-                           onclick="window.location.href='${path}/question_update.qa?q_num=${q.q_num}'">${q.q_title}</a>
+                           onclick="window.location='${path}/question_detailAction.qa?q_num=${q.q_num}'">${q.q_title}</a>
                       </div>
                       <%-- <div class="text-gray-400 text-xs ellipsis" title="${q.preview}">${q.preview}</div> --%>
                     </td>
                     <td class="py-2 px-3 align-center ellipsis" title="${q.u_id}">${q.u_id}</td>
                     <td class="py-2 px-3 align-center"><fmt:formatDate value="${q.q_regDate}" pattern="yyyy-MM-dd" /></td>
                     <td class="py-2 px-3 align-center">
-                      <%-- <c:choose>	처리일
-                        <c:when test="${not empty q.completed_at}">
-                          <fmt:formatDate value="${q.completed_at}" pattern="yyyy-MM-dd" />
+                      <c:choose>
+                        <c:when test="${not empty q.a_regdate}">
+                          ${q.a_regdate}
                         </c:when>
                         <c:otherwise>-</c:otherwise>
-                      </c:choose> --%>
+                      </c:choose>
                     </td>
                     <c:if test="${not (q.q_answer eq 'Y')}">
 						<td class="text-center">

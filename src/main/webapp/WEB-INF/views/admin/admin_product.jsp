@@ -30,7 +30,7 @@
         <img src="${path}/resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
         <h2 class="text-lg font-semibold">${session_u_nickname}</h2>
         <p class="text-gray-500 text-sm mb-4">${session_u_email}</p>
-        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
+        <%-- <a href="${path}/mypage/profile" class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</a> --%>
 
         <nav class="w-full space-y-2 text-sm">
           <a href="${path}/admin_board"   class="block py-2 px-3 rounded hover:bg-gray-100">게시판관리</a>
@@ -116,7 +116,7 @@
               <a href="${path}/admin_product_insert" class="inline-flex items-center justify-center h-10 px-4 py-0 rounded-lg border bg-sky-700 text-white hover:bg-blue-700 no-underline align-middle">상품등록</a>
 
               <!-- 상품수정 버튼 (체크된 1건 수정) -->
-              <button type="button" id="bulkEditBtn" class="inline-flex items-center justify-center h-10 px-4 py-0 rounded-lg border bg-blue-400 text-white hover:bg-yellow-700 align-middle">상품수정</button>
+              <button type="button" id="bulkEditBtn" class="inline-flex items-center justify-center h-10 px-4 py-0 rounded-lg border bg-blue-400 text-white hover:bg-blue-500 align-middle">상품수정</button>
             </div>
           </div>
         </section>
