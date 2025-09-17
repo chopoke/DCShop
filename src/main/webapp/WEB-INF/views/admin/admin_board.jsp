@@ -31,7 +31,7 @@
         <img src="${path}/resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
         <h2 class="text-lg font-semibold"><c:out value="${session_u_nickname}"/></h2>
         <p class="text-gray-500 text-sm mb-4"><c:out value="${session_u_email}"/></p>
-		<button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
+        <%-- <a href="${path}/mypage/profile" class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600 inline-block">정보수정</a> --%>
 
         <!-- 네비게이션 -->
         <nav class="w-full space-y-2 text-sm">
@@ -47,7 +47,7 @@
 
       <!-- 메인 콘텐츠 -->
       <main class="flex-1 p-8 bg-gray-50">
-        <h2 class="text-xl font-semibold mb-4">게시판관리</h2>
+        <h2 class="text-2xl font-bold mb-6">게시판관리</h2>
 
         <!-- 검색/필터 바 -->
         <form method="get" action="${path}/admin_board" class="mb-4 grid grid-cols-12 gap-2">

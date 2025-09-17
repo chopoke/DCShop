@@ -240,7 +240,7 @@ public class MypageController {
 		}
         myService.findById(sessionid, model);
         
-		//myService.orderListInfo(req, res, model);
+//		myService.orderListInfo(req, res, model);
 		
 		myService.orderListById(req, res, model);
 		

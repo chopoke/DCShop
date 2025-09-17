@@ -57,7 +57,7 @@
         <img src="resources/img_main/mypage_default.png" alt="Profile" class="rounded-full w-28 h-28 object-cover mb-4">
         <h2 class="text-lg font-semibold">${session_u_nickname}</h2>
         <p class="text-gray-500 text-sm mb-4">${session_u_email}</p>
-        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button>
+        <!-- <button class="px-4 py-2 bg-blue-500 text-white rounded-lg mb-6 hover:bg-blue-600">정보수정</button> -->
 
         <nav class="w-full space-y-2 text-sm">
           <a href="${path}/admin_board"   class="block py-2 px-3 rounded hover:bg-gray-100">게시판관리</a>
@@ -253,7 +253,7 @@
                 <span class="px-3 py-2 rounded-lg bg-blue-600 text-white">${i}</span>
               </c:when>
               <c:otherwise>
-                <a class="px-3 py-2 border rounded-lg hover:bg-gray-50"
+                <a class="px-3 py-2 bg-gray-900 text-white border rounded-lg hover:bg-gray-50"
                    href="${path}/admin_order?pageNum=${i}&${pageQuery}">${i}</a>
               </c:otherwise>
             </c:choose>
