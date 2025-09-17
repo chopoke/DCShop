@@ -71,7 +71,8 @@
 
 						<div class="image-container">
 							<input type="text" placeholder="Search" class="board_search" name="keyword" value="${fn:escapeXml(param.keyword)}"/>
-							<div class="son"><a href="?sortOrder=rn" data-sort="rn">최신순</a>&nbsp;<a href="?sortOrder=viewCnt" data-sort="viewCnt">조회순</a>&nbsp;<a href="?sortOrder=commCnt" data-sort="commCnt">댓글순</a>
+							<div class="son"><a href="?sortOrder=rn" class="sort-link"  data-sort="rn">최신순</a>&nbsp;<a href="?sortOrder=viewCnt" class="sort-link" data-sort="viewCnt">조회순</a>&nbsp;<a href="?sortOrder=commCnt" class="sort-link" data-sort="commCnt">댓글순</a>
+
 							</div>
 							<a class="a_icon" href="#"><img alt="" src="resources/img_main/icon/돋보기.png"></a>
 					      	<img  class="p_img" alt="" src="resources/img_main/고개틀2.png">
@@ -164,9 +165,21 @@
 	    if (el) el.textContent = (name[category] || "전체") + "▼";	// 기존에 보이던 요소 덮어씌우기
 	    
 	    const form = document.getElementById("searchForm");			// 폼 가져오기
-	    const catInput = document.getElementById("categoryInput");	// 카테고리들 가져오기
 	    
-	    if (catInput) catInput.value = category;
+	    
+	    document.querySelectorAll(".sort-link").forEach(a=>{   // 모든 요소에서 sort-link를 찾아 순회
+	          a.addEventListener("click", e => {
+	             e.preventDefault();   // 이벤트 기본 중지
+	             const current = new URL(location.href);
+	             const keyword = (document.querySelector('input[name="keyword"]')?.value)   //키워드가 있다면 값 가져오기
+	             keyword ? current.searchParams.set("keyword", keyword) : current.searchParams.delete("keyword");
+	             current.searchParams.set("sortOrder", a.dataset.sort);
+	             // 정렬이 바뀌면 1페이지로 다시 옴ㄹ겨주기
+	             current.searchParams.delete("pageNum");
+	             location.href= current.pathname + "?" + current.searchParams.toString();
+	          });
+	          
+	       });
 	    
 	    const cur = new URL(location.href);
 	    document.querySelectorAll(".pagination a").forEach(a => {

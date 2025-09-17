@@ -136,7 +136,7 @@
 					<li class="breadcrumb-item active">펫 등록</li>
 				</ol>
 
-				<div class="stepper is-2">
+				<div class="stepper is-3">
 					<div class="segments">
 						<div class="seg"></div>
 						<div class="seg"></div>

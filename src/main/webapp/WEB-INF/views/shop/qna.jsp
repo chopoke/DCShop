@@ -163,8 +163,8 @@
                         <option value="환불">환불</option>
                         <option value="배송">배송</option>
                         <option value="가격">가격</option>
-                        <option value="품절">품절</option>
-                        <option value="입고">입고</option>
+                        <!-- <option value="품절">품절</option>
+                        <option value="입고">입고</option> -->
                         <option value="기타">기타</option>
                       </select>
                     </td>

@@ -109,6 +109,7 @@ public class QnaController {
 		String sessionid = (String)request.getSession().getAttribute("sessionid");
 		my.findById(sessionid, model);
 		
+		System.out.println(u_role);
 		// 상세페이지에 띄울 데이터 요청
 		int q_num = Integer.parseInt(request.getParameter("q_num"));
 		QuestDTO dto = service.qnaDetail(q_num);

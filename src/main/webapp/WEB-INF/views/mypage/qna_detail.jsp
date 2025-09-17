@@ -155,7 +155,7 @@
 				        <h2 class="text-lg font-semibold">${sessionScope.sessionid}</h2>
 				        <h2 class="text-lg font-semibold">${sessionScope.session_u_nickname}</h2>
 				        <p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
-				        <button class="px-4 py-2 bg-black text-white rounded-lg mb-6 hover:bg-blue-600"
+				        <button class="px-4 py-2 bg-black text-white rounded mb-6 hover:bg-blue-600"
 				                onclick="window.location='<c:url value="/mypage_pwdcheck.do"/>'">정보수정</button>
 				
 				        <!-- 네비게이션 -->
