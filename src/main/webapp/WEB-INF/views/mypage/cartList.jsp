@@ -245,16 +245,18 @@ tailwind.config = {
       
       const items = [];
       rows.forEach(row => {
+         
+         
          const pdId = (row.dataset.pdId);
          const pdName = (row.querySelector(".pd-name").textContent).trim();
          const pdPriceValue = (row.querySelector(".order-amount").textContent).trim();
          const pdPrice = Number(pdPriceValue.replace(/[^\d]/g, '') || 0);
-         const qty = (row.querySelector(".pd-qty").textContent).trim();
+         const qty = row.querySelector(".pd-qty input").value;
          const pdImg  = (row.querySelector(".pd-img").value);
          const pdDiscountRate = (row.querySelector(".pd-discount").value);
          items.push({ pdId, pdName, pdPrice, qty, pdImg, pdDiscountRate });
       });
-      
+     
      add('_payload', JSON.stringify({ items, pdShippingFee, totalClient }));
 
        form.method = 'post';
@@ -308,22 +310,22 @@ tailwind.config = {
          <aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
             <!-- 프로필 -->
             <form id="avatarForm" action="${path}/mypage_imgUpload.do" method="post" enctype="multipart/form-data">
-			  	<input type="hidden" name="u_id" value="${sessionScope.sessionid}">
-			  	<input type="file" id="u_image" name="u_image" accept="image/*" style="display:none;">
-			</form>
-			<c:choose>
-				  <c:when test="${empty dto.u_image}">
-				    <c:url var="imgUrl" value="/resources/img_main/mypage_default.png" />
-				  </c:when>
-				  <c:otherwise>
-				    <c:url var="imgUrl" value="/resources/image/profile/${dto.u_image}" />
-				  </c:otherwise>
-			</c:choose>
-			
-			<img id="profileImg"
-			     src="${imgUrl}"
-			     alt="Profile"
-			     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
+              <input type="hidden" name="u_id" value="${sessionScope.sessionid}">
+              <input type="file" id="u_image" name="u_image" accept="image/*" style="display:none;">
+         </form>
+         <c:choose>
+              <c:when test="${empty dto.u_image}">
+                <c:url var="imgUrl" value="/resources/img_main/mypage_default.png" />
+              </c:when>
+              <c:otherwise>
+                <c:url var="imgUrl" value="/resources/image/profile/${dto.u_image}" />
+              </c:otherwise>
+         </c:choose>
+         
+         <img id="profileImg"
+              src="${imgUrl}"
+              alt="Profile"
+              class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
 
             <h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
             <h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
@@ -354,7 +356,6 @@ tailwind.config = {
          <main class="flex-1 p-8 bg-gray-50">
 
             <h1 class="text-3xl font-bold text-gray-900 mb-2">장바구니</h1>
-            <c:out value="${hasFreeShipping}">dd</c:out>
             <div class="d-flex justify-content-between align-items-center mb-3">
                <div class="text-secondary small">
                   주문한 상품 총: <strong id="totalItemsCount">${cartCountSum}</strong>개

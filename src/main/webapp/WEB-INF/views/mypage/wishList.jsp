@@ -73,7 +73,7 @@
 			<!-- 메인 콘텐츠 -->
 			<main class="flex-1 p-8 bg-gray-50">
 			
-				<h1 class="text-2xl font-bold mb-6">내 찜 목록</h1>
+				<h1 class="text-3xl font-bold text-gray-900 mb-2">내 찜 목록</h1>
 
 				<section class="space-y-4">
 				  <c:choose>

@@ -96,13 +96,13 @@
            <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
            <a href="./mypage_qna.do" class="block py-2 px-3 bg-gray-900 text-white rounded hover:bg-gray-100">Q&A</a> 
            <a href="./mypage/my_reviews.do" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a>
-           <!-- <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a> -->
+           <a href="${path}/logout.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
         </nav>
       </aside>
 
       <!-- 메인 콘텐츠 -->
       <main class="flex-1 p-8 bg-gray-50">
-        <h1 class="text-2xl font-bold mb-6">내 문의</h1>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">내 문의</h1>
 
         <!-- 검색/필터 -->
         <form action="${path}/mypage_qna.do" method="get" class="mb-4">
@@ -233,7 +233,7 @@
                     <td class="py-2 px-3 align-center">
                       <div class="flex flex-wrap gap-1">
                         <button type="button" class="px-2 py-1 border rounded hover:bg-gray-50"
-                                onclick="window.location.href='${path}/question_update.qa?q_num=${q.q_num}'">수정</button>
+                                onclick="window.location='${path}/question_update.qa?q_num=${q.q_num}'">수정</button>
                         <a class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
                            onclick="question_delete(${q.q_num})">삭제</a>
                       </div>
