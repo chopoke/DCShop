@@ -268,7 +268,7 @@
     const adminReplyContent = document.getElementById("adminReplyContent");
     const adminReplyForm = document.getElementById("adminReplyForm");
     const adminReplyText = document.getElementById("adminReplyText");
-    
+
     const adminReplyDate = adminReplyContent.querySelector('span');
     const adminReplyMessage = adminReplyContent.querySelector('p');
 
