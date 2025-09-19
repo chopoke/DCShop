@@ -153,6 +153,7 @@ public class CartServiceImpl implements CartService {
 
 		// 상품 구입 갯수 증가[성공이면 1이상, 실패이면, 0]
 		int upResult = cartdao.increaseProductCount(increaseInfo);
+		System.out.println(upResult);
 		int qty = 0;
 		if(upResult > 0) {
 			// 상품 구입 갯수 가져오기
@@ -180,7 +181,7 @@ public class CartServiceImpl implements CartService {
 
 		// 상품 구입 갯수 감소
 		int upResult = cartdao.dicreaseProductCount(dicreaseInfo);
-		int qty = 0;
+		int qty = 1;
 		// 상품 구입 갯수 가져오기
 		CartDTO cartdto = cartdao.getProductCount(dicreaseInfo);
 		if(upResult > 0) {

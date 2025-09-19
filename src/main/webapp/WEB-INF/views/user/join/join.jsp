@@ -15,9 +15,6 @@
 <script type="text/javascript" src="${path}/resources/js/customer/emailAuthentication.js"></script>
 </head>
 <body>
-
-
-
 	<div class="wrap">
 		<!-- Header 시작 -->
 		<%@ include file="../../setting/header.jsp"%>

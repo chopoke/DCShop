@@ -101,7 +101,6 @@
 	  
 	   const wrapper = document.getElementById(qtyId);
 	   const input = wrapper.querySelector("input");
-	   
 	   const pd_stock = document.getElementById("pd_stock-"+pdId);
 	   
 	   if(input.value == pd_stock.value) {

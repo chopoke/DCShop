@@ -31,9 +31,9 @@ public class ApiController {
 		
 		logger.info("ApiController = > sendCode()");
 		String result = service.sendValidationCode(request);
-		System.out.println("결과" + result);
+
 		if(result.equals("1")) {
-			System.out.println("들어옴");
+
 			res.put("ok", false);
 			res.put("duplicate", "duplicate");
 			
