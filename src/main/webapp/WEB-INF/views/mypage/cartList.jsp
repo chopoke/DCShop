@@ -245,8 +245,6 @@ tailwind.config = {
       
       const items = [];
       rows.forEach(row => {
-    	  
-    	  
          const pdId = (row.dataset.pdId);
          const pdName = (row.querySelector(".pd-name").textContent).trim();
          const pdPriceValue = (row.querySelector(".order-amount").textContent).trim();
@@ -310,24 +308,26 @@ tailwind.config = {
          <aside class="w-72 bg-white border-r p-6 flex flex-col items-center">
             <!-- 프로필 -->
             <form id="avatarForm" action="${path}/mypage_imgUpload.do" method="post" enctype="multipart/form-data">
-			  	<input type="hidden" name="u_id" value="${sessionScope.sessionid}">
-			  	<input type="file" id="u_image" name="u_image" accept="image/*" style="display:none;">
-			</form>
-			<c:choose>
-				  <c:when test="${empty dto.u_image}">
-				    <c:url var="imgUrl" value="/resources/img_main/mypage_default.png" />
-				  </c:when>
-				  <c:otherwise>
-				    <c:url var="imgUrl" value="/resources/image/profile/${dto.u_image}" />
-				  </c:otherwise>
-			</c:choose>
-			
-			<img id="profileImg"
-			     src="${imgUrl}"
-			     alt="Profile"
-			     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
+              <input type="hidden" name="u_id" value="${sessionScope.sessionid}">
+              <input type="file" id="u_image" name="u_image" accept="image/*" style="display:none;">
+         </form>
+         <c:choose>
+              <c:when test="${empty dto.u_image}">
+                <c:url var="imgUrl" value="/resources/img_main/mypage_default.png" />
+              </c:when>
+              <c:otherwise>
+                <c:url var="imgUrl" value="/resources/image/profile/${dto.u_image}" />
+              </c:otherwise>
+         </c:choose>
+         
+         <img id="profileImg"
+              src="${imgUrl}"
+              alt="Profile"
+              class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
 
+            <a style="font-size: 10px; padding: 5px">(ID)</a>
             <h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+            <a style="font-size: 10px; padding: 5px">(닉네임)</a>
             <h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
             <p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
             <button

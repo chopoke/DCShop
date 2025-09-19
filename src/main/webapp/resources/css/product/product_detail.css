@@ -36,7 +36,7 @@
 /* 메인/보조 버튼 */
 .btn-primary{
   min-width:140px; height:52px; padding:0 18px;
-  background:#b3d2ff; color:#fff; border:none; border-radius:12px;
+  background:#8ebbfa; color:#fff; border:none; border-radius:12px;
   /* text-shadow: -2px 0px 10px black; */
   font-size:16px; font-weight:700; cursor:pointer;
 }

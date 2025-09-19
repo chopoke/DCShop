@@ -160,7 +160,9 @@
 				     alt="Profile"
 				     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
 				     
-				<h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+				<a style="font-size: 10px; padding: 5px">(ID)</a>
+	            <h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+	            <a style="font-size: 10px; padding: 5px">(닉네임)</a>
 					<h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
 					<p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
 					<button
@@ -173,9 +175,9 @@
 		               <a href="./orderList" class="block py-2 px-3 rounded hover:bg-gray-100">주문내역</a> 
 		               <a href="./wishList.do" class="block py-2 px-3 rounded hover:bg-gray-100">관심상품</a> 
 		               <a href="./cartList" class="block py-2 px-3 rounded hover:bg-gray-100">장바구니</a> 
-		               <a href="./mypage_qna.do" class="block py-2 px-3 rounded hover:bg-gray-100">Q&A</a> 
+		               <a href="./mypage_qna.do" class="block py-2 px-3 bg-gray-900 text-white rounded hover:bg-gray-100">Q&A</a> 
 		               <a href="./mypage/my_reviews.do" class="block py-2 px-3 rounded hover:bg-gray-100">상품리뷰</a> 
-		               <!-- <a href="#" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a> -->
+		               <a href="${path}/logout.do" class="block py-2 px-3 rounded hover:bg-gray-100 text-red-500">로그아웃</a>
 		            </nav>
 	         </aside>
 		      
@@ -239,9 +241,7 @@
 		            </div>
 		          </div>
 		          <div class="flex justify-end pt-4">
-		            <button onclick="history.back()" class="px-6 h-10 !bg-black text-white !rounded-button hover:!bg-blue-200 transition-colors !whitespace-nowrap !mr-3">
-		              뒤로가기
-		            </button>
+		            
 		            <button type="reset" class="px-6 h-10 !bg-gray-100 !text-gray-600 !rounded-button hover:!bg-gray-200 !transition-colors !whitespace-nowrap !mr-3">
 		              취소
 		            </button>

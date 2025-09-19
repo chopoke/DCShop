@@ -76,7 +76,7 @@
 		class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
 		<h1 class="text-lg font-semibold">주문/결제</h1>
 		<button class="text-gray-500">
-			<i class="ri-close-line text-xl"></i>
+			<!-- <i class="ri-close-line text-xl"></i> -->
 		</button>
 	</div>
 	</header>
@@ -323,7 +323,7 @@
       		orderList : orderListResult
           };
       	
-      	// 결제 정보 세션에 저장하기 위해서 ajax 이용
+      	// 결제 정보 세션에 저장하기 위해서
       	await fetch("${path}/saveOrderInfo", {
       		method: "POST",
       		headers: {

@@ -56,7 +56,7 @@
     <!-- 4번째 칸: 게시판 -->
     <div class="footer-col">
       <h4>게시판</h4>
-      <p>Q&A<br>FAQ</p>
+      <p><a href="${path}/board_list">COMM</a><br><a href="./mypage_qna.do">Q&A</a></p>
     </div>
 
     <!-- 5번째 칸: 찾아오기 -->

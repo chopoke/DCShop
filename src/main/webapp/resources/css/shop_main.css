@@ -189,6 +189,6 @@ section nav {
             transition: background 0.15s, box-shadow 0.15s, transform 0.05s;
         }
 .page-btn:hover { background: #f9fafb; }
-.page-btn.active { background: #d7e6fb; color:#000; border-color:#004080; }
+.page-btn.active { background: #8ebbfa; color:#000; border-color:#004080; }
 .page-btn.disabled { opacity:.4; pointer-events:none; }
 .logo-font { font-family: 'Pacifico', cursive; }

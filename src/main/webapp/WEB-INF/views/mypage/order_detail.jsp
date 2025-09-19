@@ -106,7 +106,9 @@ tailwind.config = {
 				     alt="Profile"
 				     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
 
-				<h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+				<a style="font-size: 10px; padding: 5px">(ID)</a>
+	           <h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+	           <a style="font-size: 10px; padding: 5px">(닉네임)</a>
 				<h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
 				<p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
 				<button
@@ -405,7 +407,7 @@ tailwind.config = {
 		statusCircle4.classList.add('bg-gray-300');
 		statusCircle5.classList.add('bg-gray-300');
 		statusCircle6.classList.add('bg-gray-300');
-	} else if(dil === '주문완료') {
+	} else if(dil === '') {
 		statusCircle1.classList.add('bg-gray-300');
 		statusCircle2.classList.add('bg-gray-300');
 		statusCircle3.classList.add('bg-gray-300');

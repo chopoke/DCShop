@@ -278,10 +278,10 @@ $(function(){
 				          </td>
 				        </tr>
 				        
-				        <tr>
+				        <%-- <tr>
 				          <th>할인율</th>
 				          <td><c:out value="${dto.pd_discount_rate}"/>%</td>
-				        </tr>
+				        </tr> --%>
 				        
 				        <tr>
 				          <th>상태</th>
@@ -293,7 +293,7 @@ $(function(){
 				          <td><c:out value="${dto.pd_option}"/></td>
 				        </tr>
 				        
-				        <tr>
+				        <%-- <tr>
 				          <th>등록일</th>
 				          <td><fmt:formatDate value="${dto.pd_created}" pattern="yyyy-MM-dd HH:mm"/></td>
 				        </tr>
@@ -301,7 +301,7 @@ $(function(){
 				        <tr>
 				          <th>수정일</th>
 				          <td><fmt:formatDate value="${dto.pd_updated}" pattern="yyyy-MM-dd HH:mm"/></td>
-				        </tr>
+				        </tr> --%>
 				      </table>
 				
 				      <div class="actions actions-main">
