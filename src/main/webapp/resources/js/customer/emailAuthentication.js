@@ -108,7 +108,7 @@ $.ajax({
       } else {
          if(res.duplicate == "duplicate") {
              $('#emailCode').val("");
-            $('#emailTimer').addClass('hidden');   
+             $('#emailTimer').addClass('hidden');   
               $('#input-group-text').addClass('hidden'); // 있으면 숨김
               $('#btnVerify').addClass('hidden');
               $('#emailCode').addClass('hidden').prop('disabled', true);

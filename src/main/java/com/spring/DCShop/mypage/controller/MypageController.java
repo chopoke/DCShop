@@ -258,6 +258,7 @@ public class MypageController {
 		if(sessionid == null) {
 			return "user/login/login_main";
 		}
+		myService.findById(sessionid, model);
 		
 		myService.orderDetailAction(req, res, model);
 		
