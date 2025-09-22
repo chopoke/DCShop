@@ -323,7 +323,7 @@
       		orderList : orderListResult
           };
       	
-      	// 결제 정보 세션에 저장하기 위해서 ajax 이용
+      	// 결제 정보 세션에 저장하기 위해서
       	await fetch("${path}/saveOrderInfo", {
       		method: "POST",
       		headers: {

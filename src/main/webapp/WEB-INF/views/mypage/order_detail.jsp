@@ -405,7 +405,7 @@ tailwind.config = {
 		statusCircle4.classList.add('bg-gray-300');
 		statusCircle5.classList.add('bg-gray-300');
 		statusCircle6.classList.add('bg-gray-300');
-	} else if(dil === '주문완료') {
+	} else if(dil === '') {
 		statusCircle1.classList.add('bg-gray-300');
 		statusCircle2.classList.add('bg-gray-300');
 		statusCircle3.classList.add('bg-gray-300');

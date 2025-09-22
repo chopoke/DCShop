@@ -201,8 +201,8 @@ public class BoardServiceImpl implements BoardService {
 				String saveDir = request.getSession().getServletContext().getRealPath("/resources/board_upload/");
 				System.out.println("saveDir : " + saveDir);
 
-				//String realDir = "D:\\DEV05\\workspace_DCshop\\DCShop\\src\\main\\webapp\\resources\\board_upload\\";
-				String realDir = "D:\\DEV05\\workspace_team\\DCShop\\src\\main\\webapp\\resources\\board_upload\\";
+				String realDir = "D:\\DEV05\\workspace_DCshop\\DCShop\\src\\main\\webapp\\resources\\board_upload\\";
+				//String realDir = "D:\\DEV05\\workspace_team\\DCShop\\src\\main\\webapp\\resources\\board_upload\\";
 				//String realDir = request.getSession().getServletContext().getRealPath("/resources/board_upload/");
 				//new java.io.File(realDir).mkdirs();
 				System.out.println("realDir : " + realDir);
@@ -286,6 +286,8 @@ public class BoardServiceImpl implements BoardService {
 	    MultipartFile file = request.getFile("b_image");
 	    System.out.println("file : " + file);
 	    
+	    String old_b_image = request.getParameter("old_b_image");
+	    
 	    FileInputStream fis = null;
 		FileOutputStream fos = null;
 		
@@ -319,6 +321,8 @@ public class BoardServiceImpl implements BoardService {
 				String b_image = "/resources/board_upload/" + file.getOriginalFilename();
 				System.out.println("b_image : " + b_image);
 				dto.setB_image(b_image);
+			} else if(old_b_image != null) {
+				dto.setB_image(old_b_image);
 			} else {
 				dto.setB_image(null);
 			}
