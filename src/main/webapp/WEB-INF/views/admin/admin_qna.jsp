@@ -230,8 +230,7 @@
                                 onclick="openModal(${q.q_num})">보기</button> --%>
                         <a href="${path}/qna_answer?q_num=${q.q_num}"
                            class="px-2 py-1 bg-stone-500 text-white rounded hover:bg-blue-700">답변</a>
-                        <a href="${path}/admin_qna/delete?q_num=${q.q_num}"
-                           class="px-2 py-1 bg-red-400 text-white rounded hover:bg-red-700"
+                        <a class="px-2 py-1 bg-red-400 text-white rounded hover:bg-red-700"
                            onclick="question_delete(${q.q_num})">삭제</a>
                       </div>
                     </td>

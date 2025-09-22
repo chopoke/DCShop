@@ -64,7 +64,7 @@
 						  AND pd.pd_discount_rate <![CDATA[ > ]]> 0
 						</if>
 					    <if test="keyword != null and keyword != ''">
-							(pd.pd_name like '%'||#{keyword} || '%'
+							AND (pd.pd_name like '%'||#{keyword} || '%'
 							OR pd.pd_brand like '%' || #{keyword} || '%')
 						</if>
 						
@@ -133,7 +133,7 @@
 			  AND pd_discount_rate <![CDATA[ > ]]> 0
 			</if>
 			<if test="keyword != null and keyword != ''">
-				(pd_name like '%' || #{keyword} || '%'
+				AND (pd_name like '%' || #{keyword} || '%'
 				or pd_brand like '%' || #{keyword} || '%')
 			</if>
 			

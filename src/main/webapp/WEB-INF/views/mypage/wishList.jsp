@@ -51,7 +51,9 @@
 			     alt="Profile"
 			     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
             
+            <a style="font-size: 10px; padding: 5px">(ID)</a>
             <h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+            <a style="font-size: 10px; padding: 5px">(닉네임)</a>
             <h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
             <p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
             <button
@@ -73,7 +75,7 @@
 			<!-- 메인 콘텐츠 -->
 			<main class="flex-1 p-8 bg-gray-50">
 			
-				<h1 class="text-2xl font-bold mb-6">내 찜 목록</h1>
+				<h1 class="text-3xl font-bold text-gray-900 mb-2">내 찜 목록</h1>
 
 				<section class="space-y-4">
 				  <c:choose>

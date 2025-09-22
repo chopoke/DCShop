@@ -36,16 +36,20 @@
     SELECT * FROM (
       SELECT A.*, rownum AS rn
       FROM (
-        SELECT b.*, u.u_nickname,
-               (SELECT COUNT(*) FROM comment_tbl c WHERE b.b_num = c.b_num) AS b_comments
-        FROM user_tbl u, board_tbl b
+        SELECT b.*
+             , u.u_nickname,
+       	(SELECT COUNT(*) 
+        	FROM comment_tbl c 
+        	WHERE b.b_num = c.b_num) AS b_comments
+        	FROM user_tbl u
+          	   , board_tbl b
         WHERE u.u_member_id = b.u_member_id
-        <if test="category == '전체'">
-          AND b.b_category IN ('공지','이벤트')
-        </if>
-        <if test="category != '전체'">
-          AND b.b_category = #{category}
-        </if>
+       	<if test="category == '전체'">
+          	AND b.b_category IN ('공지','이벤트')
+       	</if>
+       	<if test="category != '전체'">
+          	AND b.b_category = #{category}
+       	</if>
         ORDER BY b.b_num DESC
       ) A
     )
@@ -54,13 +58,18 @@
 
   <select id="noticeUnifiedListAction" parameterType="java.util.Map" resultMap="noticeMap">
     SELECT * FROM (
-      SELECT A.*, rownum AS rn
-      FROM (
-        SELECT b.*, u.u_nickname,
-               (SELECT COUNT(*) FROM comment_tbl c WHERE b.b_num = c.b_num) AS b_comments
-        FROM user_tbl u, board_tbl b
+      SELECT A.*
+      	   , rownum AS rn
+      FROM 
+      (SELECT b.*
+           , u.u_nickname,
+       (SELECT COUNT(*) 
+        FROM comment_tbl c 
+        WHERE b.b_num = c.b_num) AS b_comments
+        FROM user_tbl u
+           , board_tbl b
         WHERE u.u_member_id = b.u_member_id
-          AND b.b_category IN ('공지','이벤트')
+        AND b.b_category IN ('공지','이벤트')
         ORDER BY b.b_num DESC
       ) A
     )
@@ -68,7 +77,8 @@
   </select>
 
   <select id="noticeListTotal" parameterType="String" resultType="int">
-    SELECT COUNT(*) FROM board_tbl
+    SELECT COUNT(*) 
+    FROM board_tbl
     <if test="_parameter == '전체'">
       WHERE b_category IN ('공지','이벤트')
     </if>
@@ -78,13 +88,17 @@
   </select>
 
   <select id="noticeUnifiedListTotal" resultType="int">
-    SELECT COUNT(*) FROM board_tbl
+    SELECT COUNT(*) 
+    FROM board_tbl
     WHERE b_category IN ('공지','이벤트')
   </select>
 
   <select id="noticeDetailAction" parameterType="int" resultMap="noticeMap">
-    SELECT b.*, u.u_id, u.u_nickname
-    FROM user_tbl u, board_tbl b
+    SELECT b.*
+         , u.u_id
+         , u.u_nickname
+    FROM user_tbl u
+         , board_tbl b
     WHERE u.u_member_id = b.u_member_id
       AND b.b_num = #{b_num}
   </select>
@@ -97,11 +111,24 @@
       SELECT NVL(MAX(b_num)+1,1) FROM board_tbl
     </selectKey>
     INSERT INTO board_tbl (
-      b_num, u_member_id, b_title, b_contents, b_category,
-      b_dateposted, b_updateDate, b_views, b_recommend, b_image
+      			b_num
+      		  , u_member_id
+      		  , b_title
+      		  , b_contents
+      		  , b_category
+      		  , b_dateposted
+      		  , b_updateDate
+      		  , b_views
+      		  , b_recommend
+      		  , b_image
     ) VALUES (
-      #{b_num}, #{u_member_id}, #{b_title}, #{b_contents},
-      #{b_category}, sysdate, NULL, 0, 0,
+      		    #{b_num}
+              , #{u_member_id}
+              , #{b_title}
+              , #{b_contents}
+              , #{b_category}
+              , sysdate
+              , NULL,0,0,
       <if test='b_image != null'>#{b_image}</if>
       <if test='b_image == null'>null</if>
     )
@@ -138,11 +165,13 @@
   </select>
 
   <insert id="noticeRecommendAddAction" parameterType="java.util.Map">
-    INSERT INTO recommend_tbl (rec_num, u_member_id, b_num)
+    INSERT INTO recommend_tbl 
+    		   (rec_num, u_member_id, b_num)
     VALUES (
-      (SELECT NVL(MAX(rec_num)+1, 1) FROM recommend_tbl),
-      #{u_member_id}, #{b_num}
-    )
+      (SELECT NVL(MAX(rec_num)+1, 1) 
+       FROM recommend_tbl)
+       	  , #{u_member_id}
+       	  , #{b_num})
   </insert>
 
   <delete id="noticeRecommendRemoveAction" parameterType="java.util.Map">
@@ -154,108 +183,132 @@
   <update id="noticeRecommendUpdateAction" parameterType="int">
     UPDATE board_tbl
     SET b_recommend = (
-      SELECT COUNT(*) FROM recommend_tbl WHERE b_num = #{b_num}
-    )
+      SELECT COUNT(*) 
+      FROM recommend_tbl WHERE b_num = #{b_num})
     WHERE b_num = #{b_num}
   </update>
 
   <select id="noticeSelectB_recommend" parameterType="int" resultType="int">
-    SELECT b_recommend FROM board_tbl WHERE b_num = #{b_num}
+    SELECT b_recommend 
+    FROM board_tbl 
+    WHERE b_num = #{b_num}
   </select>
 
   <select id="noticeSelectBoardAuthorId" parameterType="int" resultType="String">
     SELECT u.u_id
     FROM user_tbl u, board_tbl b
     WHERE u.u_member_id = b.u_member_id
-      AND b.b_num = #{b_num}
+    AND b.b_num = #{b_num}
   </select>
 
   <!-- ===========================
         통합 게시판
   ============================ -->
   <select id="unifiedBoardListAction" parameterType="java.util.Map" resultMap="noticeMap">
-    SELECT * FROM (
-      SELECT A.*, rownum AS rn
-      FROM (
-        SELECT b.*, u.u_nickname,
-               (SELECT COUNT(*) FROM comment_tbl c WHERE b.b_num = c.b_num) AS b_comments
-        FROM user_tbl u, board_tbl b
-        WHERE u.u_member_id = b.u_member_id
+    SELECT * 
+    FROM (SELECT A.*
+        , rownum AS rn
+    FROM (SELECT b.*
+        , u.u_nickname
+        ,(SELECT COUNT(*) 
+      	  FROM comment_tbl c 
+      	  WHERE b.b_num = c.b_num) 
+      	  AS b_comments
+      	   FROM user_tbl u
+          	  , board_tbl b
+     WHERE u.u_member_id = b.u_member_id
         <if test='category != null and category != "전체"'>
-          AND b.b_category = #{category}
+     	     AND b.b_category = #{category}
         </if>
-        ORDER BY b.b_num DESC
-      ) A
+        ORDER BY b.b_num DESC) A
     )
     WHERE rn BETWEEN #{start} AND #{end}
   </select>
 
   <select id="unifiedBoardListTotal" parameterType="String" resultType="int">
-    SELECT COUNT(*) FROM board_tbl
-    <if test='_parameter != null and _parameter != "전체"'>
-      WHERE b_category = #{_parameter}
-    </if>
+    SELECT COUNT(*) 
+    FROM board_tbl
+    	<if test='_parameter != null and _parameter != "전체"'>
+    		WHERE b_category = #{_parameter}
+    	</if>
   </select>
 
   <!-- ===========================
         카테고리별 게시판
   ============================ -->
   <select id="categoryBoardListAction" parameterType="java.util.Map" resultMap="noticeMap">
-    SELECT * FROM (
-      SELECT A.*, rownum AS rn
-      FROM (
-        SELECT b.*, u.u_nickname,
-               (SELECT COUNT(*) FROM comment_tbl c WHERE b.b_num = c.b_num) AS b_comments
-        FROM user_tbl u, board_tbl b
-        WHERE u.u_member_id = b.u_member_id
-          AND b.b_category = #{category}
-        ORDER BY b.b_num DESC
-      ) A
-    )
+    SELECT * 
+      FROM (SELECT A.*
+          , rownum AS rn
+      FROM (SELECT b.*
+          , u.u_nickname
+          ,(SELECT COUNT(*) 
+        	 FROM comment_tbl c 
+             WHERE b.b_num = c.b_num) AS b_comments
+    			FROM user_tbl u, board_tbl b
+        		WHERE u.u_member_id = b.u_member_id
+         AND b.b_category = #{category}
+         ORDER BY b.b_num DESC) A
+    	  )
     WHERE rn BETWEEN #{start} AND #{end}
   </select>
 
   <select id="categoryBoardListTotal" parameterType="String" resultType="int">
-    SELECT COUNT(*) FROM board_tbl WHERE b_category = #{_parameter}
+    SELECT COUNT(*) 
+    FROM board_tbl 
+    WHERE b_category = #{_parameter}
   </select>
 
   <select id="selectLatestByCategory" parameterType="java.util.Map" resultMap="noticeMap">
-  
-    SELECT * FROM (
-      SELECT b.*, u.u_nickname,
-             (SELECT COUNT(*) FROM comment_tbl c WHERE b.b_num = c.b_num) AS b_comments
-      FROM user_tbl u, board_tbl b
-      WHERE u.u_member_id = b.u_member_id
+    SELECT * 
+    FROM (SELECT b.*
+     	, u.u_nickname,
+     	(SELECT COUNT(*) 
+       	  FROM comment_tbl c 
+       	  WHERE b.b_num = c.b_num) AS b_comments
+             FROM user_tbl u
+      	  	    , board_tbl b
+        WHERE u.u_member_id = b.u_member_id
         AND b.b_category = #{category}
       ORDER BY b.b_num DESC
     )
-    WHERE ROWNUM &lt;= #{limit}
+    WHERE ROWNUM	&lt;= #{limit}
   </select>
 
   <!-- ===========================
         유틸성 쿼리
   ============================ -->
   <select id="selectU_member_id" parameterType="String" resultType="int">
-    SELECT u_member_id FROM user_tbl WHERE u_id = #{u_id}
+    SELECT u_member_id 
+    FROM user_tbl 
+    WHERE u_id = #{u_id}
   </select>
 
   <select id="selectU_nicknameAction" parameterType="String" resultType="String">
-    SELECT u_nickname FROM user_tbl WHERE u_id = #{u_id}
+    SELECT u_nickname 
+    FROM user_tbl 
+    WHERE u_id = #{u_id}
   </select>
 
   <!-- ===========================
         삭제 관련
   ============================ -->
   <delete id="deleteCommentsByNotice" parameterType="int">
-    DELETE FROM comment_tbl WHERE b_num = #{b_num}
+    DELETE 
+    FROM comment_tbl 
+    WHERE b_num = #{b_num}
   </delete>
 
   <delete id="deleteNotice" parameterType="int">
-    DELETE FROM board_tbl WHERE b_num = #{b_num}
+    DELETE 
+    FROM board_tbl 
+    WHERE b_num = #{b_num}
   </delete>
 
   <delete id="deleteRecommendByBoard" parameterType="int">
-    DELETE FROM recommend_tbl WHERE b_num = #{b_num}
+    DELETE 
+    FROM recommend_tbl 
+    WHERE b_num = #{b_num}
   </delete>
 
 </mapper>

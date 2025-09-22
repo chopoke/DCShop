@@ -162,7 +162,7 @@
 								</div> 
 								<div class="mt-auto flex justify-end">  
 							    <span 
-							    class="absolute bottom-5 right-3 inline-flex items-center h-10 px-4 rounded-lg bg-blue-300 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 active:scale-[.99] transition"
+							    class="absolute bottom-5 right-3 inline-flex items-center h-10 px-4 rounded-lg bg-blue-400 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 active:scale-[.99] transition"
 							    data-pd-id="${dto.pd_id}" role="button" onclick="return addToCart(event, ${dto.pd_id})" tabindex="0">
 							      담기
 							    </span>

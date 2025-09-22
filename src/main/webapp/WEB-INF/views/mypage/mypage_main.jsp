@@ -96,7 +96,9 @@ tailwind.config = {
             <!-- <img src="resources/img_main/mypage_default.png" alt="Profile"
                   class="rounded-full w-28 h-28 object-cover mb-4"> -->
 
+			<a style="font-size: 10px; padding: 5px">(ID)</a>
             <h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+            <a style="font-size: 10px; padding: 5px">(닉네임)</a>
             <h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
             <p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
             <button

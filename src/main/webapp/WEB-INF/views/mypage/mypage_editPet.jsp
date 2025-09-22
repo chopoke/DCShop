@@ -82,7 +82,9 @@
 			     alt="Profile"
 			     class="rounded-full w-28 h-28 object-cover mb-4 cursor-pointer border" />
 
-				<h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+				<a style="font-size: 10px; padding: 5px">(ID)</a>
+	           <h2 class="text-lg font-semibold">${sessionScope.sessionid }</h2>
+	           <a style="font-size: 10px; padding: 5px">(닉네임)</a>
 				<h2 class="text-lg font-semibold">${sessionScope.session_u_nickname }</h2>
 				<p class="text-gray-500 text-sm mb-4">${sessionScope.session_u_email}</p>
 				<button
@@ -105,7 +107,7 @@
          <main class="flex-1 p-8 bg-gray-50">
          	<h1 class="text-3xl font-bold text-gray-900 mb-2">내 반려동물</h1>
             <!-- 반려동물 목록 -->
-			<section class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 mt-8">
+			<section class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 mt-0">
 			  	<div class="flex items-center justify-between">
 				    <h3 class="text-lg font-semibold text-gray-900">내 반려동물</h3>
 				    <button id="btnOpenAdd" type="button"

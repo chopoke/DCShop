@@ -62,9 +62,12 @@ public class QnaController {
 		logger.info("q_num"+q_num);
 		
 		QuestDTO dto = service.qnaDetail(q_num);
-		
-		if(dto.getU_member_id() != (Integer)request.getSession().getAttribute("session_u_member_id")) {
-			return "redirect:/";	//글 작성자 본인이 아니라면 페이지 접근 불가.
+		int u_member_id  =dto.getU_member_id();
+		// 논리 오류 수정: 글 작성자 또는 관리자만 접근 가능하도록 수정
+		String u_role = (String)request.getSession().getAttribute("session_u_role");
+		Integer id = (Integer)request.getSession().getAttribute("session_u_member_id");
+		if(!(u_member_id==id || "ADMIN".equals(u_role))) {
+			return "redirect:/";	// 글 작성자 또는 관리자가 아니라면 페이지 접근 불가
 		}
 		
 		my.findById(sessionid, model);
@@ -106,10 +109,12 @@ public class QnaController {
 		String sessionid = (String)request.getSession().getAttribute("sessionid");
 		my.findById(sessionid, model);
 		
+		System.out.println(u_role);
 		// 상세페이지에 띄울 데이터 요청
 		int q_num = Integer.parseInt(request.getParameter("q_num"));
 		QuestDTO dto = service.qnaDetail(q_num);
-		if(u_role != null || id != null || ("ADMIN".equals(u_role) && "ADMIN" == u_role && dto.getU_member_id() == id)) {
+		// 논리 오류 수정: 작성자 또는 관리자만 접근 가능하도록 수정
+		if(dto.getU_member_id() == id || "ADMIN".equals(u_role)) {
 			model.addAttribute("qna", dto);
 			return "mypage/qna_detail";
 		}

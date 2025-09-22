@@ -78,7 +78,7 @@
          "pd_id" : ${param.pd_id}, //상품 상세페이지에서 받은 삼품번호 파라미터로 넘기기
          "q_title" : $('#q_title').val(),		//문의 제목
          "q_content" : $('#q_content').val(),	//문의 내용
-         "q_secret" : $('#q_secret').val(),
+         "q_secret": $('#q_secret').prop('checked') ? 'Y' : 'N',
          "q_category" : $('#q_category').val(),
       }
       $.ajax({
@@ -152,8 +152,7 @@
                           type="checkbox"
                           name="q_secret"
                           id="q_secret"
-                          class="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary"
-                          value="Y"/>
+                          class="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary"/>
                         <label for="q_secret" class="text-sm text-gray-700">비밀글 여부</label>
                       </div>
                     </td>
@@ -164,8 +163,8 @@
                         <option value="환불">환불</option>
                         <option value="배송">배송</option>
                         <option value="가격">가격</option>
-                        <option value="품절">품절</option>
-                        <option value="입고">입고</option>
+                        <!-- <option value="품절">품절</option>
+                        <option value="입고">입고</option> -->
                         <option value="기타">기타</option>
                       </select>
                     </td>

@@ -80,9 +80,9 @@
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-bold">반려동물 통계</h2>
             <div class="flex gap-2">
-              <button type="button" id="btnAll" class="px-3 py-1 rounded-lg border bg-white hover:bg-gray-100 text-sm">전체</button>
+              <!-- <button type="button" id="btnAll" class="px-3 py-1 rounded-lg border bg-white hover:bg-gray-100 text-sm">전체</button>
               <button type="button" id="btnDog" class="px-3 py-1 rounded-lg border bg-white hover:bg-gray-100 text-sm">강아지</button>
-              <button type="button" id="btnCat" class="px-3 py-1 rounded-lg border bg-white hover:bg-gray-100 text-sm">고양이</button>
+              <button type="button" id="btnCat" class="px-3 py-1 rounded-lg border bg-white hover:bg-gray-100 text-sm">고양이</button> -->
             </div>
           </div>
 
