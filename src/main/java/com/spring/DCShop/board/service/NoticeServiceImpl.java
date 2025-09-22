@@ -259,13 +259,11 @@ public class NoticeServiceImpl implements NoticeService {
 			// 실무 팁: 롤백을 확실히 하려면 RuntimeException을 던지는 방식도 고려
 			throw new ServletException("권한이 없습니다.");
 		}
-
-
+		
 		// 추천(자식) 데이터 선삭제
 		noticeDAO.deleteRecommendsByNotice(b_num);
 
 		// 공지/이벤트 삭제(부모)
-
 		int deleteCnt = noticeDAO.noticeDeleteAction(b_num);
 		model.addAttribute("deleteCnt", deleteCnt);
 		// 주의: deleteCnt == 0 이면 이미 삭제되었거나 없는 글 → 프론트에서 처리

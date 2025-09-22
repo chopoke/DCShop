@@ -245,6 +245,7 @@ public class AdminDAOImpl implements AdminDAO{
 		List<UserDTO> list = sqlSession.selectList("com.spring.DCShop.mypage.dao.AdminDAO.adminUserList2");
 		return list;
 	}
+
 	// 문의관리 - 답변페이지
 	@Override
 	public QuestDTO questDetail(int q_num) {

@@ -85,8 +85,6 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-<link rel="stylesheet" href="${path}/resources/css/cart.css">
-<link rel="stylesheet" href="${path}/resources/css/cart.css">
 <link rel="stylesheet" href="${path}/resources/css/shop/cart.css">
 <body
 	class="bg-body-tertiary<c:if test='${not empty cart}'> has-sticky-footer</c:if>">
@@ -103,7 +101,6 @@
 	  
 	   const wrapper = document.getElementById(qtyId);
 	   const input = wrapper.querySelector("input");
-	   
 	   const pd_stock = document.getElementById("pd_stock-"+pdId);
 	   
 	   if(input.value == pd_stock.value) {

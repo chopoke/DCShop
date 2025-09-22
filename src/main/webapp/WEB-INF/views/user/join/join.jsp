@@ -41,7 +41,6 @@
                   </div>
                </div>
             </div>
-
             <!-- 상단 중앙1 시작 -->
             <div id="section1">
                <h1 align="center">회원가입창</h1>

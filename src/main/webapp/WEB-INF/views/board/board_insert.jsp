@@ -1,15 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="/WEB-INF/views/setting/setting.jsp" %>
+
 <!DOCTYPE html>
 <html>
 <head>
+<%@ include file="/WEB-INF/views/setting/setting.jsp" %>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>board_insert</title>
 
 <link rel="stylesheet" href="${path}/resources/css/board.css">
-
+<script type="text/javascript" src="${path}/resources/js/editor.js" defer></script>
 <script type="text/javascript">
 	$(function() {	
 		// [게시글 작성 버튼] 클릭시 [게시글 작성처리]로 이동

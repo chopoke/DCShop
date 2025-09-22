@@ -197,7 +197,7 @@ public class CartController {
 
 		int discountPrice;
 		int totalDiscount = 0;
-		System.out.println(req.getTotalClient());
+		System.out.println("출력^^" + req.getTotalClient());
 		for (CartItemRequest it : req.getItems()) {
 			System.out.println(it.getPdId());
 		    System.out.println(it.getPdName());

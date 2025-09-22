@@ -103,6 +103,7 @@ public interface AdminDAO {
 	
 	// 리뷰관리 - 선택 삭제
 	public int adminReviewDelete(List<Integer> ids);
+	
 	// 회원목록-최신가입자5건조회
 	public List<UserDTO> adminUserList1();
 	
@@ -111,4 +112,5 @@ public interface AdminDAO {
 	
 	// 회원목록 - 탈퇴회원5건조회
 	public List<UserDTO> adminUserList2();
+
 }

@@ -245,8 +245,6 @@ tailwind.config = {
       
       const items = [];
       rows.forEach(row => {
-         
-         
          const pdId = (row.dataset.pdId);
          const pdName = (row.querySelector(".pd-name").textContent).trim();
          const pdPriceValue = (row.querySelector(".order-amount").textContent).trim();
